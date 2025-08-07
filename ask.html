@@ -147,11 +147,12 @@
                     formData.append('entry.1110765284', pickupMethodValue);
 
                     // 確保安親班的名稱和電話欄位有值，即使它們被隱藏
-                    if (afterschoolNameInput.value) {
+                    if (pickupMethodValue === '安親班') {
                          formData.append('entry.2071732360', afterschoolNameInput.value);
-                    }
-                    if (afterschoolPhoneInput.value) {
                          formData.append('entry.652898657', afterschoolPhoneInput.value);
+                    } else {
+                         formData.append('entry.2071732360', '');
+                         formData.append('entry.652898657', '');
                     }
 
                     // 禁用按鈕並顯示載入狀態
