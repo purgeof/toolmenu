@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新學期學生基本資料表</title>
+    <!-- 引入 Tailwind CSS 以美化樣式，提供響應式設計功能 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 使用 Inter 字體 -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
+    <!-- 主容器：在小螢幕上保持滿版，在中等螢幕上限制最大寬度，並增加內距 -->
+    <div class="container mx-auto p-6 md:p-12 bg-white rounded-xl shadow-2xl space-y-8 max-w-2xl">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">新學期學生基本資料與意願調查表</h1>
+        <p class="text-sm sm:text-base text-center text-gray-600 mb-8">請家長或學生填寫以下資料，以利學校安排相關事宜。</p>
+        
+        <!--
+        ** 程式碼說明：
+        ** 所有的欄位代碼都已更新。此版本使用 JavaScript 進行非同步提交，送出後會顯示完成訊息。
+        -->
+        <form id="student-info-form" 
+              action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScgpzUfNDxoONngBnzCcCDYXtpB6PnmvtUBYcJOVpsYgSKsuQ/formResponse" 
+              method="POST" 
+              class="space-y-6">
+            
+            <!-- 學生姓名 -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <label for="studentName" class="block text-lg font-semibold text-gray-700 mb-2">1. 學生姓名</label>
+                <input type="text" id="studentName" name="entry.1921966849" placeholder="請輸入學生姓名"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out sm:text-sm">
+            </div>
+
+            <!-- 午餐繳費方式 -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">2. 本學期午餐繳費方式</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center">
+                        <input type="radio" name="entry.1145508098" value="全繳 （與註冊費一起繳交）" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700 text-sm sm:text-base">全繳 （與註冊費一起繳交）</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="entry.1145508098" value="月繳" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700 text-sm sm:text-base">月繳</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="entry.1145508098" value="領有午餐補助證明" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700 text-sm sm:text-base">領有午餐補助證明</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 午餐乳品 -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">3. 本學期午餐飲用的乳品</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center">
+                        <input type="radio" name="entry.1877188953" value="牛奶" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700 text-sm sm:text-base">牛奶</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="entry.1877188953" value="豆奶" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700 text-sm sm:text-base">豆奶</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 放學接送方式 -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">4. 本學期放學接送方式</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center">
+                        <input type="radio" name="entry.1110765284" value="家長接送" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700 text-sm sm:text-base">家長接送</span>
+                    </label>
+                    <label class="flex items-start">
+                        <input type="radio" name="entry.1110765284" value="安親班" class="form-radio h-4 w-4 text-blue-600 mt-1">
+                        <span class="ml-2 text-gray-700 text-sm sm:text-base">安親班</span>
+                        <!-- 只有當選擇「安親班」時，才顯示這些欄位。 -->
+                        <div id="afterschoolDetails" class="ml-6 space-y-2 hidden">
+                            <label class="block">
+                                <span class="text-sm text-gray-500">名稱:</span>
+                                <input type="text" name="entry.2071732360" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                            </label>
+                            <label class="block">
+                                <span class="text-sm text-gray-500">電話:</span>
+                                <input type="tel" name="entry.652898657" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                            </label>
+                        </div>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="entry.1110765284" value="課後照顧班" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2 text-gray-700 text-sm sm:text-base">課後照顧班</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 送出按鈕 -->
+            <div class="flex justify-center pt-6">
+                <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    送出
+                </button>
+            </div>
+        </form>
+
+        <!-- 送出完成的訊息 (一開始隱藏) -->
+        <div id="successMessage" class="hidden text-center">
+            <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <p class="mt-4 text-2xl font-bold text-gray-800">送出完成！</p>
+            <p class="mt-2 text-gray-600">感謝你的填寫。</p>
+        </div>
+
+        <!-- 處理表單提交及欄位顯示/隱藏的腳本 -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.getElementById('student-info-form');
+                const successMessage = document.getElementById('successMessage');
+                const pickupMethodRadios = document.querySelectorAll('input[name="entry.1110765284"]');
+                const afterschoolDetails = document.getElementById('afterschoolDetails');
+
+                // 處理表單提交
+                form.addEventListener('submit', async (event) => {
+                    event.preventDefault(); // 防止預設的表單提交行為（重新載入頁面）
+
+                    const formData = new FormData(form);
+                    
+                    // 禁用按鈕並顯示載入狀態
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    submitButton.disabled = true;
+                    submitButton.textContent = '送出中...';
+                    
+                    try {
+                        const response = await fetch(form.action, {
+                            method: form.method,
+                            body: formData
+                        });
+                        
+                        // 檢查回應狀態碼，Google 表單成功提交會回傳 200
+                        if (response.ok) {
+                            form.style.display = 'none'; // 隱藏表單
+                            successMessage.classList.remove('hidden'); // 顯示完成訊息
+                        } else {
+                            // 提交失敗時的處理
+                            alert('送出失敗，請再試一次。');
+                        }
+                    } catch (error) {
+                        // 網路錯誤時的處理
+                        console.error('Error submitting form:', error);
+                        alert('網路錯誤，請檢查你的連線。');
+                    } finally {
+                        // 無論成功或失敗，都恢復按鈕狀態
+                        submitButton.disabled = false;
+                        submitButton.textContent = '送出';
+                    }
+                });
+
+                // 處理安親班欄位顯示/隱藏
+                pickupMethodRadios.forEach(radio => {
+                    radio.addEventListener('change', (event) => {
+                        if (event.target.value === '安親班') {
+                            afterschoolDetails.classList.remove('hidden');
+                        } else {
+                            afterschoolDetails.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        </script>
+
+    </div>
+</body>
+</html>
