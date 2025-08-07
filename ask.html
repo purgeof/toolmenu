@@ -17,14 +17,15 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
     <!-- 主容器：在小螢幕上保持滿版，在中等螢幕上限制最大寬度，並增加內距 -->
     <div class="container mx-auto p-6 md:p-12 bg-white rounded-xl shadow-2xl space-y-8 max-w-2xl">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">114新學期學生基本資料與意願調查表</h1>
-
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">新學期學生基本資料與意願調查表</h1>
+        <p class="text-sm sm:text-base text-center text-gray-600 mb-8">請家長或學生填寫以下資料，以利學校安排相關事宜。</p>
         
         <!--
         ** 程式碼說明：
-        ** 這是最新、最完整的版本。
-        ** 提交時會確保所有欄位，特別是「安親班」的名稱和電話，都被正確地送出。
-        ** 即使「安親班」未被選中，這兩個欄位也會以空值送出，避免資料遺漏。
+        ** 這是最新的修正版本。
+        ** 提交時會將所有欄位的值手動組合成一個 FormData 物件。
+        ** 特別針對「安親班」的名稱和電話，我將它們獨立於表單元素之外，
+        ** 確保即使未選擇「安親班」選項，這兩個欄位的 entry ID 也會被送出，只是值為空。
         -->
         <form id="student-info-form" 
               action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScgpzUfNDxoONngBnzCcCDYXtpB6PnmvtUBYcJOVpsYgSKsuQ/formResponse" 
@@ -146,6 +147,7 @@
                     formData.append('entry.1110765284', pickupMethodValue);
 
                     // 這裡進行關鍵修正：如果沒有選擇「安親班」，則強制將安親班欄位設為空字串再送出。
+                    // 為了確保欄位被送出，即使值為空
                     if (pickupMethodValue !== '安親班') {
                         afterschoolNameInput.value = '';
                         afterschoolPhoneInput.value = '';
@@ -206,5 +208,3 @@
     </div>
 </body>
 </html>
-
-
