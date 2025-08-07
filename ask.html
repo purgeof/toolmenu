@@ -22,10 +22,9 @@
         
         <!--
         ** 程式碼說明：
-        ** 這是最新的修正版本。
-        ** 為了確保「安親班」的名稱和電話能被 Google 表單正確接收，
-        ** 我們將它們改為隱藏欄位，並透過 JavaScript 根據使用者的選擇來填入值。
-        ** 這樣可以確保這些欄位的 entry ID 總會被提交，避免資料遺漏。
+        ** 這是最新的修正版本，採用了 fetch API 來手動提交表單。
+        ** 這種方式可以完全控制提交的資料，確保「安親班」的名稱和電話能被正確傳送。
+        ** 表單中的 action 和 method 屬性在這裡主要是為了兼容性，實際提交由 JavaScript 處理。
         -->
         <form id="student-info-form" 
               action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScgpzUfNDxoONngBnzCcCDYXtpB6PnmvtUBYcJOVpsYgSKsuQ/formResponse" 
@@ -106,10 +105,6 @@
                     </label>
                 </div>
             </div>
-            
-            <!-- 隱藏的表單欄位，用於提交給 Google 表單 -->
-            <input type="hidden" id="hiddenAfterschoolName" name="entry.2071732360" value="">
-            <input type="hidden" id="hiddenAfterschoolPhone" name="entry.652898657" value="">
 
             <!-- 送出按鈕 -->
             <div class="flex justify-center pt-6">
@@ -140,23 +135,28 @@
                 
                 const afterschoolNameInput = document.getElementById('afterschoolNameInput');
                 const afterschoolPhoneInput = document.getElementById('afterschoolPhoneInput');
-                
-                const hiddenAfterschoolName = document.getElementById('hiddenAfterschoolName');
-                const hiddenAfterschoolPhone = document.getElementById('hiddenAfterschoolPhone');
 
                 // 處理表單提交
                 form.addEventListener('submit', async (event) => {
                     event.preventDefault(); // 防止預設的表單提交行為（重新載入頁面）
                     
-                    // 在提交前，根據使用者的選擇，將值賦予隱藏欄位
-                    const selectedPickupMethod = document.querySelector('input[name="entry.1110765284"]:checked')?.value;
-                    if (selectedPickupMethod === '安親班') {
-                        hiddenAfterschoolName.value = afterschoolNameInput.value;
-                        hiddenAfterschoolPhone.value = afterschoolPhoneInput.value;
+                    const formData = new FormData();
+                    
+                    // 手動將所有欄位添加到 formData
+                    formData.append('entry.1921966849', document.getElementById('studentName').value);
+                    formData.append('entry.1145508098', document.querySelector('input[name="entry.1145508098"]:checked')?.value || '');
+                    formData.append('entry.1877188953', document.querySelector('input[name="entry.1877188953"]:checked')?.value || '');
+                    
+                    const pickupMethodValue = document.querySelector('input[name="entry.1110765284"]:checked')?.value || '';
+                    formData.append('entry.1110765284', pickupMethodValue);
+
+                    // 關鍵修正：確保即使未選擇「安親班」，安親班的欄位也會被送出，但值為空。
+                    if (pickupMethodValue === '安親班') {
+                        formData.append('entry.2071732360', afterschoolNameInput.value);
+                        formData.append('entry.652898657', afterschoolPhoneInput.value);
                     } else {
-                        // 如果未選擇「安親班」，則確保隱藏欄位為空
-                        hiddenAfterschoolName.value = '';
-                        hiddenAfterschoolPhone.value = '';
+                        formData.append('entry.2071732360', '');
+                        formData.append('entry.652898657', '');
                     }
 
                     // 禁用按鈕並顯示載入狀態
@@ -165,16 +165,15 @@
                     submitButton.textContent = '送出中...';
                     
                     try {
-                        // 使用表單的 native submit 方法
-                        form.submit();
-                        
-                        // 因為 form.submit() 會導致頁面跳轉到 Google 表單的感謝頁面，
-                        // 所以這裡的程式碼在一般情況下不會執行。
-                        // 我們可以將成功訊息顯示在表單隱藏之後，讓使用者知道提交已完成。
-                        // 為了讓這段程式碼有機會執行，我們可以先顯示訊息再延遲提交，
-                        // 但這可能會導致使用者體驗不佳。
-                        // 最簡單的方法是使用 iframe，但這會讓整個架構變複雜。
-                        // 因此，我們假設 form.submit() 會成功，並顯示成功訊息。
+                        const response = await fetch(form.action, {
+                            method: form.method,
+                            body: formData,
+                            mode: 'no-cors' // 修正 CORS 錯誤的關鍵
+                        });
+
+                        // 在 no-cors 模式下，我們無法檢查 response.ok，因為狀態碼總是 opaque。
+                        // 因此，我們假設請求成功並顯示成功訊息。
+                        // 如果提交失敗，資料不會被寫入，但頁面會顯示成功。這是一個妥協。
                         form.style.display = 'none'; // 隱藏表單
                         messageContainer.classList.remove('hidden'); // 顯示訊息區塊
                         messageContainer.classList.add('bg-green-100', 'text-green-800');
