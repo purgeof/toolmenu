@@ -17,25 +17,21 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
     <!-- 主容器：在小螢幕上保持滿版，在中等螢幕上限制最大寬度，並增加內距 -->
     <div class="container mx-auto p-6 md:p-12 bg-white rounded-xl shadow-2xl space-y-8 max-w-2xl">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">117新學期學生基本資料與意願調查表</h1>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">119新學期學生基本資料與意願調查表</h1>
         <p class="text-sm sm:text-base text-center text-gray-600 mb-8">請家長或學生填寫以下資料，以利學校安排相關事宜。</p>
         
         <!--
         ** 程式碼說明：
-        ** 這是經過徹底重寫的最可靠版本。
-        ** 為了確保「安親班」的名稱和電話能被 Google 表單正確接收，
-        ** 這次的解決方案是將安親班的輸入框直接放入表單中，並使用 JavaScript 來控制其顯示和必填屬性。
-        ** 這樣可以保證在提交時，所有欄位都會被瀏覽器正常處理。
+        ** 這是最新、最可靠的版本，它使用 Google Apps Script 作為中介層來接收資料。
+        ** 這樣可以完全繞過 Google 表單本身的提交限制，確保所有動態欄位都能被正確寫入。
+        ** 請務必在 JavaScript 區塊中，將 SCRIPT_URL 替換為你的 Web App URL。
         -->
-        <form id="student-info-form" 
-              action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScgpzUfNDxoONngBnzCcCDYXtpB6PnmvtUBYcJOVpsYgSKsuQ/formResponse" 
-              method="POST" 
-              class="space-y-6">
+        <form id="student-info-form" class="space-y-6">
             
             <!-- 學生姓名 -->
             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <label for="studentName" class="block text-lg font-semibold text-gray-700 mb-2">1. 學生姓名</label>
-                <input type="text" id="studentName" name="entry.1921966849" placeholder="請輸入學生姓名"
+                <input type="text" id="studentName" name="studentName" placeholder="請輸入學生姓名"
                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out sm:text-sm" required>
             </div>
 
@@ -44,15 +40,15 @@
                 <h3 class="text-lg font-semibold text-gray-700 mb-4">2. 本學期午餐繳費方式</h3>
                 <div class="space-y-3">
                     <label class="flex items-center">
-                        <input type="radio" name="entry.1145508098" value="全繳 （與註冊費一起繳交）" class="form-radio h-4 w-4 text-blue-600">
+                        <input type="radio" name="lunchFee" value="全繳 （與註冊費一起繳交）" class="form-radio h-4 w-4 text-blue-600">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">全繳 （與註冊費一起繳交）</span>
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="entry.1145508098" value="月繳" class="form-radio h-4 w-4 text-blue-600">
+                        <input type="radio" name="lunchFee" value="月繳" class="form-radio h-4 w-4 text-blue-600">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">月繳</span>
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="entry.1145508098" value="領有午餐補助證明" class="form-radio h-4 w-4 text-blue-600">
+                        <input type="radio" name="lunchFee" value="領有午餐補助證明" class="form-radio h-4 w-4 text-blue-600">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">領有午餐補助證明</span>
                     </label>
                 </div>
@@ -63,11 +59,11 @@
                 <h3 class="text-lg font-semibold text-gray-700 mb-4">3. 本學期午餐飲用的乳品</h3>
                 <div class="space-y-3">
                     <label class="flex items-center">
-                        <input type="radio" name="entry.1877188953" value="牛奶" class="form-radio h-4 w-4 text-blue-600">
+                        <input type="radio" name="lunchMilk" value="牛奶" class="form-radio h-4 w-4 text-blue-600">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">牛奶</span>
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="entry.1877188953" value="豆奶" class="form-radio h-4 w-4 text-blue-600">
+                        <input type="radio" name="lunchMilk" value="豆奶" class="form-radio h-4 w-4 text-blue-600">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">豆奶</span>
                     </label>
                 </div>
@@ -78,15 +74,15 @@
                 <h3 class="text-lg font-semibold text-gray-700 mb-4">4. 本學期放學接送方式</h3>
                 <div class="space-y-3">
                     <label class="flex items-center">
-                        <input type="radio" name="entry.1110765284" value="家長接送" class="form-radio h-4 w-4 text-blue-600">
+                        <input type="radio" name="pickupMethod" value="家長接送" class="form-radio h-4 w-4 text-blue-600">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">家長接送</span>
                     </label>
                     <label class="flex items-start">
-                        <input type="radio" id="afterschoolRadio" name="entry.1110765284" value="安親班" class="form-radio h-4 w-4 text-blue-600 mt-1">
+                        <input type="radio" id="afterschoolRadio" name="pickupMethod" value="安親班" class="form-radio h-4 w-4 text-blue-600 mt-1">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">安親班</span>
                     </label>
                     <label class="flex items-center">
-                        <input type="radio" name="entry.1110765284" value="課後照顧班" class="form-radio h-4 w-4 text-blue-600">
+                        <input type="radio" name="pickupMethod" value="課後照顧班" class="form-radio h-4 w-4 text-blue-600">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">課後照顧班</span>
                     </label>
                 </div>
@@ -98,11 +94,11 @@
                 <div class="space-y-2">
                     <label class="block">
                         <span class="text-sm text-gray-500">名稱:</span>
-                        <input type="text" id="afterschoolNameInput" name="entry.2071732360" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                        <input type="text" id="afterschoolNameInput" name="afterschoolName" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                     </label>
                     <label class="block">
                         <span class="text-sm text-gray-500">電話:</span>
-                        <input type="tel" id="afterschoolPhoneInput" name="entry.652898657" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                        <input type="tel" id="afterschoolPhoneInput" name="afterschoolPhone" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                     </label>
                 </div>
             </div>
@@ -132,10 +128,13 @@
                 const errorIcon = document.getElementById('errorIcon');
                 const messageText = document.getElementById('messageText');
                 const afterschoolRadio = document.getElementById('afterschoolRadio');
-                const pickupMethodRadios = document.querySelectorAll('input[name="entry.1110765284"]');
+                const pickupMethodRadios = document.querySelectorAll('input[name="pickupMethod"]');
                 const afterschoolDetails = document.getElementById('afterschoolDetails');
                 const afterschoolNameInput = document.getElementById('afterschoolNameInput');
                 const afterschoolPhoneInput = document.getElementById('afterschoolPhoneInput');
+                
+                // ** 請將此處的網址替換為你的 Google Apps Script Web App URL **
+                const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzblXFPi9EESdh54RUhU46k5nry1BEr82wKhF25Ffl129z4zYbTAfC9MVuooffRceOzvw/exec';
 
                 // 處理安親班欄位顯示/隱藏及必填屬性
                 pickupMethodRadios.forEach(radio => {
@@ -163,26 +162,32 @@
                     submitButton.textContent = '送出中...';
                     
                     try {
-                        const formData = new FormData(form);
+                        const formData = {
+                            studentName: document.getElementById('studentName').value,
+                            lunchFee: document.querySelector('input[name="lunchFee"]:checked')?.value || '',
+                            lunchMilk: document.querySelector('input[name="lunchMilk"]:checked')?.value || '',
+                            pickupMethod: document.querySelector('input[name="pickupMethod"]:checked')?.value || '',
+                            afterschoolName: afterschoolNameInput.value,
+                            afterschoolPhone: afterschoolPhoneInput.value
+                        };
 
-                        // 為了修正 CORS 問題，我們不能檢查 response.ok，
-                        // 但 form.submit() 提交方式會直接導向 Google 表單的確認頁。
-                        // 這會導致使用者體驗不佳。
-                        // 因此，我們再次回到 fetch，但這次欄位的處理方式不同。
-                        const response = await fetch(form.action, {
-                            method: form.method,
-                            body: formData,
-                            mode: 'no-cors' // 修正 CORS 錯誤的關鍵
+                        const response = await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
                         });
 
-                        // 在 no-cors 模式下，我們無法檢查 response.ok，因為狀態碼總是 opaque。
-                        // 因此，我們假設請求成功並顯示成功訊息。
-                        // 如果提交失敗，資料不會被寫入，但頁面會顯示成功。這是一個妥協。
-                        form.style.display = 'none';
-                        messageContainer.classList.remove('hidden');
-                        messageContainer.classList.add('bg-green-100', 'text-green-800');
-                        messageText.textContent = '送出完成！';
-                        successIcon.classList.remove('hidden');
+                        if (response.ok) {
+                            form.style.display = 'none';
+                            messageContainer.classList.remove('hidden');
+                            messageContainer.classList.add('bg-green-100', 'text-green-800');
+                            messageText.textContent = '送出完成！';
+                            successIcon.classList.remove('hidden');
+                        } else {
+                            throw new Error('伺服器錯誤');
+                        }
                         
                     } catch (error) {
                         console.error('Error submitting form:', error);
@@ -197,7 +202,7 @@
                 });
             });
         </script>
+
     </div>
 </body>
 </html>
-
