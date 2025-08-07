@@ -88,11 +88,11 @@
                         <div id="afterschoolDetails" class="ml-6 space-y-2 hidden">
                             <label class="block">
                                 <span class="text-sm text-gray-500">名稱:</span>
-                                <input type="text" id="afterschoolName" name="entry.2071732360" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                <input type="text" id="afterschoolName" name="安親班」 名稱" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                             </label>
                             <label class="block">
                                 <span class="text-sm text-gray-500">電話:</span>
-                                <input type="tel" id="afterschoolPhone" name="entry.652898657" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                <input type="tel" id="afterschoolPhone" name="安親班」 電話" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                             </label>
                         </div>
                     </label>
@@ -148,11 +148,11 @@
 
                     // 確保安親班的名稱和電話欄位有值，即使它們被隱藏
                     if (pickupMethodValue === '安親班') {
-                         formData.append('entry.2071732360', afterschoolNameInput.value);
-                         formData.append('entry.652898657', afterschoolPhoneInput.value);
+                         formData.append('安親班」 名稱', afterschoolNameInput.value);
+                         formData.append('安親班」 電話', afterschoolPhoneInput.value);
                     } else {
-                         formData.append('entry.2071732360', '');
-                         formData.append('entry.652898657', '');
+                         formData.append('安親班」 名稱', '');
+                         formData.append('安親班」 電話', '');
                     }
 
                     // 禁用按鈕並顯示載入狀態
