@@ -24,6 +24,7 @@
         ** 程式碼說明：
         ** 所有的欄位代碼都已更新。此版本使用 JavaScript 進行非同步提交，送出後會顯示完成訊息。
         ** action 網址已修正為正確的提交網址。
+        ** fetch 請求已加入 'no-cors' 模式以解決跨域問題。
         -->
         <form id="student-info-form" 
               action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScgpzUfNDxoONngBnzCcCDYXtpB6PnmvtUBYcJOVpsYgSKsuQ/formResponse" 
@@ -86,11 +87,11 @@
                         <div id="afterschoolDetails" class="ml-6 space-y-2 hidden">
                             <label class="block">
                                 <span class="text-sm text-gray-500">名稱:</span>
-                                <input type="text" name="entry.2071732360" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                <input type="text" id="afterschoolName" name="entry.2071732360" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                             </label>
                             <label class="block">
                                 <span class="text-sm text-gray-500">電話:</span>
-                                <input type="tel" name="entry.652898657" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                <input type="tel" id="afterschoolPhone" name="entry.652898657" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                             </label>
                         </div>
                     </label>
@@ -132,8 +133,24 @@
                 form.addEventListener('submit', async (event) => {
                     event.preventDefault(); // 防止預設的表單提交行為（重新載入頁面）
                     
-                    const formData = new FormData(form);
+                    const formData = new FormData();
                     
+                    // 手動將所有欄位添加到 formData
+                    // 這裡我們不能直接用 new FormData(form)，因為隱藏的欄位不會被抓取
+                    const formElements = form.elements;
+                    for (let i = 0; i < formElements.length; i++) {
+                        const element = formElements[i];
+                        if (element.name && element.value) {
+                             if (element.type === 'radio' || element.type === 'checkbox') {
+                                if (element.checked) {
+                                    formData.append(element.name, element.value);
+                                }
+                            } else {
+                                formData.append(element.name, element.value);
+                            }
+                        }
+                    }
+
                     // 禁用按鈕並顯示載入狀態
                     const submitButton = form.querySelector('button[type="submit"]');
                     submitButton.disabled = true;
