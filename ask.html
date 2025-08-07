@@ -23,9 +23,9 @@
         <!--
         ** 程式碼說明：
         ** 這是最新的修正版本。
-        ** 提交時會將所有欄位的值手動組合成一個 FormData 物件。
-        ** 特別針對「安親班」的名稱和電話，我將它們獨立於表單元素之外，
-        ** 確保即使未選擇「安親班」選項，這兩個欄位的 entry ID 也會被送出，只是值為空。
+        ** 為了確保「安親班」的名稱和電話能被 Google 表單正確接收，
+        ** 我們將它們改為隱藏欄位，並透過 JavaScript 根據使用者的選擇來填入值。
+        ** 這樣可以確保這些欄位的 entry ID 總會被提交，避免資料遺漏。
         -->
         <form id="student-info-form" 
               action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScgpzUfNDxoONngBnzCcCDYXtpB6PnmvtUBYcJOVpsYgSKsuQ/formResponse" 
@@ -84,17 +84,6 @@
                     <label class="flex items-start">
                         <input type="radio" id="afterschoolRadio" name="entry.1110765284" value="安親班" class="form-radio h-4 w-4 text-blue-600 mt-1">
                         <span class="ml-2 text-gray-700 text-sm sm:text-base">安親班</span>
-                        <!-- 只有當選擇「安親班」時，才顯示這些欄位。 -->
-                        <div id="afterschoolDetails" class="ml-6 space-y-2 hidden">
-                            <label class="block">
-                                <span class="text-sm text-gray-500">名稱:</span>
-                                <input type="text" id="afterschoolName" name="entry.2071732360" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
-                            </label>
-                            <label class="block">
-                                <span class="text-sm text-gray-500">電話:</span>
-                                <input type="tel" id="afterschoolPhone" name="entry.652898657" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
-                            </label>
-                        </div>
                     </label>
                     <label class="flex items-center">
                         <input type="radio" name="entry.1110765284" value="課後照顧班" class="form-radio h-4 w-4 text-blue-600">
@@ -102,6 +91,25 @@
                     </label>
                 </div>
             </div>
+            
+            <!-- 安親班詳細資訊的動態輸入框，此區塊將被 JavaScript 顯示/隱藏 -->
+            <div id="afterschoolDetails" class="bg-gray-100 p-4 rounded-lg hidden">
+                <p class="text-md font-semibold text-gray-700 mb-2">安親班資訊</p>
+                <div class="space-y-2">
+                    <label class="block">
+                        <span class="text-sm text-gray-500">名稱:</span>
+                        <input type="text" id="afterschoolNameInput" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                    </label>
+                    <label class="block">
+                        <span class="text-sm text-gray-500">電話:</span>
+                        <input type="tel" id="afterschoolPhoneInput" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 隱藏的表單欄位，用於提交給 Google 表單 -->
+            <input type="hidden" id="hiddenAfterschoolName" name="entry.2071732360" value="">
+            <input type="hidden" id="hiddenAfterschoolPhone" name="entry.652898657" value="">
 
             <!-- 送出按鈕 -->
             <div class="flex justify-center pt-6">
@@ -129,33 +137,27 @@
                 const messageText = document.getElementById('messageText');
                 const pickupMethodRadios = document.querySelectorAll('input[name="entry.1110765284"]');
                 const afterschoolDetails = document.getElementById('afterschoolDetails');
-                const afterschoolNameInput = document.getElementById('afterschoolName');
-                const afterschoolPhoneInput = document.getElementById('afterschoolPhone');
+                
+                const afterschoolNameInput = document.getElementById('afterschoolNameInput');
+                const afterschoolPhoneInput = document.getElementById('afterschoolPhoneInput');
+                
+                const hiddenAfterschoolName = document.getElementById('hiddenAfterschoolName');
+                const hiddenAfterschoolPhone = document.getElementById('hiddenAfterschoolPhone');
 
                 // 處理表單提交
                 form.addEventListener('submit', async (event) => {
                     event.preventDefault(); // 防止預設的表單提交行為（重新載入頁面）
                     
-                    const formData = new FormData();
-                    
-                    // 手動將所有欄位添加到 formData
-                    formData.append('entry.1921966849', document.getElementById('studentName').value);
-                    formData.append('entry.1145508098', document.querySelector('input[name="entry.1145508098"]:checked')?.value || '');
-                    formData.append('entry.1877188953', document.querySelector('input[name="entry.1877188953"]:checked')?.value || '');
-                    
-                    const pickupMethodValue = document.querySelector('input[name="entry.1110765284"]:checked')?.value || '';
-                    formData.append('entry.1110765284', pickupMethodValue);
-
-                    // 這裡進行關鍵修正：如果沒有選擇「安親班」，則強制將安親班欄位設為空字串再送出。
-                    // 為了確保欄位被送出，即使值為空
-                    if (pickupMethodValue !== '安親班') {
-                        afterschoolNameInput.value = '';
-                        afterschoolPhoneInput.value = '';
+                    // 在提交前，根據使用者的選擇，將值賦予隱藏欄位
+                    const selectedPickupMethod = document.querySelector('input[name="entry.1110765284"]:checked')?.value;
+                    if (selectedPickupMethod === '安親班') {
+                        hiddenAfterschoolName.value = afterschoolNameInput.value;
+                        hiddenAfterschoolPhone.value = afterschoolPhoneInput.value;
+                    } else {
+                        // 如果未選擇「安親班」，則確保隱藏欄位為空
+                        hiddenAfterschoolName.value = '';
+                        hiddenAfterschoolPhone.value = '';
                     }
-
-                    // 確保安親班的名稱和電話欄位有值，即使它們被隱藏
-                    formData.append('entry.2071732360', afterschoolNameInput.value);
-                    formData.append('entry.652898657', afterschoolPhoneInput.value);
 
                     // 禁用按鈕並顯示載入狀態
                     const submitButton = form.querySelector('button[type="submit"]');
@@ -163,15 +165,16 @@
                     submitButton.textContent = '送出中...';
                     
                     try {
-                        const response = await fetch(form.action, {
-                            method: form.method,
-                            body: formData,
-                            mode: 'no-cors' // 修正 CORS 錯誤的關鍵
-                        });
-
-                        // 在 no-cors 模式下，我們無法檢查 response.ok，因為狀態碼總是 opaque。
-                        // 因此，我們假設請求成功並顯示成功訊息。
-                        // 如果提交失敗，資料不會被寫入，但頁面會顯示成功。這是一個妥協。
+                        // 使用表單的 native submit 方法
+                        form.submit();
+                        
+                        // 因為 form.submit() 會導致頁面跳轉到 Google 表單的感謝頁面，
+                        // 所以這裡的程式碼在一般情況下不會執行。
+                        // 我們可以將成功訊息顯示在表單隱藏之後，讓使用者知道提交已完成。
+                        // 為了讓這段程式碼有機會執行，我們可以先顯示訊息再延遲提交，
+                        // 但這可能會導致使用者體驗不佳。
+                        // 最簡單的方法是使用 iframe，但這會讓整個架構變複雜。
+                        // 因此，我們假設 form.submit() 會成功，並顯示成功訊息。
                         form.style.display = 'none'; // 隱藏表單
                         messageContainer.classList.remove('hidden'); // 顯示訊息區塊
                         messageContainer.classList.add('bg-green-100', 'text-green-800');
@@ -199,6 +202,9 @@
                             afterschoolDetails.classList.remove('hidden');
                         } else {
                             afterschoolDetails.classList.add('hidden');
+                            // 當隱藏時，清空動態輸入框的值，以防使用者誤輸入
+                            afterschoolNameInput.value = '';
+                            afterschoolPhoneInput.value = '';
                         }
                     });
                 });
