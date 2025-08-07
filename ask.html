@@ -17,14 +17,15 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
     <!-- 主容器：在小螢幕上保持滿版，在中等螢幕上限制最大寬度，並增加內距 -->
     <div class="container mx-auto p-6 md:p-12 bg-white rounded-xl shadow-2xl space-y-8 max-w-2xl">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">115新學期學生基本資料與意願調查表</h1>
-      
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">116新學期學生基本資料與意願調查表</h1>
+       
         
         <!--
         ** 程式碼說明：
-        ** 這是最新的修正版本，採用了 fetch API 來手動提交表單。
-        ** 這種方式可以完全控制提交的資料，確保「安親班」的名稱和電話能被正確傳送。
-        ** 表單中的 action 和 method 屬性在這裡主要是為了兼容性，實際提交由 JavaScript 處理。
+        ** 這是經過徹底重寫的最可靠版本。
+        ** 為了確保「安親班」的名稱和電話能被 Google 表單正確接收，
+        ** 這次的解決方案是將安親班的輸入框直接放入表單中，並使用 JavaScript 來控制其顯示和必填屬性。
+        ** 這樣可以保證在提交時，所有欄位都會被瀏覽器正常處理。
         -->
         <form id="student-info-form" 
               action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScgpzUfNDxoONngBnzCcCDYXtpB6PnmvtUBYcJOVpsYgSKsuQ/formResponse" 
@@ -97,11 +98,11 @@
                 <div class="space-y-2">
                     <label class="block">
                         <span class="text-sm text-gray-500">名稱:</span>
-                        <input type="text" id="afterschoolNameInput" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                        <input type="text" id="afterschoolNameInput" name="entry.2071732360" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                     </label>
                     <label class="block">
                         <span class="text-sm text-gray-500">電話:</span>
-                        <input type="tel" id="afterschoolPhoneInput" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                        <input type="tel" id="afterschoolPhoneInput" name="entry.652898657" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                     </label>
                 </div>
             </div>
@@ -130,41 +131,44 @@
                 const successIcon = document.getElementById('successIcon');
                 const errorIcon = document.getElementById('errorIcon');
                 const messageText = document.getElementById('messageText');
+                const afterschoolRadio = document.getElementById('afterschoolRadio');
                 const pickupMethodRadios = document.querySelectorAll('input[name="entry.1110765284"]');
                 const afterschoolDetails = document.getElementById('afterschoolDetails');
-                
                 const afterschoolNameInput = document.getElementById('afterschoolNameInput');
                 const afterschoolPhoneInput = document.getElementById('afterschoolPhoneInput');
 
+                // 處理安親班欄位顯示/隱藏及必填屬性
+                pickupMethodRadios.forEach(radio => {
+                    radio.addEventListener('change', (event) => {
+                        if (afterschoolRadio.checked) {
+                            afterschoolDetails.classList.remove('hidden');
+                            afterschoolNameInput.required = true;
+                            afterschoolPhoneInput.required = true;
+                        } else {
+                            afterschoolDetails.classList.add('hidden');
+                            afterschoolNameInput.required = false;
+                            afterschoolPhoneInput.required = false;
+                            afterschoolNameInput.value = '';
+                            afterschoolPhoneInput.value = '';
+                        }
+                    });
+                });
+
                 // 處理表單提交
                 form.addEventListener('submit', async (event) => {
-                    event.preventDefault(); // 防止預設的表單提交行為（重新載入頁面）
+                    event.preventDefault(); // 防止預設的表單提交行為
                     
-                    const formData = new FormData();
-                    
-                    // 手動將所有欄位添加到 formData
-                    formData.append('entry.1921966849', document.getElementById('studentName').value);
-                    formData.append('entry.1145508098', document.querySelector('input[name="entry.1145508098"]:checked')?.value || '');
-                    formData.append('entry.1877188953', document.querySelector('input[name="entry.1877188953"]:checked')?.value || '');
-                    
-                    const pickupMethodValue = document.querySelector('input[name="entry.1110765284"]:checked')?.value || '';
-                    formData.append('entry.1110765284', pickupMethodValue);
-
-                    // 關鍵修正：確保即使未選擇「安親班」，安親班的欄位也會被送出，但值為空。
-                    if (pickupMethodValue === '安親班') {
-                        formData.append('entry.2071732360', afterschoolNameInput.value);
-                        formData.append('entry.652898657', afterschoolPhoneInput.value);
-                    } else {
-                        formData.append('entry.2071732360', '');
-                        formData.append('entry.652898657', '');
-                    }
-
-                    // 禁用按鈕並顯示載入狀態
                     const submitButton = form.querySelector('button[type="submit"]');
                     submitButton.disabled = true;
                     submitButton.textContent = '送出中...';
                     
                     try {
+                        const formData = new FormData(form);
+
+                        // 為了修正 CORS 問題，我們不能檢查 response.ok，
+                        // 但 form.submit() 提交方式會直接導向 Google 表單的確認頁。
+                        // 這會導致使用者體驗不佳。
+                        // 因此，我們再次回到 fetch，但這次欄位的處理方式不同。
                         const response = await fetch(form.action, {
                             method: form.method,
                             body: formData,
@@ -174,43 +178,25 @@
                         // 在 no-cors 模式下，我們無法檢查 response.ok，因為狀態碼總是 opaque。
                         // 因此，我們假設請求成功並顯示成功訊息。
                         // 如果提交失敗，資料不會被寫入，但頁面會顯示成功。這是一個妥協。
-                        form.style.display = 'none'; // 隱藏表單
-                        messageContainer.classList.remove('hidden'); // 顯示訊息區塊
+                        form.style.display = 'none';
+                        messageContainer.classList.remove('hidden');
                         messageContainer.classList.add('bg-green-100', 'text-green-800');
                         messageText.textContent = '送出完成！';
                         successIcon.classList.remove('hidden');
                         
                     } catch (error) {
-                        // 網路錯誤時的處理
                         console.error('Error submitting form:', error);
                         messageContainer.classList.remove('hidden');
                         messageContainer.classList.add('bg-red-100', 'text-red-800');
                         messageText.textContent = '網路錯誤';
                         errorIcon.classList.remove('hidden');
                     } finally {
-                        // 無論成功或失敗，都恢復按鈕狀態
                         submitButton.disabled = false;
                         submitButton.textContent = '送出';
                     }
                 });
-
-                // 處理安親班欄位顯示/隱藏
-                pickupMethodRadios.forEach(radio => {
-                    radio.addEventListener('change', (event) => {
-                        if (event.target.value === '安親班') {
-                            afterschoolDetails.classList.remove('hidden');
-                        } else {
-                            afterschoolDetails.classList.add('hidden');
-                            // 當隱藏時，清空動態輸入框的值，以防使用者誤輸入
-                            afterschoolNameInput.value = '';
-                            afterschoolPhoneInput.value = '';
-                        }
-                    });
-                });
             });
         </script>
-
     </div>
 </body>
 </html>
-
