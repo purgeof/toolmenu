@@ -22,10 +22,9 @@
         
         <!--
         ** 程式碼說明：
-        ** 所有的欄位代碼都已更新。此版本使用 JavaScript 進行非同步提交，送出後會顯示完成訊息。
-        ** action 網址已修正為正確的提交網址。
-        ** fetch 請求已加入 'no-cors' 模式以解決跨域問題。
-        ** 提交邏輯已修改，手動抓取所有欄位值，以確保隱藏的安親班資訊也能被正確送出。
+        ** 這是最新、最完整的版本。
+        ** 提交時會確保所有欄位，特別是「安親班」的名稱和電話，都被正確地送出。
+        ** 即使「安親班」未被選中，這兩個欄位也會以空值送出，避免資料遺漏。
         -->
         <form id="student-info-form" 
               action="https://docs.google.com/forms/u/0/d/e/1FAIpQLScgpzUfNDxoONngBnzCcCDYXtpB6PnmvtUBYcJOVpsYgSKsuQ/formResponse" 
@@ -88,11 +87,11 @@
                         <div id="afterschoolDetails" class="ml-6 space-y-2 hidden">
                             <label class="block">
                                 <span class="text-sm text-gray-500">名稱:</span>
-                                <input type="text" id="afterschoolName" name="安親班」 名稱" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                <input type="text" id="afterschoolName" name="entry.2071732360" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                             </label>
                             <label class="block">
                                 <span class="text-sm text-gray-500">電話:</span>
-                                <input type="tel" id="afterschoolPhone" name="安親班」 電話" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                <input type="tel" id="afterschoolPhone" name="entry.652898657" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
                             </label>
                         </div>
                     </label>
@@ -146,14 +145,15 @@
                     const pickupMethodValue = document.querySelector('input[name="entry.1110765284"]:checked')?.value || '';
                     formData.append('entry.1110765284', pickupMethodValue);
 
-                    // 確保安親班的名稱和電話欄位有值，即使它們被隱藏
-                    if (pickupMethodValue === '安親班') {
-                         formData.append('安親班」 名稱', afterschoolNameInput.value);
-                         formData.append('安親班」 電話', afterschoolPhoneInput.value);
-                    } else {
-                         formData.append('安親班」 名稱', '');
-                         formData.append('安親班」 電話', '');
+                    // 這裡進行關鍵修正：如果沒有選擇「安親班」，則強制將安親班欄位設為空字串再送出。
+                    if (pickupMethodValue !== '安親班') {
+                        afterschoolNameInput.value = '';
+                        afterschoolPhoneInput.value = '';
                     }
+
+                    // 確保安親班的名稱和電話欄位有值，即使它們被隱藏
+                    formData.append('entry.2071732360', afterschoolNameInput.value);
+                    formData.append('entry.652898657', afterschoolPhoneInput.value);
 
                     // 禁用按鈕並顯示載入狀態
                     const submitButton = form.querySelector('button[type="submit"]');
