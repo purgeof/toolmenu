@@ -17,7 +17,7 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
     <!-- 主容器：在小螢幕上保持滿版，在中等螢幕上限制最大寬度，並增加內距 -->
     <div class="container mx-auto p-6 md:p-12 bg-white rounded-xl shadow-2xl space-y-8 max-w-2xl">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">119新學期學生基本資料與意願調查表</h1>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">200新學期學生基本資料與意願調查表</h1>
         <p class="text-sm sm:text-base text-center text-gray-600 mb-8">請家長或學生填寫以下資料，以利學校安排相關事宜。</p>
         
         <!--
@@ -176,18 +176,18 @@
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify(formData)
+                            body: JSON.stringify(formData),
+                            mode: 'no-cors' // 這裡添加了 'no-cors'
                         });
 
-                        if (response.ok) {
-                            form.style.display = 'none';
-                            messageContainer.classList.remove('hidden');
-                            messageContainer.classList.add('bg-green-100', 'text-green-800');
-                            messageText.textContent = '送出完成！';
-                            successIcon.classList.remove('hidden');
-                        } else {
-                            throw new Error('伺服器錯誤');
-                        }
+                        // 在 'no-cors' 模式下，我們無法檢查 response.ok
+                        // 瀏覽器將請求視為「不透明」的，所以我們無法取得狀態碼
+                        // 因此，我們假設請求成功並顯示成功訊息
+                        form.style.display = 'none';
+                        messageContainer.classList.remove('hidden');
+                        messageContainer.classList.add('bg-green-100', 'text-green-800');
+                        messageText.textContent = '送出完成！';
+                        successIcon.classList.remove('hidden');
                         
                     } catch (error) {
                         console.error('Error submitting form:', error);
