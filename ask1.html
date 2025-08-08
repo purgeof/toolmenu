@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>114調查表</title>
+  <style>
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 10px;
+    }
+    .form-container {
+      background: #ffffff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+      animation: fadeIn 0.5s ease;
+    }
+    h2 {
+      text-align: center;
+      color: #00796b;
+      margin-bottom: 25px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 8px;
+      color: #004d40;
+      font-size: 1.05em;
+    }
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #b2dfdb;
+      font-size: 1em;
+      transition: 0.3s;
+    }
+    input[type="text"]:focus, input[type="tel"]:focus {
+      outline: none;
+      border-color: #26a69a;
+      box-shadow: 0 0 5px rgba(38,166,154,0.5);
+    }
+    .option-group {
+      margin-bottom: 10px;
+    }
+    .option-group input {
+      margin-right: 8px;
+    }
+    .hidden {
+      display: none;
+    }
+    .btn {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #26a69a, #4db6ac);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #4db6ac, #26a69a);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>114 調查表</h2>
+    <form id="form" onsubmit="handleSubmit(event)">
+      
+      <label>1. 學生姓名</label>
+      <input type="text" id="studentName" required>
+
+      <label>2. 本學期午餐繳費方式</label>
+      <div class="option-group">
+        <input type="radio" name="lunchPay" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）
+      </div>
+      <div class="option-group">
+        <input type="radio" name="lunchPay" value="月繳"> 月繳
+      </div>
+      <div class="option-group">
+        <input type="radio" name="lunchPay" value="領有午餐補助證明"> 領有午餐補助證明
+      </div>
+
+      <label>3. 本學期午餐飲用的乳品</label>
+      <div class="option-group">
+        <input type="radio" name="drink" value="牛奶" required> 牛奶
+      </div>
+      <div class="option-group">
+        <input type="radio" name="drink" value="豆奶"> 豆奶
+      </div>
+
+      <label>4. 本學期放學接送方式</label>
+      <div class="option-group">
+        <input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送
+      </div>
+      <div class="option-group">
+        <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班
+      </div>
+
+            <div id="tutorFields" class="hidden">
+        <label>安親班名稱</label>
+        <input type="text" id="tutorName">
+
+        <label>安親班電話</label>
+        <input type="tel" id="tutorPhone">
+      </div>
+
+      <div class="option-group">
+        <input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()"> 課後照顧班
+      </div>
+
+      <button type="submit" class="btn">送出</button>
+    </form>
+  </div>
+
+  <script>
+    // 載入頁面時，隱藏安親班欄位
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById("tutorFields").style.display = "none";
+    });
+   
+    function toggleTutorFields() {
+      var pickup = document.querySelector('input[name="pickupWay"]:checked').value;
+      document.getElementById("tutorFields").style.display = (pickup === "安親班") ? "block" : "none";
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      var data = {
+        studentName: document.getElementById("studentName").value,
+        lunchPay: document.querySelector('input[name="lunchPay"]:checked').value,
+        drink: document.querySelector('input[name="drink"]:checked').value,
+        pickupWay: document.querySelector('input[name="pickupWay"]:checked').value,
+        tutorName: document.getElementById("tutorName").value,
+        tutorPhone: document.getElementById("tutorPhone").value
+      };
+      // 檢查如果接送方式是安親班，但名稱或電話未填，則提示使用者
+      if (data.pickupWay === "安親班" && (!data.tutorName || !data.tutorPhone)) {
+        alert("選擇安親班接送，請務必填寫安親班名稱及電話！");
+        return;
+      }
+      google.script.run.withSuccessHandler(function(resp) {
+        if (resp.status === 'success') {
+          alert(resp.message);
+          document.getElementById("form").reset();
+          // 重設表單後重新呼叫，確保安親班欄位被隱藏
+          toggleTutorFields();
+        } else {
+          alert('送出失敗，請再試一次');
+        }
+      }).withFailureHandler(function(err) {
+        console.error(err);
+        alert('發生錯誤：' + err.message);
+      }).submitForm(data);
+    }
+  </script>
+</body>
+</html>
