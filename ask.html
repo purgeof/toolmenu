@@ -4,48 +4,138 @@
   <meta charset="UTF-8">
   <title>114調查表</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; }
-    .hidden { display: none; }
-    label { font-weight: bold; }
-    .btn { margin-top: 12px; padding: 8px 16px; }
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 10px;
+    }
+    .form-container {
+      background: #ffffff;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+      animation: fadeIn 0.5s ease;
+    }
+    h2 {
+      text-align: center;
+      color: #00796b;
+      margin-bottom: 25px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 8px;
+      color: #004d40;
+      font-size: 1.05em;
+    }
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #b2dfdb;
+      font-size: 1em;
+      transition: 0.3s;
+    }
+    input[type="text"]:focus, input[type="tel"]:focus {
+      outline: none;
+      border-color: #26a69a;
+      box-shadow: 0 0 5px rgba(38,166,154,0.5);
+    }
+    .option-group {
+      margin-bottom: 10px;
+    }
+    .option-group input {
+      margin-right: 8px;
+    }
+    .hidden {
+      display: none;
+    }
+    .btn {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #26a69a, #4db6ac);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #4db6ac, #26a69a);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-  <h2>114調查表</h2>
-  <form id="form" onsubmit="handleSubmit(event)">
-    <label>1. 學生姓名:</label><br>
-    <input type="text" id="studentName" required><br><br>
+  <div class="form-container">
+    <h2>114 調查表</h2>
+    <form id="form" onsubmit="handleSubmit(event)">
+      
+      <label>1. 學生姓名</label>
+      <input type="text" id="studentName" required>
 
-    <label>2. 本學期午餐繳費方式:</label><br>
-    <input type="radio" name="lunchPay" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）<br>
-    <input type="radio" name="lunchPay" value="月繳"> 月繳<br>
-    <input type="radio" name="lunchPay" value="領有午餐補助證明"> 領有午餐補助證明<br><br>
+      <label>2. 本學期午餐繳費方式</label>
+      <div class="option-group">
+        <input type="radio" name="lunchPay" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）
+      </div>
+      <div class="option-group">
+        <input type="radio" name="lunchPay" value="月繳"> 月繳
+      </div>
+      <div class="option-group">
+        <input type="radio" name="lunchPay" value="領有午餐補助證明"> 領有午餐補助證明
+      </div>
 
-    <label>3. 本學期午餐飲用的乳品:</label><br>
-    <input type="radio" name="drink" value="牛奶" required> 牛奶<br>
-    <input type="radio" name="drink" value="豆奶"> 豆奶<br><br>
+      <label>3. 本學期午餐飲用的乳品</label>
+      <div class="option-group">
+        <input type="radio" name="drink" value="牛奶" required> 牛奶
+      </div>
+      <div class="option-group">
+        <input type="radio" name="drink" value="豆奶"> 豆奶
+      </div>
 
-    <label>4. 本學期放學接送方式:</label><br>
-    <input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送<br>
-    <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班<br>
-    <input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()"> 課後照顧班<br><br>
+      <label>4. 本學期放學接送方式</label>
+      <div class="option-group">
+        <input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送
+      </div>
+      <div class="option-group">
+        <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班
+      </div>
+      <div class="option-group">
+        <input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()"> 課後照顧班
+      </div>
 
-    <div id="tutorFields" class="hidden">
-      <label>安親班 -- 名稱:</label><br>
-      <input type="text" id="tutorName"><br><br>
+      <div id="tutorFields" class="hidden">
+        <label>安親班名稱</label>
+        <input type="text" id="tutorName">
 
-      <label>安親班 -- 電話:</label><br>
-      <input type="text" id="tutorPhone"><br><br>
-    </div>
+        <label>安親班電話</label>
+        <input type="tel" id="tutorPhone">
+      </div>
 
-    <button type="submit" class="btn">送出</button>
-  </form>
+      <button type="submit" class="btn">送出</button>
+    </form>
+  </div>
 
   <script>
     function toggleTutorFields() {
       var pickup = document.querySelector('input[name="pickupWay"]:checked').value;
-      var tutorDiv = document.getElementById("tutorFields");
-      tutorDiv.style.display = (pickup === "安親班") ? "block" : "none";
+      document.getElementById("tutorFields").style.display = (pickup === "安親班") ? "block" : "none";
     }
 
     function handleSubmit(e) {
