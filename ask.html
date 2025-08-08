@@ -1,139 +1,64 @@
-/* ---------- index.html (前端) ---------- */
-
-/*
-把下方整個 HTML 貼成 index.html 檔案 (Apps Script 的 HTML 檔案)
-*/
-
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>114調查表01 - 單頁互動式表單</title>
-  <style>
-    body { font-family: Roboto, "Noto Sans TC", Arial, sans-serif; margin: 24px; }
-    .card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
-    label { display:block; margin-bottom:6px; font-weight:600; }
-    input[type="text"], input[type="tel"] { width:100%; padding:8px; box-sizing:border-box; border:1px solid #ccc; border-radius:4px; }
-    .radios label { font-weight: normal; margin-right:12px; }
-    .hidden { display:none; }
-    .btn { background:#5c6bc0; color:white; padding:10px 14px; border-radius:6px; border:none; cursor:pointer; }
-    .btn:disabled { opacity:0.6; cursor:not-allowed; }
-    .msg { margin-top:12px; }
-  </style>
+<meta charset="UTF-8">
+<title>114調查表</title>
+<script>
+function toggleTutorFields() {
+  var pickupWay = document.querySelector('input[name="pickupWay"]:checked').value;
+  var tutorFields = document.getElementById("tutorFields");
+  tutorFields.style.display = (pickupWay === "安親班") ? "block" : "none";
+}
+
+function handleSubmit(e) {
+  e.preventDefault();
+
+  var data = {
+    studentName: document.getElementById("studentName").value,
+    lunchPay: document.querySelector('input[name="lunchPay"]:checked').value,
+    drink: document.querySelector('input[name="drink"]:checked').value,
+    pickupWay: document.querySelector('input[name="pickupWay"]:checked').value,
+    tutorName: document.getElementById("tutorName").value,
+    tutorPhone: document.getElementById("tutorPhone").value
+  };
+
+  google.script.run
+    .withSuccessHandler(function(msg) {
+      alert(msg);
+      document.getElementById("form").reset();
+      toggleTutorFields();
+    })
+    .submitForm(data);
+}
+</script>
 </head>
 <body>
-  <h2>114調查表01</h2>
+  <form id="form" onsubmit="handleSubmit(event)">
+    <label>1. 學生姓名:</label><br>
+    <input type="text" id="studentName" required><br><br>
 
-  <div class="card">
-    <label for="studentName">1. 學生姓名 <span style="color:#d32f2f">*</span></label>
-    <input id="studentName" type="text" placeholder="請輸入學生姓名">
-  </div>
+    <label>2. 本學期午餐繳費方式:</label><br>
+    <input type="radio" name="lunchPay" value="全繳" required>全繳（與註冊費一起繳交）<br>
+    <input type="radio" name="lunchPay" value="月繳">月繳<br>
+    <input type="radio" name="lunchPay" value="補助">領有午餐補助證明<br><br>
 
-  <div class="card">
-    <label>2. 本學期午餐繳費方式 <span style="color:#d32f2f">*</span></label>
-    <div class="radios">
-      <label><input type="radio" name="payment" value="全繳（與註冊費一起繳交）"> 全繳（與註冊費一起繳交）</label>
-      <label><input type="radio" name="payment" value="月繳"> 月繳</label>
-      <label><input type="radio" name="payment" value="領有午餐補助證明"> 領有午餐補助證明</label>
+    <label>3. 本學期午餐飲用的乳品:</label><br>
+    <input type="radio" name="drink" value="牛奶" required>牛奶<br>
+    <input type="radio" name="drink" value="豆奶">豆奶<br><br>
+
+    <label>4. 本學期放學接送方式:</label><br>
+    <input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required>家長接送<br>
+    <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()">安親班<br>
+    <input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()">課後照顧班<br><br>
+
+    <div id="tutorFields" style="display:none;">
+      <label>安親班 -- 名稱:</label><br>
+      <input type="text" id="tutorName"><br><br>
+      <label>安親班 -- 電話:</label><br>
+      <input type="text" id="tutorPhone"><br><br>
     </div>
-  </div>
 
-  <div class="card">
-    <label>3. 本學期午餐飲用的乳品 <span style="color:#d32f2f">*</span></label>
-    <div class="radios">
-      <label><input type="radio" name="milk" value="牛奶"> 牛奶</label>
-      <label><input type="radio" name="milk" value="豆奶"> 豆奶</label>
-    </div>
-  </div>
-
-  <div class="card">
-    <label>4. 本學期放學接送方式 <span style="color:#d32f2f">*</span></label>
-    <div class="radios">
-      <label><input type="radio" name="pickup" value="家長接送"> 家長接送</label>
-      <label><input type="radio" name="pickup" value="安親班"> 安親班</label>
-      <label><input type="radio" name="pickup" value="課後照顧班"> 課後照顧班</label>
-    </div>
-  </div>
-
-  <!-- 安親班區塊：預設隱藏 -->
-  <div id="acBlock" class="card hidden">
-    <label for="acName">「安親班」-- 名稱 <span style="color:#d32f2f">*</span></label>
-    <input id="acName" type="text" placeholder="請輸入安親班名稱">
-
-    <label for="acPhone" style="margin-top:10px">「安親班」-- 電話 <span style="color:#d32f2f">*</span></label>
-    <input id="acPhone" type="tel" placeholder="請輸入安親班電話">
-  </div>
-
-  <button id="submitBtn" class="btn">送出</button>
-
-  <div id="msg" class="msg"></div>
-
-  <script>
-    // 監聽接送方式，若選安親班則顯示額外欄位
-    document.querySelectorAll('input[name="pickup"]').forEach(r => {
-      r.addEventListener('change', function(e){
-        const acBlock = document.getElementById('acBlock');
-        if (this.value === '安親班') {
-          acBlock.classList.remove('hidden');
-        } else {
-          acBlock.classList.add('hidden');
-        }
-      });
-    });
-
-    function getSelectedValue(name) {
-      const el = document.querySelector('input[name="'+name+'']:checked');
-      return el ? el.value : '';
-    }
-
-    document.getElementById('submitBtn').addEventListener('click', function(){
-      const submitBtn = this;
-      const msg = document.getElementById('msg');
-      msg.textContent = '';
-
-      const studentName = document.getElementById('studentName').value.trim();
-      const payment = getSelectedValue('payment');
-      const milk = getSelectedValue('milk');
-      const pickup = getSelectedValue('pickup');
-      const acName = document.getElementById('acName').value.trim();
-      const acPhone = document.getElementById('acPhone').value.trim();
-
-      // 基本驗證
-      if (!studentName) { msg.textContent = '請填寫學生姓名。'; return; }
-      if (!payment) { msg.textContent = '請選擇繳費方式。'; return; }
-      if (!milk) { msg.textContent = '請選擇乳品種類。'; return; }
-      if (!pickup) { msg.textContent = '請選擇放學接送方式。'; return; }
-      if (pickup === '安親班') {
-        if (!acName) { msg.textContent = '請填寫安親班名稱。'; return; }
-        if (!acPhone) { msg.textContent = '請填寫安親班電話。'; return; }
-      }
-
-      // 禁用按鈕避免重複送出
-      submitBtn.disabled = true;
-      msg.textContent = '送出中，請稍候...';
-
-      const formObj = { studentName, payment, milk, pickup, acName, acPhone };
-
-      google.script.run.withSuccessHandler(function(resp){
-        submitBtn.disabled = false;
-        if (resp && resp.status === 'success') {
-          msg.textContent = '送出成功，謝謝！';
-          // 清空表單（保留可視回饋）
-          document.getElementById('studentName').value = '';
-          document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
-          document.getElementById('acName').value = '';
-          document.getElementById('acPhone').value = '';
-          document.getElementById('acBlock').classList.add('hidden');
-        } else {
-          msg.textContent = '送出失敗，請稍後再試。';
-        }
-      }).withFailureHandler(function(err){
-        submitBtn.disabled = false;
-        console.error(err);
-        msg.textContent = '發生錯誤: ' + (err && err.message ? err.message : '請稍後再試');
-      }).submitForm(formObj);
-    });
-  </script>
+    <button type="submit">送出</button>
+  </form>
 </body>
 </html>
