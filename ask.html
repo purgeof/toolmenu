@@ -1,64 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<title>114調查表</title>
-<script>
-function toggleTutorFields() {
-  var pickupWay = document.querySelector('input[name="pickupWay"]:checked').value;
-  var tutorFields = document.getElementById("tutorFields");
-  tutorFields.style.display = (pickupWay === "安親班") ? "block" : "none";
-}
-
-function handleSubmit(e) {
-  e.preventDefault();
-
-  var data = {
-    studentName: document.getElementById("studentName").value,
-    lunchPay: document.querySelector('input[name="lunchPay"]:checked').value,
-    drink: document.querySelector('input[name="drink"]:checked').value,
-    pickupWay: document.querySelector('input[name="pickupWay"]:checked').value,
-    tutorName: document.getElementById("tutorName").value,
-    tutorPhone: document.getElementById("tutorPhone").value
-  };
-
-  google.script.run
-    .withSuccessHandler(function(msg) {
-      alert(msg);
-      document.getElementById("form").reset();
-      toggleTutorFields();
-    })
-    .submitForm(data);
-}
-</script>
+  <meta charset="UTF-8">
+  <title>114調查表</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    .hidden { display: none; }
+    label { font-weight: bold; }
+    .btn { margin-top: 12px; padding: 8px 16px; }
+  </style>
 </head>
 <body>
+  <h2>114調查表</h2>
   <form id="form" onsubmit="handleSubmit(event)">
     <label>1. 學生姓名:</label><br>
     <input type="text" id="studentName" required><br><br>
 
     <label>2. 本學期午餐繳費方式:</label><br>
-    <input type="radio" name="lunchPay" value="全繳" required>全繳（與註冊費一起繳交）<br>
-    <input type="radio" name="lunchPay" value="月繳">月繳<br>
-    <input type="radio" name="lunchPay" value="補助">領有午餐補助證明<br><br>
+    <input type="radio" name="lunchPay" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）<br>
+    <input type="radio" name="lunchPay" value="月繳"> 月繳<br>
+    <input type="radio" name="lunchPay" value="領有午餐補助證明"> 領有午餐補助證明<br><br>
 
     <label>3. 本學期午餐飲用的乳品:</label><br>
-    <input type="radio" name="drink" value="牛奶" required>牛奶<br>
-    <input type="radio" name="drink" value="豆奶">豆奶<br><br>
+    <input type="radio" name="drink" value="牛奶" required> 牛奶<br>
+    <input type="radio" name="drink" value="豆奶"> 豆奶<br><br>
 
     <label>4. 本學期放學接送方式:</label><br>
-    <input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required>家長接送<br>
-    <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()">安親班<br>
-    <input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()">課後照顧班<br><br>
+    <input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送<br>
+    <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班<br>
+    <input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()"> 課後照顧班<br><br>
 
-    <div id="tutorFields" style="display:none;">
+    <div id="tutorFields" class="hidden">
       <label>安親班 -- 名稱:</label><br>
       <input type="text" id="tutorName"><br><br>
+
       <label>安親班 -- 電話:</label><br>
       <input type="text" id="tutorPhone"><br><br>
     </div>
 
-    <button type="submit">送出</button>
+    <button type="submit" class="btn">送出</button>
   </form>
+
+  <script>
+    function toggleTutorFields() {
+      var pickup = document.querySelector('input[name="pickupWay"]:checked').value;
+      var tutorDiv = document.getElementById("tutorFields");
+      tutorDiv.style.display = (pickup === "安親班") ? "block" : "none";
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      var data = {
+        studentName: document.getElementById("studentName").value,
+        lunchPay: document.querySelector('input[name="lunchPay"]:checked').value,
+        drink: document.querySelector('input[name="drink"]:checked').value,
+        pickupWay: document.querySelector('input[name="pickupWay"]:checked').value,
+        tutorName: document.getElementById("tutorName").value,
+        tutorPhone: document.getElementById("tutorPhone").value
+      };
+      google.script.run.withSuccessHandler(function(resp) {
+        if (resp.status === 'success') {
+          alert(resp.message);
+          document.getElementById("form").reset();
+          toggleTutorFields();
+        } else {
+          alert('送出失敗，請再試一次');
+        }
+      }).withFailureHandler(function(err) {
+        console.error(err);
+        alert('發生錯誤：' + err.message);
+      }).submitForm(data);
+    }
+  </script>
 </body>
 </html>
