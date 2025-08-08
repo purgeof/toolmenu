@@ -1,209 +1,139 @@
+/* ---------- index.html (前端) ---------- */
+
+/*
+把下方整個 HTML 貼成 index.html 檔案 (Apps Script 的 HTML 檔案)
+*/
+
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新學期學生基本資料表</title>
-    <!-- 引入 Tailwind CSS 以美化樣式，提供響應式設計功能 -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 使用 Inter 字體 -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>114調查表01 - 單頁互動式表單</title>
+  <style>
+    body { font-family: Roboto, "Noto Sans TC", Arial, sans-serif; margin: 24px; }
+    .card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
+    label { display:block; margin-bottom:6px; font-weight:600; }
+    input[type="text"], input[type="tel"] { width:100%; padding:8px; box-sizing:border-box; border:1px solid #ccc; border-radius:4px; }
+    .radios label { font-weight: normal; margin-right:12px; }
+    .hidden { display:none; }
+    .btn { background:#5c6bc0; color:white; padding:10px 14px; border-radius:6px; border:none; cursor:pointer; }
+    .btn:disabled { opacity:0.6; cursor:not-allowed; }
+    .msg { margin-top:12px; }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
-    <!-- 主容器：在小螢幕上保持滿版，在中等螢幕上限制最大寬度，並增加內距 -->
-    <div class="container mx-auto p-6 md:p-12 bg-white rounded-xl shadow-2xl space-y-8 max-w-2xl">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 tracking-wide">2011新學期學生基本資料與意願調查表</h1>
-        <p class="text-sm sm:text-base text-center text-gray-600 mb-8">請家長或學生填寫以下資料，以利學校安排相關事宜。</p>
-        
-        <!--
-        ** 程式碼說明：
-        ** 這是最新、最可靠的版本，它使用 Google Apps Script 作為中介層來接收資料。
-        ** 這樣可以完全繞過 Google 表單本身的提交限制，確保所有動態欄位都能被正確寫入。
-        ** 請務必在 JavaScript 區塊中，將 SCRIPT_URL 替換為你的 Web App URL。
-        -->
-        <form id="student-info-form" class="space-y-6">
-            
-            <!-- 學生姓名 -->
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <label for="studentName" class="block text-lg font-semibold text-gray-700 mb-2">1. 學生姓名</label>
-                <input type="text" id="studentName" name="studentName" placeholder="請輸入學生姓名"
-                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out sm:text-sm" required>
-            </div>
+<body>
+  <h2>114調查表01</h2>
 
-            <!-- 午餐繳費方式 -->
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-700 mb-4">2. 本學期午餐繳費方式</h3>
-                <div class="space-y-3">
-                    <label class="flex items-center">
-                        <input type="radio" name="lunchFee" value="全繳 （與註冊費一起繳交）" class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700 text-sm sm:text-base">全繳 （與註冊費一起繳交）</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="radio" name="lunchFee" value="月繳" class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700 text-sm sm:text-base">月繳</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="radio" name="lunchFee" value="領有午餐補助證明" class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700 text-sm sm:text-base">領有午餐補助證明</span>
-                    </label>
-                </div>
-            </div>
+  <div class="card">
+    <label for="studentName">1. 學生姓名 <span style="color:#d32f2f">*</span></label>
+    <input id="studentName" type="text" placeholder="請輸入學生姓名">
+  </div>
 
-            <!-- 午餐乳品 -->
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-700 mb-4">3. 本學期午餐飲用的乳品</h3>
-                <div class="space-y-3">
-                    <label class="flex items-center">
-                        <input type="radio" name="lunchMilk" value="牛奶" class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700 text-sm sm:text-base">牛奶</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="radio" name="lunchMilk" value="豆奶" class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700 text-sm sm:text-base">豆奶</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- 放學接送方式 -->
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-700 mb-4">4. 本學期放學接送方式</h3>
-                <div class="space-y-3">
-                    <label class="flex items-center">
-                        <input type="radio" name="pickupMethod" value="家長接送" class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700 text-sm sm:text-base">家長接送</span>
-                    </label>
-                    <label class="flex items-start">
-                        <input type="radio" id="afterschoolRadio" name="pickupMethod" value="安親班" class="form-radio h-4 w-4 text-blue-600 mt-1">
-                        <span class="ml-2 text-gray-700 text-sm sm:text-base">安親班</span>
-                    </label>
-                    <label class="flex items-center">
-                        <input type="radio" name="pickupMethod" value="課後照顧班" class="form-radio h-4 w-4 text-blue-600">
-                        <span class="ml-2 text-gray-700 text-sm sm:text-base">課後照顧班</span>
-                    </label>
-                </div>
-            </div>
-            
-            <!-- 安親班詳細資訊的動態輸入框，此區塊將被 JavaScript 顯示/隱藏 -->
-            <div id="afterschoolDetails" class="bg-gray-100 p-4 rounded-lg hidden">
-                <p class="text-md font-semibold text-gray-700 mb-2">安親班資訊</p>
-                <div class="space-y-2">
-                    <label class="block">
-                        <span class="text-sm text-gray-500">名稱:</span>
-                        <input type="text" id="afterschoolNameInput" name="afterschoolName" placeholder="安親班名稱" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
-                    </label>
-                    <label class="block">
-                        <span class="text-sm text-gray-500">電話:</span>
-                        <input type="tel" id="afterschoolPhoneInput" name="afterschoolPhone" placeholder="聯絡電話" class="mt-1 block w-full px-3 py-1 border border-gray-300 rounded-md text-sm">
-                    </label>
-                </div>
-            </div>
-
-            <!-- 送出按鈕 -->
-            <div class="flex justify-center pt-6">
-                <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    送出
-                </button>
-            </div>
-        </form>
-
-        <!-- 訊息顯示區塊 -->
-        <div id="messageContainer" class="hidden text-center p-4 rounded-lg">
-            <svg id="successIcon" class="mx-auto h-12 w-12 text-green-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <svg id="errorIcon" class="mx-auto h-12 w-12 text-red-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <p id="messageText" class="mt-4 text-2xl font-bold text-gray-800"></p>
-            <p class="mt-2 text-gray-600">請確認網址和連線後再試一次。</p>
-        </div>
-
-        <!-- 處理表單提交及欄位顯示/隱藏的腳本 -->
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const form = document.getElementById('student-info-form');
-                const messageContainer = document.getElementById('messageContainer');
-                const successIcon = document.getElementById('successIcon');
-                const errorIcon = document.getElementById('errorIcon');
-                const messageText = document.getElementById('messageText');
-                const afterschoolRadio = document.getElementById('afterschoolRadio');
-                const pickupMethodRadios = document.querySelectorAll('input[name="pickupMethod"]');
-                const afterschoolDetails = document.getElementById('afterschoolDetails');
-                const afterschoolNameInput = document.getElementById('afterschoolNameInput');
-                const afterschoolPhoneInput = document.getElementById('afterschoolPhoneInput');
-                
-                // ** 請將此處的網址替換為你的 Google Apps Script Web App URL **
-                const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDaYuImItv-qZgcB0sYraR0Lwmq0oNNZiUt6vzDexnxNf8lEeSme5g5PPyJb_X5aAvLg/exec';
-
-                // 處理安親班欄位顯示/隱藏及必填屬性
-                pickupMethodRadios.forEach(radio => {
-                    radio.addEventListener('change', (event) => {
-                        if (afterschoolRadio.checked) {
-                            afterschoolDetails.classList.remove('hidden');
-                            afterschoolNameInput.required = true;
-                            afterschoolPhoneInput.required = true;
-                        } else {
-                            afterschoolDetails.classList.add('hidden');
-                            afterschoolNameInput.required = false;
-                            afterschoolPhoneInput.required = false;
-                            afterschoolNameInput.value = '';
-                            afterschoolPhoneInput.value = '';
-                        }
-                    });
-                });
-
-                // 處理表單提交
-                form.addEventListener('submit', async (event) => {
-                    event.preventDefault(); // 防止預設的表單提交行為
-                    
-                    const submitButton = form.querySelector('button[type="submit"]');
-                    submitButton.disabled = true;
-                    submitButton.textContent = '送出中...';
-                    
-                    try {
-                        const formData = {
-                            studentName: document.getElementById('studentName').value,
-                            lunchFee: document.querySelector('input[name="lunchFee"]:checked')?.value || '',
-                            lunchMilk: document.querySelector('input[name="lunchMilk"]:checked')?.value || '',
-                            pickupMethod: document.querySelector('input[name="pickupMethod"]:checked')?.value || '',
-                            afterschoolName: afterschoolNameInput.value,
-                            afterschoolPhone: afterschoolPhoneInput.value
-                        };
-
-                        const response = await fetch(SCRIPT_URL, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(formData),
-                            mode: 'no-cors' // 這裡添加了 'no-cors'
-                        });
-
-                        // 在 'no-cors' 模式下，我們無法檢查 response.ok
-                        // 瀏覽器將請求視為「不透明」的，所以我們無法取得狀態碼
-                        // 因此，我們假設請求成功並顯示成功訊息
-                        form.style.display = 'none';
-                        messageContainer.classList.remove('hidden');
-                        messageContainer.classList.add('bg-green-100', 'text-green-800');
-                        messageText.textContent = '送出完成！';
-                        successIcon.classList.remove('hidden');
-                        
-                    } catch (error) {
-                        console.error('Error submitting form:', error);
-                        messageContainer.classList.remove('hidden');
-                        messageContainer.classList.add('bg-red-100', 'text-red-800');
-                        messageText.textContent = '網路錯誤';
-                        errorIcon.classList.remove('hidden');
-                    } finally {
-                        submitButton.disabled = false;
-                        submitButton.textContent = '送出';
-                    }
-                });
-            });
-        </script>
-
+  <div class="card">
+    <label>2. 本學期午餐繳費方式 <span style="color:#d32f2f">*</span></label>
+    <div class="radios">
+      <label><input type="radio" name="payment" value="全繳（與註冊費一起繳交）"> 全繳（與註冊費一起繳交）</label>
+      <label><input type="radio" name="payment" value="月繳"> 月繳</label>
+      <label><input type="radio" name="payment" value="領有午餐補助證明"> 領有午餐補助證明</label>
     </div>
+  </div>
+
+  <div class="card">
+    <label>3. 本學期午餐飲用的乳品 <span style="color:#d32f2f">*</span></label>
+    <div class="radios">
+      <label><input type="radio" name="milk" value="牛奶"> 牛奶</label>
+      <label><input type="radio" name="milk" value="豆奶"> 豆奶</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <label>4. 本學期放學接送方式 <span style="color:#d32f2f">*</span></label>
+    <div class="radios">
+      <label><input type="radio" name="pickup" value="家長接送"> 家長接送</label>
+      <label><input type="radio" name="pickup" value="安親班"> 安親班</label>
+      <label><input type="radio" name="pickup" value="課後照顧班"> 課後照顧班</label>
+    </div>
+  </div>
+
+  <!-- 安親班區塊：預設隱藏 -->
+  <div id="acBlock" class="card hidden">
+    <label for="acName">「安親班」-- 名稱 <span style="color:#d32f2f">*</span></label>
+    <input id="acName" type="text" placeholder="請輸入安親班名稱">
+
+    <label for="acPhone" style="margin-top:10px">「安親班」-- 電話 <span style="color:#d32f2f">*</span></label>
+    <input id="acPhone" type="tel" placeholder="請輸入安親班電話">
+  </div>
+
+  <button id="submitBtn" class="btn">送出</button>
+
+  <div id="msg" class="msg"></div>
+
+  <script>
+    // 監聽接送方式，若選安親班則顯示額外欄位
+    document.querySelectorAll('input[name="pickup"]').forEach(r => {
+      r.addEventListener('change', function(e){
+        const acBlock = document.getElementById('acBlock');
+        if (this.value === '安親班') {
+          acBlock.classList.remove('hidden');
+        } else {
+          acBlock.classList.add('hidden');
+        }
+      });
+    });
+
+    function getSelectedValue(name) {
+      const el = document.querySelector('input[name="'+name+'']:checked');
+      return el ? el.value : '';
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', function(){
+      const submitBtn = this;
+      const msg = document.getElementById('msg');
+      msg.textContent = '';
+
+      const studentName = document.getElementById('studentName').value.trim();
+      const payment = getSelectedValue('payment');
+      const milk = getSelectedValue('milk');
+      const pickup = getSelectedValue('pickup');
+      const acName = document.getElementById('acName').value.trim();
+      const acPhone = document.getElementById('acPhone').value.trim();
+
+      // 基本驗證
+      if (!studentName) { msg.textContent = '請填寫學生姓名。'; return; }
+      if (!payment) { msg.textContent = '請選擇繳費方式。'; return; }
+      if (!milk) { msg.textContent = '請選擇乳品種類。'; return; }
+      if (!pickup) { msg.textContent = '請選擇放學接送方式。'; return; }
+      if (pickup === '安親班') {
+        if (!acName) { msg.textContent = '請填寫安親班名稱。'; return; }
+        if (!acPhone) { msg.textContent = '請填寫安親班電話。'; return; }
+      }
+
+      // 禁用按鈕避免重複送出
+      submitBtn.disabled = true;
+      msg.textContent = '送出中，請稍候...';
+
+      const formObj = { studentName, payment, milk, pickup, acName, acPhone };
+
+      google.script.run.withSuccessHandler(function(resp){
+        submitBtn.disabled = false;
+        if (resp && resp.status === 'success') {
+          msg.textContent = '送出成功，謝謝！';
+          // 清空表單（保留可視回饋）
+          document.getElementById('studentName').value = '';
+          document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+          document.getElementById('acName').value = '';
+          document.getElementById('acPhone').value = '';
+          document.getElementById('acBlock').classList.add('hidden');
+        } else {
+          msg.textContent = '送出失敗，請稍後再試。';
+        }
+      }).withFailureHandler(function(err){
+        submitBtn.disabled = false;
+        console.error(err);
+        msg.textContent = '發生錯誤: ' + (err && err.message ? err.message : '請稍後再試');
+      }).submitForm(formObj);
+    });
+  </script>
 </body>
 </html>
-
