@@ -17,29 +17,27 @@
   h1 {
     text-align: center;
     color: #2c3e50;
+    margin-bottom: 25px;
   }
   label {
     font-weight: bold;
-    margin-top: 15px;
     display: block;
-  }
-  input[type="text"], input[type="tel"], input[type="radio"] {
-    margin-top: 5px;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    color: #004d40;
+    font-size: 1.05em;
   }
   .radio-group {
-    margin-top: 10px;
+    margin-left: 24px; /* 縮排選項 */
   }
-  .option-group {
-    margin-bottom: 10px;
-  }
-  .option-group label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .radio-group label {
     font-weight: normal;
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
   }
   .nested-fields {
-    margin-left: 28px; /* 縮排效果 */
+    margin-left: 48px; /* 安親班的額外縮排 */
     margin-top: 6px;
   }
   input[type="text"], input[type="tel"] {
@@ -48,6 +46,7 @@
     border: 1px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
+    margin-bottom: 8px;
   }
   button {
     display: block;
@@ -64,11 +63,22 @@
   button:hover {
     background-color: #2980b9;
   }
+  /* 感謝頁樣式 */
+  #thankYouPage {
+    display: none;
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    font-size: 1.8em;
+    padding: 50px;
+    border-radius: 8px;
+    margin-top: 40px;
+  }
 </style>
 </head>
 <body>
 
-<h1>114 調查表 0101</h1>
+<h1>114 調查表 01</h1>
 
 <form id="surveyForm">
 
@@ -93,26 +103,24 @@
 
   <!-- 放學接送方式 -->
   <label>4. 本學期放學接送方式</label>
-  <div class="option-group">
+  <div class="radio-group">
     <label><input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送</label>
-  </div>
-
-  <div class="option-group">
-    <label><input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班</label>
+    <label>
+      <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班
+    </label>
     <div id="tutorFields" class="nested-fields" style="display:none;">
-      <label>安親班名稱</label>
+      <label style="font-weight:normal; color:#333;">安親班名稱</label>
       <input type="text" id="tutorName">
-      <label>安親班電話</label>
+      <label style="font-weight:normal; color:#333;">安親班電話</label>
       <input type="tel" id="tutorPhone">
     </div>
-  </div>
-
-  <div class="option-group">
     <label><input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()"> 課後照顧班</label>
   </div>
 
   <button type="submit">送出</button>
 </form>
+
+<div id="thankYouPage">資料送出成功</div>
 
 <script>
 function toggleTutorFields() {
@@ -138,9 +146,8 @@ document.getElementById("surveyForm").addEventListener("submit", function(e) {
   })
   .then(res => res.text())
   .then(msg => {
-    alert("已送出，謝謝！");
-    document.getElementById("surveyForm").reset();
-    document.getElementById("tutorFields").style.display = "none";
+    document.getElementById("surveyForm").style.display = "none";
+    document.getElementById("thankYouPage").style.display = "block";
   })
   .catch(err => {
     alert("送出失敗：" + err);
