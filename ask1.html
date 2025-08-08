@@ -1,208 +1,152 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <title>114調查表</title>
-  <style>
-    body {
-      font-family: "Noto Sans TC", sans-serif;
-      margin: 0;
-      background: linear-gradient(135deg, #e0f7fa, #ffffff);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 40px 10px;
-    }
-    .form-container {
-      background: #ffffff;
-      padding: 30px 25px;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      max-width: 500px;
-      width: 100%;
-      animation: fadeIn 0.5s ease;
-    }
-    h2 {
-      text-align: center;
-      color: #00796b;
-      margin-bottom: 25px;
-    }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 8px;
-      color: #004d40;
-      font-size: 1.05em;
-    }
-    input[type="text"], input[type="tel"] {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #b2dfdb;
-      font-size: 1em;
-      transition: 0.3s;
-      box-sizing: border-box; /* 修正 width 100% 的問題 */
-    }
-    input[type="text"]:focus, input[type="tel"]:focus {
-      outline: none;
-      border-color: #26a69a;
-      box-shadow: 0 0 5px rgba(38,166,154,0.5);
-    }
-    .option-group {
-      margin-bottom: 10px;
-    }
-    .option-group input {
-      margin-right: 8px;
-    }
-    .hidden {
-      display: none;
-    }
-    .btn {
-      margin-top: 25px;
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(90deg, #26a69a, #4db6ac);
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 1.1em;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .btn:hover {
-      background: linear-gradient(90deg, #4db6ac, #26a69a);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    /* 修正 1. 2. 之間的排列問題 */
-    .form-item {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .form-item label {
-      margin-top: 0;
-    }
-    .form-item .item-content {
-      flex-basis: 100%;
-    }
-    .form-item.inline-label .item-content {
-      display: flex;
-      align-items: center;
-      flex-grow: 1;
-    }
-    .form-item.inline-label input[type="text"] {
-      flex-grow: 1;
-    }
-    
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>114 調查表 01</title>
+<style>
+  body {
+    font-family: "Microsoft JhengHei", sans-serif;
+    background-color: #f7f9fc;
+    color: #333;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+  }
+  label {
+    font-weight: bold;
+    margin-top: 15px;
+    display: block;
+  }
+  input[type="text"], input[type="tel"], input[type="radio"] {
+    margin-top: 5px;
+  }
+  .radio-group {
+    margin-top: 10px;
+  }
+  .option-group {
+    margin-bottom: 10px;
+  }
+  .option-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: normal;
+  }
+  .nested-fields {
+    margin-left: 28px; /* 縮排效果 */
+    margin-top: 6px;
+  }
+  input[type="text"], input[type="tel"] {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  button:hover {
+    background-color: #2980b9;
+  }
+</style>
 </head>
 <body>
-  <div class="form-container">
-    <h2>114 調查表</h2>
-    <form id="form" onsubmit="handleSubmit(event)">
 
-            <div class="form-item inline-label">
-        <label>1. 學生姓名</label>
-        <div class="item-content">
-          <input type="text" id="studentName" required>
-        </div>
-      </div>
+<h1>114 調查表 01</h1>
 
-            <label>2. 本學期午餐繳費方式</label>
-      <div class="option-group">
-        <input type="radio" name="lunchPay" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）
-      </div>
-      <div class="option-group">
-        <input type="radio" name="lunchPay" value="月繳"> 月繳
-      </div>
-      <div class="option-group">
-        <input type="radio" name="lunchPay" value="領有午餐補助證明"> 領有午餐補助證明
-      </div>
+<form id="surveyForm">
 
-            <label>3. 本學期午餐飲用的乳品</label>
-      <div class="option-group">
-        <input type="radio" name="drink" value="牛奶" required> 牛奶
-      </div>
-      <div class="option-group">
-        <input type="radio" name="drink" value="豆奶"> 豆奶
-      </div>
+  <!-- 學生姓名 -->
+  <label>1. 學生姓名</label>
+  <input type="text" id="studentName" required>
 
-            <label>4. 本學期放學接送方式</label>
-      <div class="option-group">
-        <input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送
-      </div>
-            <div class="option-group" id="tutorOptionGroup">
-        <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班
-                <div id="tutorFields" class="hidden">
-          <label>安親班名稱</label>
-          <input type="text" id="tutorName">
+  <!-- 午餐繳費方式 -->
+  <label>2. 本學期午餐繳費方式</label>
+  <div class="radio-group">
+    <label><input type="radio" name="lunchPay" value="全繳" required> 全繳（與註冊費一起繳交）</label>
+    <label><input type="radio" name="lunchPay" value="月繳"> 月繳</label>
+    <label><input type="radio" name="lunchPay" value="午餐補助"> 領有午餐補助證明</label>
+  </div>
 
-          <label>安親班電話</label>
-          <input type="tel" id="tutorPhone">
-        </div>
-      </div>
+  <!-- 午餐乳品 -->
+  <label>3. 本學期午餐飲用的乳品</label>
+  <div class="radio-group">
+    <label><input type="radio" name="milkType" value="牛奶" required> 牛奶</label>
+    <label><input type="radio" name="milkType" value="豆奶"> 豆奶</label>
+  </div>
 
-      <div class="option-group">
-        <input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()"> 課後照顧班
-      </div>
+  <!-- 放學接送方式 -->
+  <label>4. 本學期放學接送方式</label>
+  <div class="option-group">
+    <label><input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送</label>
+  </div>
 
-      <button type="submit" class="btn">送出</button>
-    </form>
-  </div>
+  <div class="option-group">
+    <label><input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班</label>
+    <div id="tutorFields" class="nested-fields" style="display:none;">
+      <label>安親班名稱</label>
+      <input type="text" id="tutorName">
+      <label>安親班電話</label>
+      <input type="tel" id="tutorPhone">
+    </div>
+  </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      toggleTutorFields();
-    });
+  <div class="option-group">
+    <label><input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()"> 課後照顧班</label>
+  </div>
 
-    function toggleTutorFields() {
-      var tutorFields = document.getElementById("tutorFields");
-      var tutorRadio = document.querySelector('input[name="pickupWay"][value="安親班"]');
-      
-      if (tutorRadio && tutorRadio.checked) {
-        tutorFields.style.display = "block";
-      } else {
-        tutorFields.style.display = "none";
-      }
-    }
+  <button type="submit">送出</button>
+</form>
 
-    function handleSubmit(e) {
-      e.preventDefault();
-      var data = {
-        studentName: document.getElementById("studentName").value,
-        lunchPay: document.querySelector('input[name="lunchPay"]:checked').value,
-        drink: document.querySelector('input[name="drink"]:checked').value,
-        pickupWay: document.querySelector('input[name="pickupWay"]:checked').value,
-        tutorName: document.getElementById("tutorName").value,
-        tutorPhone: document.getElementById("tutorPhone").value
-      };
-      // 檢查如果接送方式是安親班，但名稱或電話未填，則提示使用者
-      if (data.pickupWay === "安親班" && (!data.tutorName || !data.tutorPhone)) {
-        alert("選擇安親班接送，請務必填寫安親班名稱及電話！");
-        return;
-      }
-      google.script.run.withSuccessHandler(function(resp) {
-        if (resp.status === 'success') {
-          alert(resp.message);
-          document.getElementById("form").reset();
-          toggleTutorFields();
-        } else {
-          alert('送出失敗，請再試一次');
-        }
-      }).withFailureHandler(function(err) {
-        console.error(err);
-        alert('發生錯誤：' + err.message);
-      }).submitForm(data);
-    }
-  </script>
+<script>
+function toggleTutorFields() {
+  var pickup = document.querySelector('input[name="pickupWay"]:checked').value;
+  document.getElementById("tutorFields").style.display = (pickup === "安親班") ? "block" : "none";
+}
+
+document.getElementById("surveyForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const data = {
+    studentName: document.getElementById("studentName").value,
+    lunchPay: document.querySelector('input[name="lunchPay"]:checked')?.value || "",
+    milkType: document.querySelector('input[name="milkType"]:checked')?.value || "",
+    pickupWay: document.querySelector('input[name="pickupWay"]:checked')?.value || "",
+    tutorName: document.getElementById("tutorName").value,
+    tutorPhone: document.getElementById("tutorPhone").value
+  };
+
+  fetch("YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL", {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+  .then(res => res.text())
+  .then(msg => {
+    alert("已送出，謝謝！");
+    document.getElementById("surveyForm").reset();
+    document.getElementById("tutorFields").style.display = "none";
+  })
+  .catch(err => {
+    alert("送出失敗：" + err);
+  });
+});
+</script>
+
 </body>
 </html>
