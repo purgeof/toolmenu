@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <title>114-1調查表</title>
+  <title>114調查表</title>
   <style>
     body {
       font-family: "Noto Sans TC", sans-serif;
@@ -43,6 +43,7 @@
       border: 1px solid #b2dfdb;
       font-size: 1em;
       transition: 0.3s;
+      box-sizing: border-box; /* 修正 width 100% 的問題 */
     }
     input[type="text"]:focus, input[type="tel"]:focus {
       outline: none;
@@ -80,17 +81,43 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    /* 修正 1. 2. 之間的排列問題 */
+    .form-item {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .form-item label {
+      margin-top: 0;
+    }
+    .form-item .item-content {
+      flex-basis: 100%;
+    }
+    .form-item.inline-label .item-content {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+    }
+    .form-item.inline-label input[type="text"] {
+      flex-grow: 1;
+    }
+    
   </style>
 </head>
 <body>
   <div class="form-container">
     <h2>114 調查表</h2>
     <form id="form" onsubmit="handleSubmit(event)">
-      
-      <label>1. 學生姓名</label>
-      <input type="text" id="studentName" required>
 
-      <label>2. 本學期午餐繳費方式</label>
+            <div class="form-item inline-label">
+        <label>1. 學生姓名</label>
+        <div class="item-content">
+          <input type="text" id="studentName" required>
+        </div>
+      </div>
+
+            <label>2. 本學期午餐繳費方式</label>
       <div class="option-group">
         <input type="radio" name="lunchPay" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）
       </div>
@@ -101,7 +128,7 @@
         <input type="radio" name="lunchPay" value="領有午餐補助證明"> 領有午餐補助證明
       </div>
 
-      <label>3. 本學期午餐飲用的乳品</label>
+            <label>3. 本學期午餐飲用的乳品</label>
       <div class="option-group">
         <input type="radio" name="drink" value="牛奶" required> 牛奶
       </div>
@@ -109,20 +136,19 @@
         <input type="radio" name="drink" value="豆奶"> 豆奶
       </div>
 
-      <label>4. 本學期放學接送方式</label>
+            <label>4. 本學期放學接送方式</label>
       <div class="option-group">
         <input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送
       </div>
-      <div class="option-group">
+            <div class="option-group" id="tutorOptionGroup">
         <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班
-      </div>
+                <div id="tutorFields" class="hidden">
+          <label>安親班名稱</label>
+          <input type="text" id="tutorName">
 
-            <div id="tutorFields" class="hidden">
-        <label>安親班名稱</label>
-        <input type="text" id="tutorName">
-
-        <label>安親班電話</label>
-        <input type="tel" id="tutorPhone">
+          <label>安親班電話</label>
+          <input type="tel" id="tutorPhone">
+        </div>
       </div>
 
       <div class="option-group">
@@ -134,14 +160,19 @@
   </div>
 
   <script>
-    // 載入頁面時，隱藏安親班欄位
     document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById("tutorFields").style.display = "none";
+      toggleTutorFields();
     });
-   
+
     function toggleTutorFields() {
-      var pickup = document.querySelector('input[name="pickupWay"]:checked').value;
-      document.getElementById("tutorFields").style.display = (pickup === "安親班") ? "block" : "none";
+      var tutorFields = document.getElementById("tutorFields");
+      var tutorRadio = document.querySelector('input[name="pickupWay"][value="安親班"]');
+      
+      if (tutorRadio && tutorRadio.checked) {
+        tutorFields.style.display = "block";
+      } else {
+        tutorFields.style.display = "none";
+      }
     }
 
     function handleSubmit(e) {
@@ -163,7 +194,6 @@
         if (resp.status === 'success') {
           alert(resp.message);
           document.getElementById("form").reset();
-          // 重設表單後重新呼叫，確保安親班欄位被隱藏
           toggleTutorFields();
         } else {
           alert('送出失敗，請再試一次');
