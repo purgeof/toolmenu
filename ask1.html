@@ -1,94 +1,104 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<title>學生資料填寫</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>114 調查表</title>
 <style>
-  body { font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; }
-  label { display: block; margin-top: 15px; font-weight: bold; }
-  .indent { margin-left: 20px; }
-  input[type="text"], input[type="tel"], select {
-    padding: 6px; font-size: 1em; width: 250px; max-width: 100%;
-  }
-  button { margin-top: 20px; padding: 10px 18px; background: #0069d9; color: white; border: none; border-radius: 5px; cursor: pointer; }
-  button:hover { background: #0053ba; }
-  #successMessage { display: none; margin-top: 20px; padding: 10px; background: #28a745; color: white; text-align: center; border-radius: 5px; }
+  body { font-family: "Microsoft JhengHei", Arial, sans-serif; background:#f8fbfa; padding:18px; color:#333; }
+  h2{ color:#00695c; margin-bottom:12px;}
+  label{ font-weight:bold; display:block; margin-top:14px; margin-bottom:6px; color:#004d40; font-size:1.03em;}
+  .indent{ margin-left:22px; }
+  .sub{ margin-left:40px; margin-top:8px; }
+  input[type="text"], input[type="tel"]{ padding:8px; border:1px solid #ccc; border-radius:6px; width:100%; box-sizing:border-box;}
+  .radio-label{ font-weight:normal; display:block; margin-bottom:6px; color:#222;}
+  button{ margin-top:18px; width:100%; padding:10px; font-size:1.02em; background:#1976d2; color:#fff; border:none; border-radius:6px; cursor:pointer;}
+  button:hover{ background:#0f61b0;}
+  .success{ display:none; background:#1976d2; color:#fff; padding:22px; text-align:center; font-size:1.2em; border-radius:8px; margin-top:16px;}
 </style>
 </head>
 <body>
+  <h2>114 調查表</h2>
 
-<h2>學生資料填寫表單</h2>
+  <form id="studentForm">
+    <label>1. 學生姓名:</label>
+    <input type="text" name="studentName" required>
 
-<form id="studentForm">
-  <!-- 學生姓名 -->
-  <label>1. 學生姓名:</label>
-  <input type="text" name="studentName" required>
-
-  <!-- 午餐繳費方式 -->
-  <label>2.本學期午餐繳費方式</label>
-  <div class="indent">
-    <label><input type="radio" name="lunchPayment" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）</label>
-    <label><input type="radio" name="lunchPayment" value="月繳"> 月繳</label>
-    <label><input type="radio" name="lunchPayment" value="領有午餐補助證明"> 領有午餐補助證明</label>
-  </div>
-
-  <!-- 午餐乳品 -->
-  <label>3.本學期午餐飲用的?</label>
-  <div class="indent">
-    <label><input type="radio" name="milkType" value="牛奶" required> 牛奶</label>
-    <label><input type="radio" name="milkType" value="豆漿"> 豆漿</label>
-    <label><input type="radio" name="milkType" value="不飲用"> 不飲用</label>
-  </div>
-
-  <!-- 放學接送方式 -->
-  <label>4.本學期放學接送方式</label>
-  <div class="indent">
-    <label><input type="radio" name="pickupMethod" value="家長接送" required> 家長接送</label>
-    <label><input type="radio" name="pickupMethod" value="安親班" id="cramSchoolOption"> 安親班</label>
-    <div id="afterSchoolFields" style="display:none; margin-left:20px;">
-      <label>「安親班」-名稱</label>
-      <input type="text" name="cramSchoolName">
-      <label>「安親班」-電話</label>
-      <input type="tel" name="cramSchoolPhone">
+    <label>2.本學期午餐繳費方式</label>
+    <div class="indent">
+      <label class="radio-label"><input type="radio" name="lunchPayment" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）</label>
+      <label class="radio-label"><input type="radio" name="lunchPayment" value="月繳"> 月繳</label>
+      <label class="radio-label"><input type="radio" name="lunchPayment" value="領有午餐補助證明"> 領有午餐補助證明</label>
     </div>
-    <label><input type="radio" name="pickupMethod" value="課後照顧班"> 課後照顧班</label>
-  </div>
 
-  <button type="submit">送出</button>
-</form>
+    <label>3.本學期午餐飲用的?</label>
+    <div class="indent">
+      <label class="radio-label"><input type="radio" name="milkType" value="牛奶" required> 牛奶</label>
+      <label class="radio-label"><input type="radio" name="milkType" value="豆漿"> 豆漿</label>
+      <label class="radio-label"><input type="radio" name="milkType" value="不飲用"> 不飲用</label>
+    </div>
 
-<div id="successMessage">✅ 資料已送出</div>
+    <label>4.本學期放學接送方式</label>
+    <div class="indent">
+      <label class="radio-label"><input type="radio" name="pickupMethod" value="家長接送" required> 家長接送</label>
+      <label class="radio-label"><input type="radio" name="pickupMethod" value="安親班" id="optCram"> 安親班</label>
+
+      <div id="cramFields" class="sub" style="display:none;">
+        <label style="font-weight:normal; color:#222;">「安親班」-名稱</label>
+        <input type="text" name="cramSchoolName">
+        <label style="font-weight:normal; color:#222; margin-top:8px;">「安親班」-電話</label>
+        <input type="tel" name="cramSchoolPhone">
+      </div>
+
+      <label class="radio-label"><input type="radio" name="pickupMethod" value="課後照顧班"> 課後照顧班</label>
+    </div>
+
+    <button type="submit">送出</button>
+  </form>
+
+  <div id="successMsg" class="success">資料送出成功</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const afterSchoolFields = document.getElementById("afterSchoolFields");
-  document.querySelectorAll('input[name="pickupMethod"]').forEach(el => {
-    el.addEventListener("change", function() {
-      afterSchoolFields.style.display = (this.value === "安親班") ? "block" : "none";
+document.addEventListener('DOMContentLoaded', function(){
+  // 當安親班被選到時顯示子欄位
+  document.querySelectorAll('input[name="pickupMethod"]').forEach(r=>{
+    r.addEventListener('change', function(){
+      document.getElementById('cramFields').style.display = (this.value === '安親班') ? 'block' : 'none';
     });
   });
 
-  document.getElementById('studentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    const data = {};
-    formData.forEach((value, key) => { data[key] = value });
+  // 送出表單（使用你的 Apps Script 部署 URL）
+  const scriptUrl = "https://script.google.com/macros/s/AKfycb9ztjUUrR5THg32_h3F_e0LrX9n3FL3aHqW4_9Ot_XYvJDr3PbzBGz4vkaw1DiZ/exec";
+  // ----- 注意 -----
+  // 如果你部署的 web app URL 不同（例如你重新部署後得到不同的 ID），
+  // 請把上面 scriptUrl 改成部署後的那個完整網址。
 
-    fetch("https://script.google.com/macros/s/AKfycby9ztjUUrR5THg32_h3F_e0LrX9n3FL3aHqW4_90t_xYvJnDr3PbzBGz4vkaw1DiZbA/exec", {
+  document.getElementById('studentForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const fd = new FormData(this);
+    const data = {};
+    fd.forEach((v,k)=> data[k]=v);
+
+    fetch(scriptUrl, {
       method: 'POST',
       body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' }
+      headers: {'Content-Type':'application/json'}
     })
     .then(res => res.text())
-    .then(() => {
-      document.getElementById('successMessage').style.display = 'block';
-      this.reset();
-      afterSchoolFields.style.display = 'none';
+    .then(txt => {
+      if (txt && txt.toUpperCase().indexOf('SUCCESS') !== -1) {
+        document.getElementById('studentForm').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+      } else {
+        alert('送出失敗：' + txt);
+      }
     })
-    .catch(err => console.error('送出失敗', err));
+    .catch(err => {
+      console.error(err);
+      alert('送出發生錯誤，請查看主控台（Console）或告訴我錯誤訊息。');
+    });
   });
 });
 </script>
-
 </body>
 </html>
