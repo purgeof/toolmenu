@@ -1,84 +1,55 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>學期資料填寫</title>
+<title>學生資料填寫</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f9fdfb;
-    margin: 0;
-    padding: 20px;
-    color: #333;
+  body { font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; }
+  label { display: block; margin-top: 15px; font-weight: bold; }
+  .indent { margin-left: 20px; }
+  input[type="text"], input[type="tel"], select {
+    padding: 6px; font-size: 1em; width: 250px; max-width: 100%;
   }
-  label {
-    font-weight: bold;
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 8px;
-    color: #004d40;
-    font-size: 1.05em;
-  }
-  .radio-group {
-    margin-left: 20px;
-  }
-  .hidden {
-    display: none;
-  }
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #00796b;
-    color: white;
-    border: none;
-    font-size: 1em;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  button:hover {
-    background-color: #004d40;
-  }
-  .success {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #2196f3;
-    color: white;
-    font-size: 1.2em;
-    text-align: center;
-    border-radius: 5px;
-  }
+  button { margin-top: 20px; padding: 10px 18px; background: #0069d9; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  button:hover { background: #0053ba; }
+  #successMessage { display: none; margin-top: 20px; padding: 10px; background: #28a745; color: white; text-align: center; border-radius: 5px; }
 </style>
 </head>
 <body>
 
-<h2>學期資料填寫表</h2>
+<h2>學生資料填寫表單</h2>
 
-<form id="schoolForm">
-  <label>1. 學生姓名</label>
+<form id="studentForm">
+  <!-- 學生姓名 -->
+  <label>1. 學生姓名:</label>
   <input type="text" name="studentName" required>
 
-  <label>2. 本學期午餐繳費方式</label>
-  <div class="radio-group">
-    <label><input type="radio" name="lunchPayment" value="全繳"> 全繳（與註冊費一起繳交）</label>
+  <!-- 午餐繳費方式 -->
+  <label>2.本學期午餐繳費方式</label>
+  <div class="indent">
+    <label><input type="radio" name="lunchPayment" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）</label>
     <label><input type="radio" name="lunchPayment" value="月繳"> 月繳</label>
     <label><input type="radio" name="lunchPayment" value="領有午餐補助證明"> 領有午餐補助證明</label>
   </div>
 
-  <label>3. 本學期午餐飲用的乳品</label>
-  <div class="radio-group">
-    <label><input type="radio" name="milkType" value="牛奶"> 牛奶</label>
-    <label><input type="radio" name="milkType" value="豆奶"> 豆奶</label>
+  <!-- 午餐乳品 -->
+  <label>3.本學期午餐飲用的?</label>
+  <div class="indent">
+    <label><input type="radio" name="milkType" value="牛奶" required> 牛奶</label>
+    <label><input type="radio" name="milkType" value="豆漿"> 豆漿</label>
+    <label><input type="radio" name="milkType" value="不飲用"> 不飲用</label>
   </div>
 
-  <label>4. 本學期放學接送方式</label>
-  <div class="radio-group">
-    <label><input type="radio" name="pickupMethod" value="家長接送"> 家長接送</label>
+  <!-- 放學接送方式 -->
+  <label>4.本學期放學接送方式</label>
+  <div class="indent">
+    <label><input type="radio" name="pickupMethod" value="家長接送" required> 家長接送</label>
     <label><input type="radio" name="pickupMethod" value="安親班" id="cramSchoolOption"> 安親班</label>
-    <div id="cramSchoolFields" class="hidden">
-      <label>安親班名稱</label>
+    <div id="afterSchoolFields" style="display:none; margin-left:20px;">
+      <label>「安親班」-名稱</label>
       <input type="text" name="cramSchoolName">
-      <label>安親班電話</label>
-      <input type="text" name="cramSchoolPhone">
+      <label>「安親班」-電話</label>
+      <input type="tel" name="cramSchoolPhone">
     </div>
     <label><input type="radio" name="pickupMethod" value="課後照顧班"> 課後照顧班</label>
   </div>
@@ -86,52 +57,35 @@
   <button type="submit">送出</button>
 </form>
 
-<div id="successMessage" class="success hidden">資料送出成功</div>
+<div id="successMessage">✅ 資料已送出</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const cramSchoolOption = document.getElementById("cramSchoolOption");
-  const cramSchoolFields = document.getElementById("cramSchoolFields");
-  const form = document.getElementById("schoolForm");
-  const successMessage = document.getElementById("successMessage");
-
-  // 顯示/隱藏安親班欄位
-  form.addEventListener("change", function (e) {
-    if (cramSchoolOption.checked) {
-      cramSchoolFields.classList.remove("hidden");
-    } else {
-      cramSchoolFields.classList.add("hidden");
-    }
+document.addEventListener("DOMContentLoaded", function() {
+  const afterSchoolFields = document.getElementById("afterSchoolFields");
+  document.querySelectorAll('input[name="pickupMethod"]').forEach(el => {
+    el.addEventListener("change", function() {
+      afterSchoolFields.style.display = (this.value === "安親班") ? "block" : "none";
+    });
   });
 
-  // 表單送出
-  form.addEventListener("submit", function (e) {
+  document.getElementById('studentForm').addEventListener('submit', function(e) {
     e.preventDefault();
-
-    const formData = new FormData(form);
+    const formData = new FormData(this);
     const data = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
+    formData.forEach((value, key) => { data[key] = value });
 
-    fetch("https://script.google.com/macros/s/AKfycbxkT0Qlh1yOEqzQXa9y36kxHUzB9Ra7AJ5JomCcFJ2iVeEAc5ZcIUCW9huQs2T81Rn8/exec", {
-      method: "POST",
+    fetch("https://script.google.com/macros/s/AKfycby9ztjUUrR5THg32_h3F_e0LrX9n3FL3aHqW4_90t_xYvJnDr3PbzBGz4vkaw1DiZbA/exec", {
+      method: 'POST',
       body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
+      headers: { 'Content-Type': 'application/json' }
     })
     .then(res => res.text())
-    .then(response => {
-      if (response.trim() === "SUCCESS") {
-        successMessage.classList.remove("hidden");
-        form.reset();
-        cramSchoolFields.classList.add("hidden");
-      } else {
-        alert("送出失敗：" + response);
-      }
+    .then(() => {
+      document.getElementById('successMessage').style.display = 'block';
+      this.reset();
+      afterSchoolFields.style.display = 'none';
     })
-    .catch(err => alert("送出失敗：" + err));
+    .catch(err => console.error('送出失敗', err));
   });
 });
 </script>
