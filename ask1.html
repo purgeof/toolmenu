@@ -2,22 +2,26 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>114 調查表 01</title>
+<title>114學期調查表</title>
 <style>
   body {
-    font-family: "Microsoft JhengHei", sans-serif;
-    background-color: #f7f9fc;
-    color: #333;
-    max-width: 600px;
-    margin: auto;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
     padding: 20px;
     line-height: 1.6;
   }
-  h1 {
+  h2 {
     text-align: center;
-    color: #2c3e50;
-    margin-bottom: 25px;
+    color: #004d40;
+  }
+  form {
+    max-width: 600px;
+    margin: auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
   label {
     font-weight: bold;
@@ -27,131 +31,116 @@
     color: #004d40;
     font-size: 1.05em;
   }
-  .radio-group {
-    margin-left: 24px; /* 縮排選項 */
+  .indent {
+    margin-left: 20px;
   }
-  .radio-group label {
-    font-weight: normal;
-    display: block;
-    margin-bottom: 6px;
-    color: #333;
-  }
-  .nested-fields {
-    margin-left: 48px; /* 安親班的額外縮排 */
-    margin-top: 6px;
-  }
-  input[type="text"], input[type="tel"] {
+  input[type="text"], select {
     width: 100%;
-    padding: 6px;
+    padding: 8px;
+    margin-top: 4px;
     border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    margin-bottom: 8px;
+    border-radius: 4px;
   }
   button {
-    display: block;
-    width: 100%;
+    background-color: #007BFF;
+    color: white;
     padding: 12px;
-    background-color: #3498db;
     border: none;
     border-radius: 6px;
-    color: white;
-    font-size: 16px;
     cursor: pointer;
+    font-size: 1em;
     margin-top: 20px;
+    width: 100%;
   }
   button:hover {
-    background-color: #2980b9;
+    background-color: #0056b3;
   }
-  /* 感謝頁樣式 */
-  #thankYouPage {
+  .hidden {
     display: none;
+  }
+  .success {
     background-color: #007BFF;
     color: white;
     text-align: center;
-    font-size: 1.8em;
-    padding: 50px;
-    border-radius: 8px;
-    margin-top: 40px;
+    font-size: 1.5em;
+    padding: 40px;
+    border-radius: 10px;
   }
 </style>
 </head>
 <body>
 
-<h1>114 調查表 01</h1>
-
+<h2>114學期調查表</h2>
 <form id="surveyForm">
 
   <!-- 學生姓名 -->
-  <label>1. 學生姓名</label>
-  <input type="text" id="studentName" required>
+  <label>1. 學生姓名：</label>
+  <input type="text" name="studentName" required>
 
   <!-- 午餐繳費方式 -->
   <label>2. 本學期午餐繳費方式</label>
-  <div class="radio-group">
-    <label><input type="radio" name="lunchPay" value="全繳" required> 全繳（與註冊費一起繳交）</label>
+  <div class="indent">
+    <label><input type="radio" name="lunchPay" value="全繳（與註冊費一起繳交）" required> 全繳（與註冊費一起繳交）</label>
     <label><input type="radio" name="lunchPay" value="月繳"> 月繳</label>
-    <label><input type="radio" name="lunchPay" value="午餐補助"> 領有午餐補助證明</label>
+    <label><input type="radio" name="lunchPay" value="領有午餐補助證明"> 領有午餐補助證明</label>
   </div>
 
   <!-- 午餐乳品 -->
   <label>3. 本學期午餐飲用的乳品</label>
-  <div class="radio-group">
+  <div class="indent">
     <label><input type="radio" name="milkType" value="牛奶" required> 牛奶</label>
-    <label><input type="radio" name="milkType" value="豆奶"> 豆奶</label>
+    <label><input type="radio" name="milkType" value="豆漿"> 豆漿</label>
+    <label><input type="radio" name="milkType" value="自備"> 自備</label>
   </div>
 
   <!-- 放學接送方式 -->
   <label>4. 本學期放學接送方式</label>
-  <div class="radio-group">
-    <label><input type="radio" name="pickupWay" value="家長接送" onclick="toggleTutorFields()" required> 家長接送</label>
-    <label>
-      <input type="radio" name="pickupWay" value="安親班" onclick="toggleTutorFields()"> 安親班
-    </label>
-    <div id="tutorFields" class="nested-fields" style="display:none;">
-      <label style="font-weight:normal; color:#333;">安親班名稱</label>
-      <input type="text" id="tutorName">
-      <label style="font-weight:normal; color:#333;">安親班電話</label>
-      <input type="tel" id="tutorPhone">
-    </div>
-    <label><input type="radio" name="pickupWay" value="課後照顧班" onclick="toggleTutorFields()"> 課後照顧班</label>
+  <div class="indent">
+    <label><input type="radio" name="pickup" value="家長接送" required> 家長接送</label>
+    <label><input type="radio" name="pickup" value="安親班"> 安親班</label>
+      <div id="afterSchoolFields" class="hidden indent">
+        <label>安親班名稱</label>
+        <input type="text" name="afterschoolName">
+        <label>安親班電話</label>
+        <input type="text" name="afterschoolPhone">
+      </div>
+    <label><input type="radio" name="pickup" value="課後照顧班"> 課後照顧班</label>
   </div>
 
   <button type="submit">送出</button>
 </form>
 
-<div id="thankYouPage">資料送出成功</div>
+<div id="successMessage" class="hidden success">資料送出成功</div>
 
 <script>
-function toggleTutorFields() {
-  var pickup = document.querySelector('input[name="pickupWay"]:checked').value;
-  document.getElementById("tutorFields").style.display = (pickup === "安親班") ? "block" : "none";
-}
+document.querySelectorAll('input[name="pickup"]').forEach(el => {
+  el.addEventListener('change', function() {
+    document.getElementById('afterSchoolFields').classList.toggle(
+      'hidden', this.value !== '安親班'
+    );
+  });
+});
 
 document.getElementById("surveyForm").addEventListener("submit", function(e) {
   e.preventDefault();
+  let formData = new FormData(this);
+  let data = {};
+  formData.forEach((value, key) => data[key] = value);
 
-  const data = {
-    studentName: document.getElementById("studentName").value,
-    lunchPay: document.querySelector('input[name="lunchPay"]:checked')?.value || "",
-    milkType: document.querySelector('input[name="milkType"]:checked')?.value || "",
-    pickupWay: document.querySelector('input[name="pickupWay"]:checked')?.value || "",
-    tutorName: document.getElementById("tutorName").value,
-    tutorPhone: document.getElementById("tutorPhone").value
-  };
-
-  fetch("YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL", {
+  fetch(window.location.href, {
     method: "POST",
     body: JSON.stringify(data)
   })
-  .then(res => res.text())
-  .then(msg => {
-    document.getElementById("surveyForm").style.display = "none";
-    document.getElementById("thankYouPage").style.display = "block";
+  .then(res => res.json())
+  .then(res => {
+    if (res.success) {
+      document.getElementById("surveyForm").classList.add("hidden");
+      document.getElementById("successMessage").classList.remove("hidden");
+    } else {
+      alert("送出失敗，請稍後再試");
+    }
   })
-  .catch(err => {
-    alert("送出失敗：" + err);
-  });
+  .catch(err => alert("送出失敗：" + err));
 });
 </script>
 
