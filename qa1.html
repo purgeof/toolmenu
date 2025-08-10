@@ -72,6 +72,11 @@
             margin-bottom: 15px;
             cursor: pointer;
         }
+        .radio-option label {
+            font-size: 16px;
+            color: #555;
+            cursor: pointer;
+        }
         .radio-option input[type="radio"] {
             margin-right: 15px;
             -webkit-appearance: none;
@@ -99,10 +104,13 @@
             border-radius: 50%;
             background-color: #17a2b8;
         }
-        .radio-option label {
-            font-size: 16px;
-            color: #555;
-            cursor: pointer;
+        .sub-fields {
+            padding-left: 35px;
+            margin-top: 10px;
+            display: none; /* Initially hidden */
+        }
+        .sub-fields input {
+            margin-top: 5px;
         }
         button[type="submit"] {
             width: 100%;
@@ -123,6 +131,29 @@
         }
         button[type="submit"]:active {
             transform: translateY(0);
+        }
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .form-section-title {
+                font-size: 16px;
+            }
+            .radio-option label {
+                font-size: 14px;
+            }
+            input[type="text"] {
+                padding: 10px;
+                font-size: 14px;
+            }
+            button[type="submit"] {
+                padding: 12px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -175,6 +206,12 @@
                         <input type="radio" id="cramSchool" name="放學接送方式" value="安親班">
                         <label for="cramSchool">安親班</label>
                     </div>
+                    <div id="cramSchoolFields" class="sub-fields">
+                        <label for="cramSchoolName">「安親班」-名稱</label>
+                        <input type="text" id="cramSchoolName" name="安親班-名稱" placeholder="安親班名稱">
+                        <label for="cramSchoolPhone" style="margin-top: 15px;">「安親班」-電話</label>
+                        <input type="text" id="cramSchoolPhone" name="安親班-電話" placeholder="安親班電話">
+                    </div>
                     <div class="radio-option">
                         <input type="radio" id="afterSchoolCare" name="放學接送方式" value="課後照顧班">
                         <label for="afterSchoolCare">課後照顧班</label>
@@ -187,9 +224,39 @@
 
     <script>
         const form = document.getElementById('qa1Form');
+        const formUrl = 'https://script.google.com/macros/s/AKfycbz9dA83Y5QvJbRIPEPyS-enRMo-2mqGqrfGYJRNq7w5qi3IFtjevXnySvHQxE2AZOA/exec'; // 將此處替換為您的 Apps Script 網頁應用程式 URL
+        const cramSchoolRadio = document.getElementById('cramSchool');
+        const cramSchoolFields = document.getElementById('cramSchoolFields');
+        const cramSchoolNameInput = document.getElementById('cramSchoolName');
+        const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
+
+        // Function to toggle the visibility of the cram school fields
+        function toggleCramSchoolFields() {
+            if (cramSchoolRadio.checked) {
+                cramSchoolFields.style.display = 'block';
+                cramSchoolNameInput.setAttribute('required', 'required');
+                cramSchoolPhoneInput.setAttribute('required', 'required');
+            } else {
+                cramSchoolFields.style.display = 'none';
+                cramSchoolNameInput.removeAttribute('required');
+                cramSchoolPhoneInput.removeAttribute('required');
+                cramSchoolNameInput.value = ''; // Clear fields when hidden
+                cramSchoolPhoneInput.value = '';
+            }
+        }
+
+        // Add event listeners to all radio buttons in the group
+        document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
+            radio.addEventListener('change', toggleCramSchoolFields);
+        });
+
+        // Initial check on page load in case a radio is pre-checked
+        toggleCramSchoolFields();
+
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            const formUrl = 'https://script.google.com/macros/s/AKfycbz9dA83Y5QvJbRIPEPyS-enRMo-2mqGqrfGYJRNq7w5qi3IFtjevXnySvHQxE2AZOA/exec'; // 將此處替換為您的 Apps Script 網頁應用程式 URL
+            
+            // Collect form data
             const formData = new FormData(form);
             
             fetch(formUrl, {
@@ -199,7 +266,8 @@
             .then(response => {
                 if (response.ok) {
                     alert('表單已成功送出！');
-                    form.reset(); // 清空表單
+                    form.reset(); // Clear the form
+                    cramSchoolFields.style.display = 'none'; // Hide cram school fields after reset
                 } else {
                     alert('送出失敗，請再試一次。');
                 }
