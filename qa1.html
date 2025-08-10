@@ -23,7 +23,7 @@
             width: 100%;
             max-width: 600px;
             box-sizing: border-box;
-            position: relative; /* For positioning the message box */
+            position: relative;
         }
         h1 {
             text-align: center;
@@ -108,7 +108,7 @@
         .sub-fields {
             padding-left: 35px;
             margin-top: 10px;
-            display: none; /* Initially hidden */
+            display: none;
         }
         .sub-fields input {
             margin-top: 5px;
@@ -136,47 +136,6 @@
         }
         button[type="submit"]:active {
             transform: translateY(0);
-        }
-        /* Message container styles */
-        .message-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: none; /* Initially hidden */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 0.3s ease-in-out;
-            opacity: 0;
-        }
-        .message-box {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            transform: scale(0.9);
-            transition: transform 0.3s ease-in-out;
-        }
-        .message-container.show .message-box {
-            transform: scale(1);
-        }
-        .message-box.success {
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
-        }
-        .message-box.error {
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-            color: #721c24;
-        }
-        .message-box h2 {
-            margin-top: 0;
-            font-size: 24px;
         }
         /* Mobile-specific styles */
         @media (max-width: 768px) {
@@ -209,7 +168,7 @@
 <body>
     <div class="form-container">
         <h1>114 調査表</h1>
-        <form id="qa1Form">
+        <form id="qa1Form" method="POST" action="https://script.google.com/macros/s/AKfycbwnhKbwDB2aaJ0c5kzZBApiz1DEE1Go1gmmxr48iBnu3KqFL-5vBIn_T5K-JDcSLv46/exec">
             <div class="form-section">
                 <div class="form-section-title"><span>1.</span>學生姓名</div>
                 <input type="text" id="studentName" name="學生姓名" placeholder="請輸入學生姓名" required>
@@ -269,93 +228,31 @@
             </div>
             <button type="submit">送出</button>
         </form>
-        
-        <div id="messageContainer" class="message-container">
-            <div id="messageBox" class="message-box">
-                <h2 id="messageTitle"></h2>
-                <p id="messageText"></p>
-            </div>
-        </div>
     </div>
-<script>
-    const form = document.getElementById('qa1Form');
-    // 請將此處替換為您重新部署後的 Apps Script 網頁應用程式 URL
-    const formUrl = 'https://script.google.com/macros/s/AKfycby9fpO9ONFTyya38JylO42u1FuDREBKCCRis_EtmtxrTgmMJQOqJXqxbtefAGt-ec5N/exec';
-    
-    const cramSchoolRadio = document.getElementById('cramSchool');
-    const cramSchoolFields = document.getElementById('cramSchoolFields');
-    const cramSchoolNameInput = document.getElementById('cramSchoolName');
-    const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
-    
-    const messageContainer = document.getElementById('messageContainer');
-    const messageBox = document.getElementById('messageBox');
-    const messageTitle = document.getElementById('messageTitle');
-    const messageText = document.getElementById('messageText');
 
-    function toggleCramSchoolFields() {
-        if (cramSchoolRadio.checked) {
-            cramSchoolFields.style.display = 'block';
-            cramSchoolNameInput.setAttribute('required', 'required');
-            cramSchoolPhoneInput.setAttribute('required', 'required');
-        } else {
-            cramSchoolFields.style.display = 'none';
-            cramSchoolNameInput.removeAttribute('required');
-            cramSchoolPhoneInput.removeAttribute('required');
-            cramSchoolNameInput.value = '';
-            cramSchoolPhoneInput.value = '';
+    <script>
+        const cramSchoolRadio = document.getElementById('cramSchool');
+        const cramSchoolFields = document.getElementById('cramSchoolFields');
+        const cramSchoolNameInput = document.getElementById('cramSchoolName');
+        const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
+        
+        function toggleCramSchoolFields() {
+            if (cramSchoolRadio.checked) {
+                cramSchoolFields.style.display = 'block';
+                cramSchoolNameInput.setAttribute('required', 'required');
+                cramSchoolPhoneInput.setAttribute('required', 'required');
+            } else {
+                cramSchoolFields.style.display = 'none';
+                cramSchoolNameInput.removeAttribute('required');
+                cramSchoolPhoneInput.removeAttribute('required');
+                cramSchoolNameInput.value = '';
+                cramSchoolPhoneInput.value = '';
+            }
         }
-    }
-
-    function showMessage(title, text, type) {
-        messageTitle.textContent = title;
-        messageText.textContent = text;
-        messageBox.className = `message-box ${type}`;
-        messageContainer.style.display = 'flex';
-        setTimeout(() => {
-            messageContainer.classList.add('show');
-        }, 10);
-        
-        setTimeout(() => {
-            messageContainer.classList.remove('show');
-            setTimeout(() => {
-                messageContainer.style.display = 'none';
-            }, 300);
-        }, 3000);
-    }
-
-    document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
-        radio.addEventListener('change', toggleCramSchoolFields);
-    });
-
-    toggleCramSchoolFields();
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = {};
-        new FormData(form).forEach((value, key) => {
-            formData[key] = value;
+        document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
+            radio.addEventListener('change', toggleCramSchoolFields);
         });
-
-        fetch(formUrl, {
-            method: 'POST',
-            body: JSON.stringify(formData),
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8',
-            },
-        })
-        .then(() => {
-            // 不管回應是什麼，只要沒有進入 catch 區塊就假設成功
-            showMessage('成功送出！', '您的表單資料已成功送出。', 'success');
-            form.reset();
-            cramSchoolFields.style.display = 'none';
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            // 處理網路連線錯誤
-            showMessage('發生錯誤', '請檢查網路連線。', 'error');
-        });
-    });
-</script>
+        toggleCramSchoolFields();
+    </script>
 </body>
 </html>
