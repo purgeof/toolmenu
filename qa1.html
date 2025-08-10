@@ -344,8 +344,8 @@
                 'Content-Type': 'text/plain;charset=utf-8',
             },
         })
-        .then(response => {
-            // 在這裡直接假設成功，因為我們知道資料已成功寫入
+        .then(() => {
+            // 不管回應是什麼，只要沒有進入 catch 區塊就假設成功
             showMessage('成功送出！', '您的表單資料已成功送出。', 'success');
             form.reset();
             cramSchoolFields.style.display = 'none';
@@ -353,7 +353,7 @@
         .catch(error => {
             console.error('Error:', error);
             // 處理網路連線錯誤
-            showMessage('發生錯誤', '請檢查網路連線或 App Script 部署設定。', 'error');
+            showMessage('發生錯誤', '請檢查網路連線。', 'error');
         });
     });
 </script>
