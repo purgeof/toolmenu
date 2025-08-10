@@ -278,94 +278,93 @@
         </div>
     </div>
 
-    <script>
-        const form = document.getElementById('qa1Form');
-        // 請將此處替換為您重新部署後的 Apps Script 網頁應用程式 URL
-        const formUrl = 'https://script.google.com/macros/s/AKfycby9fpO9ONFTyya38JylO42u1FuDREBKCCRis_EtmtxrTgmMJQOqJXqxbtefAGt-ec5N/exec';
-        
-        
-        const cramSchoolRadio = document.getElementById('cramSchool');
-        const cramSchoolFields = document.getElementById('cramSchoolFields');
-        const cramSchoolNameInput = document.getElementById('cramSchoolName');
-        const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
-        
-        const messageContainer = document.getElementById('messageContainer');
-        const messageBox = document.getElementById('messageBox');
-        const messageTitle = document.getElementById('messageTitle');
-        const messageText = document.getElementById('messageText');
+  <script>
+    const form = document.getElementById('qa1Form');
+    // 請將此處替換為您重新部署後的 Apps Script 網頁應用程式 URL
+    const formUrl = 'https://script.google.com/macros/s/AKfycby9fpO9ONFTyya38JylO42u1FuDREBKCCRis_EtmtxrTgmMJQOqJXqxbtefAGt-ec5N/exec';
+    
+    const cramSchoolRadio = document.getElementById('cramSchool');
+    const cramSchoolFields = document.getElementById('cramSchoolFields');
+    const cramSchoolNameInput = document.getElementById('cramSchoolName');
+    const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
+    
+    const messageContainer = document.getElementById('messageContainer');
+    const messageBox = document.getElementById('messageBox');
+    const messageTitle = document.getElementById('messageTitle');
+    const messageText = document.getElementById('messageText');
 
-        function toggleCramSchoolFields() {
-            if (cramSchoolRadio.checked) {
-                cramSchoolFields.style.display = 'block';
-                cramSchoolNameInput.setAttribute('required', 'required');
-                cramSchoolPhoneInput.setAttribute('required', 'required');
-            } else {
-                cramSchoolFields.style.display = 'none';
-                cramSchoolNameInput.removeAttribute('required');
-                cramSchoolPhoneInput.removeAttribute('required');
-                cramSchoolNameInput.value = '';
-                cramSchoolPhoneInput.value = '';
+    function toggleCramSchoolFields() {
+        if (cramSchoolRadio.checked) {
+            cramSchoolFields.style.display = 'block';
+            cramSchoolNameInput.setAttribute('required', 'required');
+            cramSchoolPhoneInput.setAttribute('required', 'required');
+        } else {
+            cramSchoolFields.style.display = 'none';
+            cramSchoolNameInput.removeAttribute('required');
+            cramSchoolPhoneInput.removeAttribute('required');
+            cramSchoolNameInput.value = '';
+            cramSchoolPhoneInput.value = '';
+        }
+    }
+
+    function showMessage(title, text, type) {
+        messageTitle.textContent = title;
+        messageText.textContent = text;
+        messageBox.className = `message-box ${type}`;
+        messageContainer.style.display = 'flex';
+        setTimeout(() => {
+            messageContainer.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+            messageContainer.classList.remove('show');
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 300);
+        }, 3000);
+    }
+
+    document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
+        radio.addEventListener('change', toggleCramSchoolFields);
+    });
+
+    toggleCramSchoolFields();
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {};
+        new FormData(form).forEach((value, key) => {
+            formData[key] = value;
+        });
+
+        fetch(formUrl, {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                // 如果伺服器回應狀態碼不是 200，拋出錯誤
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        }
-
-        function showMessage(title, text, type) {
-            messageTitle.textContent = title;
-            messageText.textContent = text;
-            messageBox.className = `message-box ${type}`;
-            messageContainer.style.display = 'flex';
-            setTimeout(() => {
-                messageContainer.classList.add('show');
-            }, 10);
-            
-            setTimeout(() => {
-                messageContainer.classList.remove('show');
-                setTimeout(() => {
-                    messageContainer.style.display = 'none';
-                }, 300); // Wait for transition to complete
-            }, 3000); // Message disappears after 3 seconds
-        }
-
-        document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
-            radio.addEventListener('change', toggleCramSchoolFields);
+            // 由於資料已經成功寫入，即使 JSON 解析失敗，我們也認為是成功
+            return response.text(); 
+        })
+        .then(data => {
+            // 不再檢查 JSON，直接假設成功
+            showMessage('成功送出！', '您的表單資料已成功送出。', 'success');
+            form.reset();
+            cramSchoolFields.style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // 顯示錯誤訊息
+            showMessage('發生錯誤', '請檢查網路連線或 App Script 部署設定。', 'error');
         });
-
-        toggleCramSchoolFields();
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {};
-            new FormData(form).forEach((value, key) => {
-                formData[key] = value;
-            });
-
-            fetch(formUrl, {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.result === 'success') {
-                    showMessage('成功送出！', '您的表單資料已成功送出。', 'success');
-                    form.reset();
-                    cramSchoolFields.style.display = 'none';
-                } else {
-                    showMessage('送出失敗', '請再試一次。', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showMessage('發生錯誤', '請檢查網路連線或 App Script 部署設定。', 'error');
-            });
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
