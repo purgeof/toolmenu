@@ -23,6 +23,7 @@
             width: 100%;
             max-width: 600px;
             box-sizing: border-box;
+            position: relative; /* For positioning the message box */
         }
         h1 {
             text-align: center;
@@ -136,6 +137,47 @@
         button[type="submit"]:active {
             transform: translateY(0);
         }
+        /* Message container styles */
+        .message-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0;
+        }
+        .message-box {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease-in-out;
+        }
+        .message-container.show .message-box {
+            transform: scale(1);
+        }
+        .message-box.success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .message-box.error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .message-box h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
         /* Mobile-specific styles */
         @media (max-width: 768px) {
             body {
@@ -227,18 +269,29 @@
             </div>
             <button type="submit">送出</button>
         </form>
+        
+        <div id="messageContainer" class="message-container">
+            <div id="messageBox" class="message-box">
+                <h2 id="messageTitle"></h2>
+                <p id="messageText"></p>
+            </div>
+        </div>
     </div>
 
     <script>
         const form = document.getElementById('qa1Form');
         // 請將此處替換為您重新部署後的 Apps Script 網頁應用程式 URL
-        const formUrl = 'https://script.google.com/macros/s/AKfycby9fpO9ONFTyya38JylO42u1FuDREBKCCRis_EtmtxrTgmMJQOqJXqxbtefAGt-ec5N/exec';
-        
+        const formUrl = 'https://script.google.com/macros/s/AKfycbz9dA83Y5QvJbRIPEPyS-enRMo-2mqGqrfGYJRNq7w5qi3IFtjevXnySvHQxE2AZOA/exec';
         
         const cramSchoolRadio = document.getElementById('cramSchool');
         const cramSchoolFields = document.getElementById('cramSchoolFields');
         const cramSchoolNameInput = document.getElementById('cramSchoolName');
         const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
+        
+        const messageContainer = document.getElementById('messageContainer');
+        const messageBox = document.getElementById('messageBox');
+        const messageTitle = document.getElementById('messageTitle');
+        const messageText = document.getElementById('messageText');
 
         function toggleCramSchoolFields() {
             if (cramSchoolRadio.checked) {
@@ -252,6 +305,23 @@
                 cramSchoolNameInput.value = '';
                 cramSchoolPhoneInput.value = '';
             }
+        }
+
+        function showMessage(title, text, type) {
+            messageTitle.textContent = title;
+            messageText.textContent = text;
+            messageBox.className = `message-box ${type}`;
+            messageContainer.style.display = 'flex';
+            setTimeout(() => {
+                messageContainer.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                messageContainer.classList.remove('show');
+                setTimeout(() => {
+                    messageContainer.style.display = 'none';
+                }, 300); // Wait for transition to complete
+            }, 3000); // Message disappears after 3 seconds
         }
 
         document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
@@ -283,14 +353,17 @@
             })
             .then(data => {
                 if (data.result === 'success') {
-                    alert('表單已成功送出！');
+                    showMessage('成功送出！', '您的表單資料已成功送出。', 'success');
                     form.reset();
                     cramSchoolFields.style.display = 'none';
                 } else {
-                    alert('送出失敗，請再試一次。');
+                    showMessage('送出失敗', '請再試一次。', 'error');
                 }
             })
-   
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('發生錯誤', '請檢查網路連線或 App Script 部署設定。', 'error');
+            });
         });
     </script>
 </body>
