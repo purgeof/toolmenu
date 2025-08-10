@@ -222,61 +222,69 @@
         </form>
     </div>
 
-    <script>
-        const form = document.getElementById('qa1Form');
-        const formUrl = 'https://script.google.com/macros/s/AKfycbz9dA83Y5QvJbRIPEPyS-enRMo-2mqGqrfGYJRNq7w5qi3IFtjevXnySvHQxE2AZOA/exec'; // 將此處替換為您的 Apps Script 網頁應用程式 URL
-        const cramSchoolRadio = document.getElementById('cramSchool');
-        const cramSchoolFields = document.getElementById('cramSchoolFields');
-        const cramSchoolNameInput = document.getElementById('cramSchoolName');
-        const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
+  <script>
+    const form = document.getElementById('qa1Form');
+    const formUrl = 'https://script.google.com/macros/s/AKfycbz9dA83Y5QvJbRIPEPyS-enRMo-2mqGqrfGYJRNq7w5qi3IFtjevXnySvHQxE2AZOA/exec'; // 將此處替換為您的 Apps Script 網頁應用程式 URL
+    const cramSchoolRadio = document.getElementById('cramSchool');
+    const cramSchoolFields = document.getElementById('cramSchoolFields');
+    const cramSchoolNameInput = document.getElementById('cramSchoolName');
+    const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
 
-        // Function to toggle the visibility of the cram school fields
-        function toggleCramSchoolFields() {
-            if (cramSchoolRadio.checked) {
-                cramSchoolFields.style.display = 'block';
-                cramSchoolNameInput.setAttribute('required', 'required');
-                cramSchoolPhoneInput.setAttribute('required', 'required');
-            } else {
-                cramSchoolFields.style.display = 'none';
-                cramSchoolNameInput.removeAttribute('required');
-                cramSchoolPhoneInput.removeAttribute('required');
-                cramSchoolNameInput.value = ''; // Clear fields when hidden
-                cramSchoolPhoneInput.value = '';
-            }
+    // Function to toggle the visibility of the cram school fields
+    function toggleCramSchoolFields() {
+        if (cramSchoolRadio.checked) {
+            cramSchoolFields.style.display = 'block';
+            cramSchoolNameInput.setAttribute('required', 'required');
+            cramSchoolPhoneInput.setAttribute('required', 'required');
+        } else {
+            cramSchoolFields.style.display = 'none';
+            cramSchoolNameInput.removeAttribute('required');
+            cramSchoolPhoneInput.removeAttribute('required');
+            cramSchoolNameInput.value = ''; // Clear fields when hidden
+            cramSchoolPhoneInput.value = '';
         }
+    }
 
-        // Add event listeners to all radio buttons in the group
-        document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
-            radio.addEventListener('change', toggleCramSchoolFields);
+    // Add event listeners to all radio buttons in the group
+    document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
+        radio.addEventListener('change', toggleCramSchoolFields);
+    });
+
+    // Initial check on page load in case a radio is pre-checked
+    toggleCramSchoolFields();
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Convert form data to a JSON object
+        const formData = {};
+        new FormData(form).forEach((value, key) => {
+            formData[key] = value;
         });
 
-        // Initial check on page load in case a radio is pre-checked
-        toggleCramSchoolFields();
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Collect form data
-            const formData = new FormData(form);
-            
-            fetch(formUrl, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('表單已成功送出！');
-                    form.reset(); // Clear the form
-                    cramSchoolFields.style.display = 'none'; // Hide cram school fields after reset
-                } else {
-                    alert('送出失敗，請再試一次。');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('發生錯誤，請檢查網路連線。');
-            });
+        // Use fetch with a plain text content type to avoid CORS preflight issues
+        fetch(formUrl, {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+        })
+        .then(response => response.json()) // The script now returns a JSON response
+        .then(data => {
+            if (data.result === 'success') {
+                alert('表單已成功送出！');
+                form.reset(); // Clear the form
+                cramSchoolFields.style.display = 'none'; // Hide cram school fields after reset
+            } else {
+                alert('送出失敗，請再試一次。');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('發生錯誤，請檢查網路連線。');
         });
-    </script>
+    });
+</script>
 </body>
 </html>
