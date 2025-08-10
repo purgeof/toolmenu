@@ -259,38 +259,4 @@
     </script>
 </body>
 </html>
-```javascript
-// Google Apps Script 程式碼
 
-var SHEET_NAME = "工作表1"; // 請根據您的試算表工作表名稱進行更改
-var SCRIPT_PROP = PropertiesService.getScriptProperties();
-
-function doGet(e) {
-  // 這是一個簡易的網頁應用程式，不支援 GET 請求
-  return HtmlService.createHtmlOutput('網頁應用程式已部署，請從表單頁面提交資料。');
-}
-
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  var nextRow = sheet.getLastRow() + 1;
-  
-  // Parse the JSON data from the request body
-  var formData = JSON.parse(e.postData.contents);
-
-  // 獲取目前的日期和時間，並格式化為 "yyyy/MM/dd HH:mm:ss"
-  var formattedTimestamp = Utilities.formatDate(new Date(), "GMT+8", "yyyy/MM/dd HH:mm:ss");
-
-  var newRow = headers.map(function(header) {
-    if (header === 'timestamp') {
-      return formattedTimestamp; // 使用格式化的日期和時間
-    }
-    return formData[header] || ''; // Use formData and handle cases where a field might be missing
-  });
-  
-  sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
-  
-  // 回傳一個包含成功訊息的 JSON 物件
-  return ContentService.createTextOutput(JSON.stringify({result: "success"}))
-         .setMimeType(ContentService.MimeType.JSON);
-}
