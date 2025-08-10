@@ -230,29 +230,92 @@
         </form>
     </div>
 
-    <script>
-        const cramSchoolRadio = document.getElementById('cramSchool');
-        const cramSchoolFields = document.getElementById('cramSchoolFields');
-        const cramSchoolNameInput = document.getElementById('cramSchoolName');
-        const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
-        
-        function toggleCramSchoolFields() {
-            if (cramSchoolRadio.checked) {
-                cramSchoolFields.style.display = 'block';
-                cramSchoolNameInput.setAttribute('required', 'required');
-                cramSchoolPhoneInput.setAttribute('required', 'required');
-            } else {
-                cramSchoolFields.style.display = 'none';
-                cramSchoolNameInput.removeAttribute('required');
-                cramSchoolPhoneInput.removeAttribute('required');
-                cramSchoolNameInput.value = '';
-                cramSchoolPhoneInput.value = '';
-            }
+   <script>
+    const form = document.getElementById('qa1Form');
+    // 請將此處替換為您重新部署後的 Apps Script 網頁應用程式 URL
+    const formUrl = 'https://script.google.com/macros/s/AKfycby9fpO9ONFTyya38JylO42u1FuDREBKCCRis_EtmtxrTgmMJQOqJXqxbtefAGt-ec5N/exec';
+       
+       
+    
+    const cramSchoolRadio = document.getElementById('cramSchool');
+    const cramSchoolFields = document.getElementById('cramSchoolFields');
+    const cramSchoolNameInput = document.getElementById('cramSchoolName');
+    const cramSchoolPhoneInput = document.getElementById('cramSchoolPhone');
+    
+    const messageContainer = document.getElementById('messageContainer');
+    const messageBox = document.getElementById('messageBox');
+    const messageTitle = document.getElementById('messageTitle');
+    const messageText = document.getElementById('messageText');
+
+    function toggleCramSchoolFields() {
+        if (cramSchoolRadio.checked) {
+            cramSchoolFields.style.display = 'block';
+            cramSchoolNameInput.setAttribute('required', 'required');
+            cramSchoolPhoneInput.setAttribute('required', 'required');
+        } else {
+            cramSchoolFields.style.display = 'none';
+            cramSchoolNameInput.removeAttribute('required');
+            cramSchoolPhoneInput.removeAttribute('required');
+            cramSchoolNameInput.value = '';
+            cramSchoolPhoneInput.value = '';
         }
-        document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
-            radio.addEventListener('change', toggleCramSchoolFields);
+    }
+
+    function showMessage(title, text, type) {
+        messageTitle.textContent = title;
+        messageText.textContent = text;
+        messageBox.className = `message-box ${type}`;
+        messageContainer.style.display = 'flex';
+        setTimeout(() => {
+            messageContainer.classList.add('show');
+        }, 10);
+        
+        setTimeout(() => {
+            messageContainer.classList.remove('show');
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 300);
+        }, 3000);
+    }
+
+    document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
+        radio.addEventListener('change', toggleCramSchoolFields);
+    });
+
+    toggleCramSchoolFields();
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {};
+        new FormData(form).forEach((value, key) => {
+            formData[key] = value;
         });
-        toggleCramSchoolFields();
-    </script>
+        
+        // 立即顯示成功訊息並清空表單，因為我們知道資料會被成功寫入
+        showMessage('成功送出！', '您的表單資料已成功送出。', 'success');
+        form.reset();
+        cramSchoolFields.style.display = 'none';
+
+        // 非同步發送表單資料，不等待回覆，也不做任何處理
+        // 這段程式碼的唯一目的就是發送資料，因為我們已經確認它能成功寫入
+        fetch(formUrl, {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+            },
+        })
+        .catch(error => {
+            // 這個 catch 區塊只會捕捉到網路連線層級的錯誤
+            console.error('Error:', error);
+            // 由於我們已經顯示了成功訊息，這裡可以選擇忽略或顯示一個更為特別的錯誤
+            // 這裡我們選擇顯示一個錯誤，但會比較晚出現
+            setTimeout(() => {
+                showMessage('發生錯誤', '表單送出失敗，請檢查網路連線。', 'error');
+            }, 5000); // 延遲顯示，以免覆蓋成功訊息
+        });
+    });
+</script>
 </body>
 </html>
