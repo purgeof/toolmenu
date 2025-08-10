@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>114學年度二年三班資料調查表</title>
+    <title>114 調査表</title>
     <!-- 使用 Tailwind CSS 和 Google Font "Inter" 來美化介面 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -89,10 +89,11 @@
                 <input type="text" id="studentName" name="學生姓名" placeholder="請輸入學生姓名" required
                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200">
             </div>
-            <!-- 學生座號 -->            
-           <div>
+
+            <!-- 新增學生座號 -->
+            <div>
                 <label class="block text-gray-700 font-semibold mb-2">2. 學生座號</label>
-                <input type="text" id="studentNum" name="學生座號" placeholder="請輸入座號" required
+                <input type="text" id="studentNumber" name="學生座號" placeholder="請輸入學生座號" required
                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200">
             </div>
 
@@ -144,12 +145,12 @@
                     </div>
                     <div id="cramSchoolFields" class="sub-fields pl-8 mt-2 space-y-4">
                         <div>
-                            <label for="cramSchoolName" class="block text-sm text-gray-500 mb-1">名稱</label>
+                            <label for="cramSchoolName" class="block text-sm text-gray-500 mb-1">「安親班」-名稱</label>
                             <input type="text" id="cramSchoolName" name="安親班-名稱" placeholder="請輸入安親班名稱"
                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200">
                         </div>
                         <div>
-                            <label for="cramSchoolPhone" class="block text-sm text-gray-500 mb-1">電話</label>
+                            <label for="cramSchoolPhone" class="block text-sm text-gray-500 mb-1">「安親班」-電話</label>
                             <input type="text" id="cramSchoolPhone" name="安親班-電話" placeholder="請輸入安親班電話"
                                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200">
                         </div>
@@ -179,8 +180,7 @@
     <script>
         // Google Apps Script 部署後的 Web 應用程式 URL
         // 請務必將此處替換為您自己的網址
-       // const formUrl = 'https://script.google.com/macros/s/AKfycby9fpO9ONFTyya38JylO42u1FuDREBKCCRis_EtmtxrTgmMJQOqJXqxbtefAGt-ec5N/exec';
-        const formUrl = 'https://script.google.com/macros/s/AKfycbylVpKJT01dTOTrTk1UTkCwi-vRl-4YHRjoD-cu7hG2GGDLPBP9msFcOj86Fllnfi43/exec';        
+        const formUrl = 'https://script.google.com/macros/s/AKfycby9fpO9ONFTyya38JylO42u1FuDREBKCCRis_EtmtxrTgmMJQOqJXqxbtefAGt-ec5N/exec';
         
         const form = document.getElementById('qa1Form');
         const cramSchoolRadio = document.getElementById('cramSchool');
@@ -266,4 +266,3 @@
     </script>
 </body>
 </html>
-
