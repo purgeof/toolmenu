@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>因數與倍數消消樂 - 挑戰版</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8; /* 淺灰色背景 */
+            color: #4a5568;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 2em;
+            margin-bottom: 1.5em; /* 增加與下方內容的間距 */
+            justify-content: center;
+            color: #553c9a; /* 深紫色 */
+        }
+        button {
+            cursor: pointer;
+        }
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 36px);
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+            /* 開始美化框框 */
+            border: 10px solid #8fbc8f; /* 綠色邊框 */
+            border-radius: 15px; /* 圓角效果，可依喜好調整數值 */
+            padding: 10px; /* 增加內邊距，讓框框更明顯 */
+        }
+        .number-grid button {
+            border: 1px solid #ccc;
+            background: #fff;
+            font-size: 22px;
+            user-select: none;
+            height: 42px;
+            width: 42px;
+            border-radius: 4px;
+            transition: background-color 0.2s, color 0.2s;
+            position: relative;
+        }
+        .number-grid button:hover:not(:disabled) {
+            background-color: #ebf4ff;
+            border-color: #90cdf4;
+            color: #2c5282;
+        }
+        .selected {
+            cursor: not-allowed;
+            font-weight: 900;
+        }
+        /* 玩家1和玩家2的專屬顏色 */
+        .selected.player1 {
+            background-color: #fceb9f; /* 柔和的黃色 */
+            color: #a05a16; /* 深色的字體，讓文字更清晰 */
+        }
+        .selected.player2 {
+            background-color: #d8f5f8; /* 柔和的淡藍色 */
+            color: #1a5b64; /* 深色的字體，讓文字更清晰 */
+        }
+        .selected::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            width: 70%;
+            height: 2px;
+            background-color: #5305ee;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .last-selected {
+            outline: 3px solid #d69e2e;
+            outline-offset: 1px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex-grow: 1;
+        }
+        input{
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline-offset: 2px;
+        }
+        input:focus {
+            border-color: #6b46c1;
+            caret-color: #6b46c1;
+            box-shadow: 0 0 4px #6b46c1aa;
+        }
+        .btn-primary {
+            background-color: #7f55b9; /* 調整按鈕顏色 */
+            color: #fff;
+            border: none;
+            padding: 12px 24px; /* 增加按鈕大小 */
+            font-weight: 700;
+            font-size: 1.1em;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            user-select: none;
+            transition: background-color 0.2s;
+            margin-top: 20px; /* 增加與上方內容的間距 */
+        }
+        .btn-primary:hover {
+            background-color: #6b46c1;
+        }
+        .alert {
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+        .alert.error {
+            background-color: #fff5f5;
+            color: #c53030;
+            border: 1px solid #f56565;
+        }
+        .alert.success {
+            background-color: #f0fff4;
+            color: #38a169;
+            border: 1px solid #48bb78;
+        }
+        .panel {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: #6b46c1;
+        }
+        .rules-panel {
+            background-color: #f7f3ff; /* 遊戲規則區塊背景色 */
+            border-radius: 10px;
+            padding:0px;
+            margin-bottom:0px;
+            text-align: left;
+            color: #553c9a;
+            font-size: 20px;
+        }
+        .rules-panel h2 {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #553c9a;
+            margin-bottom: 1em;
+        }
+        .rules-panel ol, .rules-panel ul {
+            padding-left: 20px;
+        }
+        .rules-panel li {
+            margin-bottom: 8px;
+        }
+        .hint-box {
+            background-color: #fefcbf;
+            border: 1px solid #faf089;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 20px;
+            color: #975a16;
+            font-size: 18px;
+        }
+        .hint-box h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .restart-btn {
+            /* 模仿「開始挑戰」按鈕樣式 */
+            display: flex; /* 使用 flexbox 佈局，讓圖示和文字可以對齊 */
+            align-items: center; /* 垂直居中對齊 */
+            justify-content: center; /* 水平居中對齊 */
+            padding: 15px 30px; /* 增加內邊距，讓按鈕更寬大 */
+            border: none;
+            border-radius: 50px; /* 設定大圓角，接近膠囊狀 */
+            background-color: #6a4c93; /* 設定為紫色 */
+            color: #ffffff; /* 文字顏色為白色 */
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 增加輕微陰影 */
+            transition: all 0.3s ease; /* 增加過渡效果 */
+            margin-top: 15px;
+        }
+        .restart-btn:hover {
+            background-color: #5b3d84; /* 滑鼠懸停時顏色變深 */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .restart-btn:active {
+            background-color: #4c306d; /* 點擊時顏色更深，模擬按壓感 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .restart-btn .icon {
+            font-size: 24px;
+            margin-right: 10px; /* 圖示與文字之間的間距 */
+        }
+        .restart-btn .text {
+            /* 這裡沒有額外樣式，但可以根據需要添加 */
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .flex-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center; /* 水平居中 */
+        }
+        .flex-grow {
+            flex-grow: 1;
+        }
+        .explanation-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .explanation-row span:first-child {
+            font-weight: bold;
+            min-width: 24px;
+        }
+        .player-inputs {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .player-input-group {
+            flex-grow: 1;
+            max-width: 300px;
+        }
+        /* 修正後的 info 區塊排版 */
+        #info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        .turn-info {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4a5568;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+        }
+        .last-number-info {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4a5568;
+            padding: 8px 12px;
+            border: 0px solid #6b46c1;
+            border-radius: 5px;
+        }
+
+
+        .win-animation {
+            animation: celebrate 1s infinite alternate; /* 1秒的無限循環動畫，交替執行 */
+        }
+
+
+        @keyframes celebrate {
+            0% {
+                transform: scale(1);
+                color: #38a169; /* 獲勝文字顏色 */
+            }
+            100% {
+                transform: scale(1.2);
+                color: #48bb78; /* 獲勝文字放大後的顏色 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+    <div id="setup" class="flex-col" style="align-items: center;">
+
+
+        <div class="rules-panel">
+            <h2>🧠 因數與倍數消消樂 - 挑戰版</h2>
+            <h2>遊戲規則</h2>
+            <ol>
+                <li>兩人一組，分成「先攻、後攻」</li>
+                <li>先攻_選1-20 的數字，後攻_選「該數字」的因數 or 倍數</li>
+                <li>選過的數字會被劃掉，不能再選</li>
+                <li>讓對方無法再選數字時，就是你獲勝！</li>
+            </ol>
+            <div class="hint-box">
+                <h3>挑戰模式特色</h3>
+                <ul>
+                    <li style="color: #c05621;">沒有數字提示，完全靠自己判斷！</li>
+                    <li style="color: #c05621;">考驗你對因數與倍數的理解</li>
+                    <li style="color: #c05621;">培養獨立思考和計算能力</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="player-inputs">
+            <div class="input-group player-input-group">
+                <label for="player1" style="color: #553c9a;">先攻玩家</label>
+                <input type="text" id="player1" placeholder="輸入先攻玩家姓名" value="玩家一" />
+            </div><BR><BR><BR>
+            <div class="input-group player-input-group">
+                <label for="player2" style="color: #553c9a;">後攻玩家</label>
+                <input type="text" id="player2" placeholder="輸入後攻玩家姓名" value="玩家二" />
+            </div>
+        </div>
+        <button id="startBtn" class="btn-primary" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            開始挑戰
+        </button>
+    </div>
+
+
+    <div id="game" style="display:none;">
+        <div id="info" class="panel"></div>
+        <div id="error" class="alert error" style="display:none;"></div>
+
+
+        <div class="number-grid" id="numberGrid"></div>
+
+
+        <div class="flex-row" style="margin-top: 20px; gap:10px;">
+            <div style="flex-grow: 1;">
+                <button id="resetBtn" class="restart-btn" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw">
+                        <path d="M3 12a9 9 0 1 0 9-9v1.72a.5.5 0 0 1-.84.385L9.61 2.373a1 1 0 0 0-1.226-.145L4.852 4.6a1 1 0 0 0-.217 1.258l2.257 3.518A.5.5 0 0 1 7.28 10h1.72a9 9 0 0 0-9 9"/>
+                    </svg>
+                    <span>重新開始</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        (function(){
+            let gameState = 'setup';
+            let currentPlayer = 1;
+            let selectedNumbers = new Map();
+            let gameHistory = [];
+            let playerNames = {player1: '玩家一', player2: '玩家二'};
+            let winner = null;
+            let lastSelectedNumber = null;
+            let errorTimeout = null;
+
+
+            const setupDiv = document.getElementById('setup');
+            const gameDiv = document.getElementById('game');
+            const startBtn = document.getElementById('startBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const player1Input = document.getElementById('player1');
+            const player2Input = document.getElementById('player2');
+            const numberGrid = document.getElementById('numberGrid');
+            const infoDiv = document.getElementById('info');
+            const errorDiv = document.getElementById('error');
+
+
+            function getFactors(num) {
+                const factors = [];
+                for(let i=1; i<=num; i++) {
+                    if(num % i === 0) factors.push(i);
+                }
+                return factors;
+            }
+            function getMultiples(num) {
+                const multiples = [];
+                for(let i=num; i<=100; i+=num) {
+                    multiples.push(i);
+                }
+                return multiples;
+            }
+            function isValidMove(selectedNum, targetNum) {
+                if(selectedNum === targetNum) return false;
+                if(selectedNum % targetNum === 0) return true;
+                if(targetNum % selectedNum === 0) return true;
+                return false;
+            }
+            function calculatePossibleMoves(selectedNum, usedNumbers) {
+                if(!selectedNum) return new Set();
+                const factors = getFactors(selectedNum);
+                const multiples = getMultiples(selectedNum);
+                const allPossible = [...factors, ...multiples];
+                const filtered = allPossible.filter(n => !usedNumbers.has(n));
+                return new Set(filtered);
+            }
+            function showError(msg) {
+                clearTimeout(errorTimeout);
+                errorDiv.textContent = msg;
+                errorDiv.style.display = 'flex';
+                errorTimeout = setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                    errorDiv.textContent = '';
+                }, 3000);
+            }
+
+
+            function renderNumberGrid() {
+                numberGrid.innerHTML = '';
+                for(let i = 1; i <= 100; i++) {
+                    const btn = document.createElement('button');
+                    btn.textContent = i;
+                    btn.addEventListener('click', () => selectNumber(i));
+                    const player = selectedNumbers.get(i);
+                    if (player) {
+                        btn.classList.add('selected', `player${player}`);
+                        btn.disabled = true;
+                    }
+                    if(i === lastSelectedNumber) {
+                        btn.classList.add('last-selected');
+                    }
+                    numberGrid.appendChild(btn);
+                }
+            }
+
+
+            function renderInfo() {
+                if(gameState === 'finished') {
+                    infoDiv.innerHTML = `<span class="turn-info">🎉 恭喜 ${playerNames['player'+winner]} 獲勝！ 🎉</span><span class="last-number-info" style="display:none;"></span>`;
+                    const winInfo = infoDiv.querySelector('.turn-info');
+                    if (winInfo) {
+                        winInfo.classList.add('win-animation');
+                    }
+                } else if(gameState === 'playing') {
+                    const msg = gameHistory.length === 0
+                        ? `輪到 ${playerNames['player'+currentPlayer]} (請選擇 1-20 的數字)`
+                        : `輪到 ${playerNames['player'+currentPlayer]} (選擇因數或倍數)`;
+
+
+                    infoDiv.innerHTML = `<span class="turn-info">${msg}</span>`;
+                    if(lastSelectedNumber !== null) {
+                        infoDiv.innerHTML += `<span class="last-number-info">上一個選擇的數字：${lastSelectedNumber}</span>`;
+                    } else {
+                        infoDiv.innerHTML += `<span class="last-number-info"></span>`;
+                    }
+                } else {
+                    infoDiv.innerHTML = '';
+                }
+            }
+
+
+            function selectNumber(number) {
+                if(gameState !== 'playing') return;
+                if(selectedNumbers.has(number)) {
+                    showError('這個數字已經被選過了！');
+                    return;
+                }
+                if(gameHistory.length === 0) {
+                    if(number < 1 || number > 20) {
+                        showError('先攻玩家只能選擇 1-20 的數字！');
+                        return;
+                    }
+                } else {
+                    if(!isValidMove(lastSelectedNumber, number)) {
+                        showError(`${number} 不是 ${lastSelectedNumber} 的因數或倍數！`);
+                        return;
+                    }
+                }
+
+
+                selectedNumbers.set(number, currentPlayer);
+
+
+                gameHistory.push({
+                    player: currentPlayer,
+                    number,
+                    playerName: playerNames['player'+currentPlayer]
+                });
+                lastSelectedNumber = number;
+                errorDiv.style.display = 'none';
+                errorDiv.textContent = '';
+                const nextMoves = calculatePossibleMoves(number, selectedNumbers);
+                if(nextMoves.size === 0) {
+                    winner = currentPlayer;
+                    gameState = 'finished';
+                } else {
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                }
+                updateUI();
+            }
+            function startGame() {
+                const p1 = player1Input.value.trim() || '玩家一';
+                const p2 = player2Input.value.trim() || '玩家二';
+                playerNames = {player1: p1, player2: p2};
+                gameState = 'playing';
+                currentPlayer = 1;
+                selectedNumbers = new Map();
+                gameHistory = [];
+                winner = null;
+                lastSelectedNumber = null;
+                errorDiv.style.display = 'none';
+                errorDiv.textContent = '';
+                setupDiv.style.display = 'none';
+                gameDiv.style.display = 'block';
+                updateUI();
+            }
+            function resetGame() {
+                gameState = 'setup';
+                currentPlayer = 1;
+                selectedNumbers = new Map();
+                gameHistory = [];
+                winner = null;
+                lastSelectedNumber = null;
+                errorDiv.style.display = 'none';
+                errorDiv.textContent = '';
+                setupDiv.style.display = 'flex';
+                gameDiv.style.display = 'none';
+                updateUI();
+            }
+            function updateUI() {
+                renderNumberGrid();
+                renderInfo();
+            }
+            startBtn.addEventListener('click', startGame);
+            resetBtn.addEventListener('click', resetGame);
+        })();
+    </script>
+</body>
+</html>
