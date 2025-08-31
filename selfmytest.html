@@ -1,97 +1,516 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<title>問卷填寫</title>
-<style>
-  body { font-family: "Microsoft JhengHei"; margin: 20px; }
-  .page { display: none; }
-  .active { display: block; }
-  .warning { color: red; font-weight: bold; }
-</style>
+    <meta charset="UTF-8">
+    <title>學生問卷</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary-color: #26a69a;
+            --primary-dark: #00796b;
+            --background-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+            --warning-color: #e53935;
+        }
+
+        body {
+            font-family: '微軟正黑體', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-size: 20px; /* 這裡可以更改，例如改成 18px 或 1em */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 30px 20px;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.4s ease-in-out;
+        }
+
+        .page-info {
+            text-align: right;
+            color: #757575;
+            font-size:1em;
+            margin: -10px 0 25px;
+        }
+
+        .form-section {
+            margin-bottom: 10px;
+        }
+
+        .form-section label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-section input[type="text"] {
+            width: 30%;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        .page {
+            display: none;
+            animation: fadein 0.5s;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .custom-checkbox input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-dark);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .custom-checkbox input[type="checkbox"]:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .custom-checkbox input[type="checkbox"]:checked::after {
+            content: '✔';
+            color: var(--card-bg);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1em;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .button-group button {
+            padding: 12px 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .next-btn, .submit-btn {
+            background-color: var(--primary-color);
+            color: var(--card-bg);
+        }
+
+        .next-btn:hover, .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .prev-btn {
+            background-color: #bdbdbd;
+            color: #424242;
+        }
+
+        .prev-btn:hover {
+            background-color: #9e9e9e;
+            transform: translateY(-2px);
+        }
+
+        .warning {
+            color: var(--warning-color);
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* 彈出視窗樣式 */
+        .popup-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup-container.show {
+            display: flex;
+        }
+
+        .popup-content {
+            background-color: var(--primary-color);
+            color: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .popup-title {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+
+        .popup-message {
+            font-size: 1.2em;
+            margin: 0 0 20px 0;
+        }
+
+        .submitted-answers {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .submitted-answers li {
+            background-color: var(--primary-dark);
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .popup-button {
+            background-color: var(--primary-dark);
+            color: var(--card-bg);
+            border: none;
+            padding: 12px 25px;
+            margin-top: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .popup-button:hover {
+            background-color: #004d40;
+        }
+    </style>
 </head>
 <body>
-<h2>學生問卷</h2>
 
-<form id="quizForm">
-  <label>座號：<input type="text" id="seat" required></label><br><br>
-  <label>姓名：<input type="text" id="name" required></label><br><br>
+    <div class="container">
+        <h1>學生問卷</h1>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <p class="page-info"><span id="currentPage">1</span> / 2</p>
 
-  <!-- 第 1 頁 -->
-  <div class="page active" id="page1">
-    <h3>第 1 頁（1~10 題）</h3>
-    <div>
-      <label><input type="checkbox" name="q" value="1. 背詩和有韻律"> 1. 背詩和有韻律的句子時很出色</label><br>
-      <label><input type="checkbox" name="q" value="2. 注意情緒變化"> 2. 注意你情緒變化，並作出反應</label><br>
-      <label><input type="checkbox" name="q" value="3. 常問『從什麼時候開始』"> 3. 常問問題如「從什麼時候開始」</label><br>
-      <label><input type="checkbox" name="q" value="4. 很少迷路"> 4. 很少迷路，記住走過的地方</label><br>
-      <label><input type="checkbox" name="q" value="5. 走路姿勢很協調"> 5. 走路姿勢很協調</label><br>
-      <label><input type="checkbox" name="q" value="6. 唱歌音階很準"> 6. 唱歌音階很準</label><br>
-      <label><input type="checkbox" name="q" value="7. 常問打雷閃電問題"> 7. 常問打雷、閃電問題</label><br>
-      <label><input type="checkbox" name="q" value="8. 糾正文詞錯誤"> 8. 如果用詞錯，他會糾正</label><br>
-      <label><input type="checkbox" name="q" value="9. 小時候會綁鞋帶"> 9. 小時候會綁鞋帶</label><br>
-      <label><input type="checkbox" name="q" value="10. 喜歡角色扮演"> 10. 喜歡角色扮演或編故事</label><br>
+        <form id="quizForm">
+            <div class="form-section">
+                <label for="seat">座號：</label>
+                <input type="text" id="seat" required>
+            </div>
+            <div class="form-section">
+                <label for="name">姓名：</label>
+                <input type="text" id="name" required>
+            </div>
+            
+            <div class="page active" id="page1">
+                <h3>第 1 頁（1~10 題）</h3>
+                <div class="question-group">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="1. 背詩和有韻律">
+                        <span>1. 背詩和有韻律的句子時很出色</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="2. 注意情緒變化">
+                        <span>2. 注意你情緒變化，並作出反應</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="3. 常問『從什麼時候開始』">
+                        <span>3. 常問問題如「從什麼時候開始」</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="4. 很少迷路">
+                        <span>4. 很少迷路，記住走過的地方</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="5. 走路姿勢很協調">
+                        <span>5. 走路姿勢很協調</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="6. 唱歌音階很準">
+                        <span>6. 唱歌音階很準</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="7. 常問打雷閃電問題">
+                        <span>7. 常問打雷、閃電問題</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="8. 糾正文詞錯誤">
+                        <span>8. 如果用詞錯，他會糾正</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="9. 小時候會綁鞋帶">
+                        <span>9. 小時候會綁鞋帶</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="10. 喜歡角色扮演">
+                        <span>10. 喜歡角色扮演或編故事</span>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="next-btn">下一頁</button>
+                </div>
+            </div>
+
+            <div class="page" id="page2">
+                <h3>第 2 頁（11~20 題）</h3>
+                <div class="question-group">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="11. 記住沿途建築">
+                        <span>11. 記住沿途建築</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="12. 喜歡聽樂器">
+                        <span>12. 喜歡聽各種樂器</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="13. 畫地圖">
+                        <span>13. 畫地圖很不錯</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="14. 模仿動作表情">
+                        <span>14. 模仿動作表情</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="15. 規律分類">
+                        <span>15. 把東西規律分類</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="16. 動作和情感聯繫">
+                        <span>16. 動作和情感聯繫</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="17. 故事講得好">
+                        <span>17. 故事講得好</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="18. 評論聲音">
+                        <span>18. 對不同聲音發表評論</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="19. 說某某像某某">
+                        <span>19. 說某某像某某</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="q" value="20. 能做出評價">
+                        <span>20. 能做出評價</span>
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="prev-btn">上一頁</button>
+                    <button type="submit" class="submit-btn">送出</button>
+                </div>
+            </div>
+            
+            <p class="warning" id="warning"></p>
+        </form>
     </div>
-    <button type="button" onclick="nextPage()">下一頁</button>
-  </div>
 
-  <!-- 第 2 頁 -->
-  <div class="page" id="page2">
-    <h3>第 2 頁（11~20 題）</h3>
-    <div>
-      <label><input type="checkbox" name="q" value="11. 記住沿途建築"> 11. 記住沿途建築</label><br>
-      <label><input type="checkbox" name="q" value="12. 喜歡聽樂器"> 12. 喜歡聽各種樂器</label><br>
-      <label><input type="checkbox" name="q" value="13. 畫地圖"> 13. 畫地圖很不錯</label><br>
-      <label><input type="checkbox" name="q" value="14. 模仿動作表情"> 14. 模仿動作表情</label><br>
-      <label><input type="checkbox" name="q" value="15. 規律分類"> 15. 把東西規律分類</label><br>
-      <label><input type="checkbox" name="q" value="16. 動作和情感聯繫"> 16. 動作和情感聯繫</label><br>
-      <label><input type="checkbox" name="q" value="17. 故事講得好"> 17. 故事講得好</label><br>
-      <label><input type="checkbox" name="q" value="18. 評論聲音"> 18. 對不同聲音發表評論</label><br>
-      <label><input type="checkbox" name="q" value="19. 說某某像某某"> 19. 說某某像某某</label><br>
-      <label><input type="checkbox" name="q" value="20. 能做出評價"> 20. 能做出評價</label><br>
+    <div id="successPopup" class="popup-container">
+        <div class="popup-content">
+            <h2 class="popup-title">成功送出！</h2>
+            <p class="popup-message">您的表單資料已成功送出。</p>
+            <p class="popup-message-note">您選擇的選項為：</p>
+            <ul id="submittedAnswers" class="submitted-answers">
+                </ul>
+            <button id="closePopup" class="popup-button">關閉</button>
+        </div>
     </div>
-    <button type="button" onclick="prevPage()">上一頁</button>
-    <button type="submit">送出</button>
-  </div>
-</form>
 
-<p class="warning" id="warning"></p>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('quizForm');
+            const pages = document.querySelectorAll(".page");
+            const nextPageBtn = document.querySelector('.next-btn');
+            const prevPageBtn = document.querySelector('.prev-btn');
+            const warningText = document.getElementById("warning");
+            const successPopup = document.getElementById('successPopup');
+            const closePopupButton = document.getElementById('closePopup');
+            const submittedAnswersList = document.getElementById('submittedAnswers');
+            const checkboxes = document.querySelectorAll("input[name=q]");
+        
+            let currentPage = 0;
+        
+            // 更新進度條和頁碼
+            function updateProgress() {
+                const totalPages = pages.length;
+                const progressWidth = ((currentPage + 1) / totalPages) * 100;
+                document.getElementById('progress').style.width = `${progressWidth}%`;
+                document.getElementById('currentPage').innerText = currentPage + 1;
+            }
+        
+            // 頁面切換功能
+            function showPage(pageIndex) {
+                pages.forEach((page, index) => {
+                    page.classList.remove('active');
+                });
+                pages[pageIndex].classList.add('active');
+                currentPage = pageIndex;
+                updateProgress();
+            }
+        
+            // 「下一頁」按鈕點擊事件
+            if (nextPageBtn) {
+                nextPageBtn.addEventListener('click', function() {
+                    showPage(currentPage + 1);
+                    warningText.innerText = '';
+                });
+            }
+        
+            // 「上一頁」按鈕點擊事件
+            if (prevPageBtn) {
+                prevPageBtn.addEventListener('click', function() {
+                    showPage(currentPage - 1);
+                    warningText.innerText = '';
+                });
+            }
 
-<script>
-const pages = document.querySelectorAll(".page");
-let currentPage = 0;
+            // 即時監控勾選數量
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const selectedCount = document.querySelectorAll("input[name=q]:checked").length;
+                    if (selectedCount > 3) {
+                        warningText.innerText = '⚠️ 只能勾選3題！';
+                    } else {
+                        warningText.innerText = ''; // 數量少於3個時清除警告
+                    }
+                });
+            });
+        
+            // 表單提交事件
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
+        
+                // 檢查座號和姓名是否填寫
+                const seat = document.getElementById("seat").value;
+                const name = document.getElementById("name").value;
+                if (!seat || !name) {
+                    warningText.innerText = '⚠️ 請填座號和姓名！';
+                    return;
+                }
+        
+                const selected = Array.from(document.querySelectorAll("input[name=q]:checked")).map(el => el.value);
+        
+                // 最終檢查勾選數量
+                if (selected.length !== 3) {
+                    warningText.innerText = "⚠️ 只能勾選3個，你是已經" + selected.length+"勾選：";
+                    return;
+                }
+        
+                // 送出資料到 Google Apps Script
+                fetch("https://script.google.com/macros/s/AKfycby_Z98d5vYGCtgGmZgY0u2EMocbqelTWMQuq2xkOo2fHB5M_L1p-7rfPlL_0nG345RHkg/exec", {
+                    method: "POST",
+                    body: JSON.stringify({ seat, name, answers: selected })
+                })
+                .then(res => res.text())
+                .then(txt => {
+                    // 顯示勾選的選項
+                    submittedAnswersList.innerHTML = selected.map(item => `<li>${item}</li>`).join('');
+                    // 顯示成功彈出視窗
+                    successPopup.classList.add('show');
+                    // 重設表單
+                    form.reset();
+                    // 切回第一頁
+                    showPage(0);
+                })
+                .catch(error => {
+                    console.error('送出時發生錯誤:', error);
+                    warningText.innerText = '送出時發生錯誤，請稍後再試。';
+                });
+            });
 
-function nextPage() {
-  pages[currentPage].classList.remove("active");
-  currentPage++;
-  pages[currentPage].classList.add("active");
-}
-function prevPage() {
-  pages[currentPage].classList.remove("active");
-  currentPage--;
-  pages[currentPage].classList.add("active");
-}
-
-document.getElementById("quizForm").addEventListener("submit", function(e){
-  e.preventDefault();
-  const seat = document.getElementById("seat").value;
-  const name = document.getElementById("name").value;
-  const selected = Array.from(document.querySelectorAll("input[name=q]:checked")).map(el => el.value);
-
-  if(selected.length !== 3){
-    document.getElementById("warning").innerText = "⚠️ 請務必勾選『剛好 3 個』，目前勾選數量：" + selected.length;
-    return;
-  }
-
-  fetch("https://script.google.com/macros/s/AKfycby_Z98d5vYGCtgGmZgY0u2EMocbqelTWMQuq2xkOo2fHB5M_L1p-7rfPlL_0nG345RHkg/exec", {
-    method: "POST",
-    body: JSON.stringify({ seat, name, answers: selected })
-  }).then(res => res.text())
-    .then(txt => {
-      alert("✅ 已送出成功！");
-      document.getElementById("quizForm").reset();
-    });
-});
-</script>
+            // 關閉彈出視窗
+            closePopupButton.addEventListener('click', function() {
+                successPopup.classList.remove('show');
+            });
+        
+            // 關閉彈出視窗（點擊視窗外時）
+            if (successPopup) {
+                successPopup.addEventListener('click', function(e) {
+                    if (e.target === successPopup) {
+                        successPopup.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
