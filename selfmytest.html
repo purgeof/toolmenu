@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>問卷填寫</title>
+<style>
+  body { font-family: "Microsoft JhengHei"; margin: 20px; }
+  .page { display: none; }
+  .active { display: block; }
+  .warning { color: red; font-weight: bold; }
+</style>
+</head>
+<body>
+<h2>學生問卷</h2>
+
+<form id="quizForm">
+  <label>座號：<input type="text" id="seat" required></label><br><br>
+  <label>姓名：<input type="text" id="name" required></label><br><br>
+
+  <!-- 第 1 頁 -->
+  <div class="page active" id="page1">
+    <h3>第 1 頁（1~10 題）</h3>
+    <div>
+      <label><input type="checkbox" name="q" value="1. 背詩和有韻律"> 1. 背詩和有韻律的句子時很出色</label><br>
+      <label><input type="checkbox" name="q" value="2. 注意情緒變化"> 2. 注意你情緒變化，並作出反應</label><br>
+      <label><input type="checkbox" name="q" value="3. 常問『從什麼時候開始』"> 3. 常問問題如「從什麼時候開始」</label><br>
+      <label><input type="checkbox" name="q" value="4. 很少迷路"> 4. 很少迷路，記住走過的地方</label><br>
+      <label><input type="checkbox" name="q" value="5. 走路姿勢很協調"> 5. 走路姿勢很協調</label><br>
+      <label><input type="checkbox" name="q" value="6. 唱歌音階很準"> 6. 唱歌音階很準</label><br>
+      <label><input type="checkbox" name="q" value="7. 常問打雷閃電問題"> 7. 常問打雷、閃電問題</label><br>
+      <label><input type="checkbox" name="q" value="8. 糾正文詞錯誤"> 8. 如果用詞錯，他會糾正</label><br>
+      <label><input type="checkbox" name="q" value="9. 小時候會綁鞋帶"> 9. 小時候會綁鞋帶</label><br>
+      <label><input type="checkbox" name="q" value="10. 喜歡角色扮演"> 10. 喜歡角色扮演或編故事</label><br>
+    </div>
+    <button type="button" onclick="nextPage()">下一頁</button>
+  </div>
+
+  <!-- 第 2 頁 -->
+  <div class="page" id="page2">
+    <h3>第 2 頁（11~20 題）</h3>
+    <div>
+      <label><input type="checkbox" name="q" value="11. 記住沿途建築"> 11. 記住沿途建築</label><br>
+      <label><input type="checkbox" name="q" value="12. 喜歡聽樂器"> 12. 喜歡聽各種樂器</label><br>
+      <label><input type="checkbox" name="q" value="13. 畫地圖"> 13. 畫地圖很不錯</label><br>
+      <label><input type="checkbox" name="q" value="14. 模仿動作表情"> 14. 模仿動作表情</label><br>
+      <label><input type="checkbox" name="q" value="15. 規律分類"> 15. 把東西規律分類</label><br>
+      <label><input type="checkbox" name="q" value="16. 動作和情感聯繫"> 16. 動作和情感聯繫</label><br>
+      <label><input type="checkbox" name="q" value="17. 故事講得好"> 17. 故事講得好</label><br>
+      <label><input type="checkbox" name="q" value="18. 評論聲音"> 18. 對不同聲音發表評論</label><br>
+      <label><input type="checkbox" name="q" value="19. 說某某像某某"> 19. 說某某像某某</label><br>
+      <label><input type="checkbox" name="q" value="20. 能做出評價"> 20. 能做出評價</label><br>
+    </div>
+    <button type="button" onclick="prevPage()">上一頁</button>
+    <button type="submit">送出</button>
+  </div>
+</form>
+
+<p class="warning" id="warning"></p>
+
+<script>
+const pages = document.querySelectorAll(".page");
+let currentPage = 0;
+
+function nextPage() {
+  pages[currentPage].classList.remove("active");
+  currentPage++;
+  pages[currentPage].classList.add("active");
+}
+function prevPage() {
+  pages[currentPage].classList.remove("active");
+  currentPage--;
+  pages[currentPage].classList.add("active");
+}
+
+document.getElementById("quizForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const seat = document.getElementById("seat").value;
+  const name = document.getElementById("name").value;
+  const selected = Array.from(document.querySelectorAll("input[name=q]:checked")).map(el => el.value);
+
+  if(selected.length !== 3){
+    document.getElementById("warning").innerText = "⚠️ 請務必勾選『剛好 3 個』，目前勾選數量：" + selected.length;
+    return;
+  }
+
+  fetch("https://script.google.com/macros/s/AKfycbyb7AfilVxyKscOW0XgBcxW4AxE6hreWWtJxm34oiqSona-rPHC8wxw9L6i-cjvNPli-w/exec", {
+    method: "POST",
+    body: JSON.stringify({ seat, name, answers: selected })
+  }).then(res => res.text())
+    .then(txt => {
+      alert("✅ 已送出成功！");
+      document.getElementById("quizForm").reset();
+    });
+});
+</script>
+</body>
+</html>
