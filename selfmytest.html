@@ -83,7 +83,7 @@ document.getElementById("quizForm").addEventListener("submit", function(e){
     return;
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbyb7AfilVxyKscOW0XgBcxW4AxE6hreWWtJxm34oiqSona-rPHC8wxw9L6i-cjvNPli-w/exec", {
+  fetch("https://script.google.com/macros/s/AKfycby_Z98d5vYGCtgGmZgY0u2EMocbqelTWMQuq2xkOo2fHB5M_L1p-7rfPlL_0nG345RHkg/exec", {
     method: "POST",
     body: JSON.stringify({ seat, name, answers: selected })
   }).then(res => res.text())
