@@ -4,189 +4,252 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>115年 2年3班 調査表</title>
-    <!-- 使用 Tailwind CSS 和 Google Font "Inter" 來美化介面 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #f3f4f6;
         }
-        /* 自定義 radio button 樣式 */
+
+        /* 優化容器與間距 */
+        .survey-card {
+            max-width: 450px; /* 稍微縮窄，看起來更專業 */
+            margin: auto;
+            background: white;
+            padding: 1.5rem 1.75rem; /* 縮減內部填充 */
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* 標題優化 */
+        .survey-title {
+            font-size: 1.5rem; /* 縮小一點點 */
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            letter-spacing: -0.025em;
+        }
+
+        /* 區塊間距縮小 */
+        .form-group {
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f3f4f6; /* 加入淡分割線 */
+        }
+        .form-group:last-child { border-bottom: none; }
+
+        .label-text {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            font-size: 0.95rem; /* 字體適中 */
+            margin-bottom: 0.5rem;
+        }
+
+        /* 輸入框美化 */
+        input[type="text"], input[type="tel"] {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            font-size: 0.95rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input[type="text"]:focus, input[type="tel"]:focus {
+            border-color: #14b8a6;
+            ring: 2px;
+            --tw-ring-color: rgba(20, 184, 166, 0.2);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--tw-ring-color);
+        }
+
+        /* 自定義 radio button 樣式優化 */
         input[type="radio"] {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            width: 1.25rem; /* 放大 */
-            height: 1.25rem; /* 放大 */
-            border-radius: 9999px;
-            border-width: 2px;
-            border-color: #d1d5db; /* 淺灰色 */
+            width: 1.15rem;
+            height: 1.15rem;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
             background-color: #fff;
-            position: relative;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            margin-top: 1px;
         }
         input[type="radio"]:checked {
-            border-color: #20b2aa; /* 海松藍 */
-            background-color: #fff;
+            border-color: #14b8a6;
+            border-width: 5px; /* 用邊框寬度模擬中心圓點，渲染更乾淨 */
         }
-        input[type="radio"]:checked::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 0.8rem; /* 放大 */
-            height: 0.8rem; /* 放大 */
-            border-radius: 9999px;
-            background-color: #20b2aa; /* 海松藍 */
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #4b5563;
+            padding: 0.25rem 0;
+            transition: color 0.2s;
         }
-        /* 成功/錯誤訊息框的樣式 */
+        .radio-label:hover { color: #111827; }
+        .radio-label span { margin-left: 0.6rem; }
+
+        /* 安親班隱藏欄位優化 */
+        .sub-fields {
+            background-color: #f9fafb;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* 按鈕美化 */
+        .submit-btn {
+            width: 100%;
+            background-color: #14b8a6;
+            color: white;
+            font-weight: 600;
+            padding: 0.8rem;
+            border-radius: 0.6rem;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            margin-top: 1rem;
+            box-shadow: 0 4px 10px rgba(20, 184, 166, 0.3);
+        }
+        .submit-btn:hover {
+            background-color: #0d9488;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(20, 184, 166, 0.4);
+        }
+        .submit-btn:active { transform: translateY(0); }
+
+        /* 彈窗樣式保持並細化 */
         #messageContainer {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+            transition: opacity 0.3s;
         }
-        #messageContainer.show {
-            opacity: 1;
-        }
+        #messageContainer.show { opacity: 1; }
         .message-box {
-            padding: 2.5rem;
-            border-radius: 0.75rem;
+            padding: 2rem;
+            border-radius: 1rem;
             text-align: center;
             color: #fff;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
             transform: scale(0.9);
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        #messageContainer.show .message-box {
-            transform: scale(1);
-        }
-        .message-box.success {
-            background-color: #20b2aa; /* 海松藍 */
-        }
-        .message-box.error {
-            background-color: #dc3545; /* 紅色 */
-        }
+        #messageContainer.show .message-box { transform: scale(1); }
+        .message-box.success { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+        .message-box.error { background: linear-gradient(135deg, #ef4444, #b91c1c); }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-    <!-- 調整為更窄的版面 -->
-    <div class="bg-white p-8 md:p-12 rounded-xl shadow-lg w-full max-w-md">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">115年 2年3班 資料調査表</h1>
-        <form id="qa1Form" class="space-y-6">
-            <!-- 學生姓名 -->
-            <div>
-                <label class="block text-gray-700 font-semibold mb-2 text-lg">1. 學生姓名</label>
-                <input type="text" id="studentName" name="學生姓名" placeholder="請輸入學生姓名" required
-                       class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200">
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="survey-card">
+        <h1 class="survey-title">115年 2年3班 資料調査表</h1>
+        
+        <form id="qa1Form">
+            <div class="form-group">
+                <label class="label-text">1. 學生姓名</label>
+                <input type="text" id="studentName" name="學生姓名" placeholder="輸入姓名" required>
             </div>
 
-            <!-- 新增學生座號 -->
-            <div>
-                <label class="block text-gray-700 font-semibold mb-2 text-lg">2. 學生座號</label>
-                <input type="tel" id="studentNumber" name="學生座號" placeholder="請輸入學生座號" required
-                       class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200">
+            <div class="form-group">
+                <label class="label-text">2. 學生座號</label>
+                <input type="tel" id="studentNumber" name="學生座號" placeholder="輸入座號" required>
             </div>
 
-            <!-- 午餐繳費方式 -->
-            <div>
-                <label class="block text-gray-700 font-semibold mb-2 text-lg">3. 本學期午餐繳費方式</label>
-                <div class="space-y-3">
-                    <div class="flex items-center">
+            <div class="form-group">
+                <label class="label-text">3. 本學期午餐繳費方式</label>
+                <div class="space-y-1">
+                    <label class="radio-label">
                         <input type="radio" id="fullPayment" name="午餐繳費方式" value="全繳" required>
-                        <label for="fullPayment" class="ml-3 text-base text-gray-600">全繳（與註冊費一起繳交）</label>
-                    </div>
-                    <div class="flex items-center">
+                        <span>全繳（與註冊費一起繳）</span>
+                    </label>
+                    <label class="radio-label">
                         <input type="radio" id="monthlyPayment" name="午餐繳費方式" value="月繳">
-                        <label for="monthlyPayment" class="ml-3 text-base text-gray-600">月繳</label>
-                    </div>
-                    <div class="flex items-center">
+                        <span>月繳</span>
+                    </label>
+                    <label class="radio-label">
                         <input type="radio" id="subsidy" name="午餐繳費方式" value="領有午餐補助證明">
-                        <label for="subsidy" class="ml-3 text-base text-gray-600">領有午餐補助證明</label>
-                    </div>
-                    <div class="flex items-center">
+                        <span>領有午餐補助證明</span>
+                    </label>
+                    <label class="radio-label">
                         <input type="radio" id="myself" name="午餐繳費方式" value="午餐自理">
-                        <label for="myself" class="ml-3 text-base text-gray-600">午餐自理</label>
-                    </div>
+                        <span>午餐自理</span>
+                    </label>
                 </div>
             </div>
 
-            <!-- 午餐乳品 -->
-            <div>
-                <label class="block text-gray-700 font-semibold mb-2 text-lg">4. 本學期午餐飲用的乳品</label>
-                <div class="space-y-3">
-                    <div class="flex items-center">
+            <div class="form-group">
+                <label class="label-text">4. 本學期午餐飲用的乳品</label>
+                <div class="flex space-x-6">
+                    <label class="radio-label">
                         <input type="radio" id="milk" name="午餐乳品" value="牛奶" required>
-                        <label for="milk" class="ml-3 text-base text-gray-600">牛奶</label>
-                    </div>
-                    <div class="flex items-center">
+                        <span>牛奶</span>
+                    </label>
+                    <label class="radio-label">
                         <input type="radio" id="soymilk" name="午餐乳品" value="豆奶">
-                        <label for="soymilk" class="ml-3 text-base text-gray-600">豆奶</label>
-                    </div>
+                        <span>豆奶</span>
+                    </label>
                 </div>
             </div>
 
-            <!-- 放學接送方式 -->
-            <div>
-                <label class="block text-gray-700 font-semibold mb-2 text-lg">5. 本學期放學接送方式</label>
-                <div class="space-y-3">
-                    <div class="flex items-center">
+            <div class="form-group">
+                <label class="label-text">5. 本學期放學接送方式</label>
+                <div class="space-y-1">
+                    <label class="radio-label">
                         <input type="radio" id="parentPickup" name="放學接送方式" value="家長接送" required>
-                        <label for="parentPickup" class="ml-3 text-base text-gray-600">家長接送</label>
-                    </div>
-                    <div class="flex items-center">
+                        <span>家長接送</span>
+                    </label>
+                    <label class="radio-label">
                         <input type="radio" id="cramSchool" name="放學接送方式" value="安親班">
-                        <label for="cramSchool" class="ml-3 text-base text-gray-600">安親班</label>
-                    </div>
-                    <div id="cramSchoolFields" class="sub-fields pl-8 mt-2 space-y-4">
+                        <span>安親班</span>
+                    </label>
+                    
+                    <div id="cramSchoolFields" class="sub-fields hidden space-y-3">
                         <div>
-                            <label for="cramSchoolName" class="block text-sm text-gray-500 mb-1">「安親班」-名稱</label>
-                            <input type="text" id="cramSchoolName" name="安親班-名稱" placeholder="請輸入安親班名稱"
-                                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200">
+                            <label for="cramSchoolName" class="text-xs text-gray-500 block mb-1">安親班名稱</label>
+                            <input type="text" id="cramSchoolName" name="安親班-名稱" placeholder="請輸入名稱">
                         </div>
                         <div>
-                            <label for="cramSchoolPhone" class="block text-sm text-gray-500 mb-1">「安親班」-電話</label>
-                            <input type="text" id="cramSchoolPhone" name="安親班-電話" placeholder="請輸入安親班電話"
-                                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200">
+                            <label for="cramSchoolPhone" class="text-xs text-gray-500 block mb-1">安親班電話</label>
+                            <input type="text" id="cramSchoolPhone" name="安親班-電話" placeholder="請輸入電話">
                         </div>
                     </div>
-                    <div class="flex items-center">
+
+                    <label class="radio-label">
                         <input type="radio" id="afterSchoolCare" name="放學接送方式" value="課後照顧班">
-                        <label for="afterSchoolCare" class="ml-3 text-base text-gray-600">課後照顧班</label>
-                    </div>
+                        <span>課後照顧班</span>
+                    </label>
                 </div>
             </div>
 
-            <button type="submit"
-                    class="w-full bg-teal-500 text-white font-bold py-4 rounded-lg hover:bg-teal-600 transition duration-300 shadow-lg mt-8 text-xl">
-                送出
-            </button>
+            <button type="submit" class="submit-btn">送出問卷</button>
         </form>
     </div>
 
-    <!-- 成功/錯誤訊息提示框 -->
     <div id="messageContainer">
         <div id="messageBox" class="message-box">
-            <h2 id="messageTitle" class="text-2xl font-bold mb-2"></h2>
-            <p id="messageText" class="text-lg"></p>
+            <h2 id="messageTitle" class="text-xl font-bold mb-1"></h2>
+            <p id="messageText" class="text-sm opacity-90"></p>
         </div>
     </div>
 
     <script>
-        // Google Apps Script 部署後的 Web 應用程式 URL
-        // 請務必將此處替換為您自己的網址
+        // --- 保持你原本的 JavaScript 邏輯不變 ---
         const formUrl = 'https://script.google.com/macros/s/AKfycby9fpO9ONFTyya38JylO42u1FuDREBKCCRis_EtmtxrTgmMJQOqJXqxbtefAGt-ec5N/exec';
-        
         const form = document.getElementById('qa1Form');
         const cramSchoolRadio = document.getElementById('cramSchool');
         const cramSchoolFields = document.getElementById('cramSchoolFields');
@@ -197,7 +260,6 @@
         const messageTitle = document.getElementById('messageTitle');
         const messageText = document.getElementById('messageText');
 
-        // 顯示/隱藏安親班欄位的邏輯
         function toggleCramSchoolFields() {
             if (cramSchoolRadio.checked) {
                 cramSchoolFields.classList.remove('hidden');
@@ -212,60 +274,40 @@
             }
         }
 
-        // 顯示訊息框的函式
         function showMessage(title, text, type) {
             messageTitle.textContent = title;
             messageText.textContent = text;
             messageBox.className = `message-box ${type}`;
             messageContainer.style.display = 'flex';
-            setTimeout(() => {
-                messageContainer.classList.add('show');
-            }, 10);
-            
+            setTimeout(() => { messageContainer.classList.add('show'); }, 10);
             setTimeout(() => {
                 messageContainer.classList.remove('show');
-                setTimeout(() => {
-                    messageContainer.style.display = 'none';
-                }, 300);
+                setTimeout(() => { messageContainer.style.display = 'none'; }, 300);
             }, 3000);
         }
 
-        // 監聽放學接送方式的變化
         document.querySelectorAll('input[name="放學接送方式"]').forEach(radio => {
             radio.addEventListener('change', toggleCramSchoolFields);
         });
 
-        // 初始載入時執行一次
         toggleCramSchoolFields();
 
-        // 處理表單提交
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const formData = {};
-            new FormData(form).forEach((value, key) => {
-                formData[key] = value;
-            });
-
-            // 在發送資料前，立即顯示成功訊息
-            showMessage('成功送出！', '您的表單資料已成功送出。', 'success');
+            new FormData(form).forEach((value, key) => { formData[key] = value; });
+            showMessage('成功送出！', '感謝您的填寫。', 'success');
             form.reset();
-            toggleCramSchoolFields(); // 清空表單後，重新呼叫以隱藏安親班欄位
-
-            // 非同步發送表單資料，不等待回覆
+            toggleCramSchoolFields();
             fetch(formUrl, {
                 method: 'POST',
                 body: JSON.stringify(formData),
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-            })
-            .catch(error => {
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            }).catch(error => {
                 console.error('Error:', error);
-                // 如果 fetch 失敗，顯示錯誤（延遲顯示，以免覆蓋成功訊息）
                 setTimeout(() => {
-                    showMessage('發生錯誤', '表單送出失敗，請檢查網路連線。', 'error');
-                }, 5000);
+                    showMessage('發生錯誤', '請檢查網路連線。', 'error');
+                }, 3500);
             });
         });
     </script>
