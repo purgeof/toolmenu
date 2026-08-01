@@ -41,15 +41,15 @@
     h2 {
       text-align: center;
       margin-top: 0;
-      margin-bottom: 0px;
+      margin-bottom: 24px;
       font-size: 1.5rem;
       color: #1a252f;
     }
 
     .form-group {
-      margin-bottom: 8px;
+      margin-bottom: 22px;
       border-bottom: 1px solid #f0f0f0;
-      padding-bottom: 0px;
+      padding-bottom: 18px;
     }
 
     .form-group:last-of-type {
@@ -59,13 +59,13 @@
     .form-group label.question-title {
       display: block;
       font-weight: 600;
-      margin-bottom: 0px;
+      margin-bottom: 10px;
       font-size: 1rem;
       line-height: 1.4;
     }
 
     .question-note {
-      font-size: 1rem;
+      font-size: 0.85rem;
       color: #666;
       font-weight: normal;
     }
@@ -105,7 +105,7 @@
       display: flex;
       align-items: center;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.95rem;
       user-select: none;
     }
 
@@ -143,14 +143,13 @@
       transform: scale(1);
     }
 
-    /* 動態隱藏子區塊樣式 */
     .sub-panel {
       display: none;
       background-color: var(--subcard-bg);
-      padding: 0px;
+      padding: 16px;
       border-radius: 12px;
-      margin-top: 0px;
-      margin-bottom: 0px;
+      margin-top: 8px;
+      margin-bottom: 8px;
     }
 
     .sub-panel .sub-field {
@@ -218,7 +217,7 @@
         <label class="question-title">2. 學生性別</label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="studentGender" value="男"> 男
+            <input type="radio" name="studentGender" value="男" checked> 男
           </label>
           <label class="radio-option">
             <input type="radio" name="studentGender" value="女"> 女
@@ -273,7 +272,7 @@
         <label class="question-title">10. 父母關係為何</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="parentRelation" value="同住"> 同住
+            <input type="radio" name="parentRelation" value="同住" checked> 同住
           </label>
           <label class="radio-option">
             <input type="radio" name="parentRelation" value="分居"> 分居
@@ -301,10 +300,9 @@
             <input type="radio" name="hasSiblings" value="是"> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="hasSiblings" value="否"> 否
+            <input type="radio" name="hasSiblings" value="否" checked> 否
           </label>
         </div>
-        <!-- 動態展開兄姊資訊 -->
         <div class="sub-panel" id="siblingPanel">
           <div class="sub-field">
             <label for="siblingInfo">請填寫兄姊的稱謂、班級及姓名：</label>
@@ -321,7 +319,7 @@
             <input type="radio" name="isIndigenous" value="是"> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="isIndigenous" value="否"> 否
+            <input type="radio" name="isIndigenous" value="否" checked> 否
           </label>
         </div>
       </div>
@@ -334,33 +332,33 @@
             <input type="radio" name="isDisabled" value="是"> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="isDisabled" value="否"> 否
+            <input type="radio" name="isDisabled" value="否" checked> 否
           </label>
         </div>
       </div>
 
       <!-- 14. 是否為低收入戶學生 -->
       <div class="form-group">
-        <label class="question-title">14. 是否為低收入戶學生？ <span class="question-note">(需有市公所114年低收證明書正本)</span></label>
+        <label class="question-title">14. 是否為低收入戶學生？ <span class="question-note">(需附市公所114年度低收入戶證明書正本)</span></label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
             <input type="radio" name="isLowIncome" value="是"> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="isLowIncome" value="否"> 否
+            <input type="radio" name="isLowIncome" value="否" checked> 否
           </label>
         </div>
       </div>
 
       <!-- 15. 是否為中低收入戶學生 -->
       <div class="form-group">
-        <label class="question-title">15. 是否為中低收入戶學生？ <span class="question-note">(需有市公所114年中低收證明書正本)</span></label>
+        <label class="question-title">15. 是否為中低收入戶學生？ <span class="question-note">(需附市公所114年度中低收入戶證明書正本)</span></label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
             <input type="radio" name="isMidLowIncome" value="是"> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="isMidLowIncome" value="否"> 否
+            <input type="radio" name="isMidLowIncome" value="否" checked> 否
           </label>
         </div>
       </div>
@@ -370,7 +368,7 @@
         <label class="question-title">16. 本學期午餐繳費方式</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="全繳（與註冊費一起繳）"> 全繳（與註冊費一起繳）
+            <input type="radio" name="lunchFee" value="全繳（與註冊費一起繳）" checked> 全繳（與註冊費一起繳）
           </label>
           <label class="radio-option">
             <input type="radio" name="lunchFee" value="月繳"> 月繳
@@ -389,7 +387,7 @@
         <label class="question-title">17. 本學期欲飲用的乳品</label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="lunchMilk" value="牛奶"> 牛奶
+            <input type="radio" name="lunchMilk" value="牛奶" checked> 牛奶
           </label>
           <label class="radio-option">
             <input type="radio" name="lunchMilk" value="豆奶"> 豆奶
@@ -402,14 +400,13 @@
         <label class="question-title">18. 本學期放學後接送方式</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="pickupMethod" value="家長接送"> 家長接送
+            <input type="radio" name="pickupMethod" value="家長接送" checked> 家長接送
           </label>
 
           <label class="radio-option">
             <input type="radio" name="pickupMethod" value="安親班"> 安親班
           </label>
 
-          <!-- 安親班動態展開欄位 -->
           <div class="sub-panel" id="afterSchoolPanel">
             <div class="sub-field">
               <label for="afterSchoolName">安親班名稱</label>
@@ -444,10 +441,9 @@
   </div>
 
   <script>
-    // 1. 請在此處替換為您的 Google Apps Script Web App URL
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxROFCqsu-q8Qw71H2d49STrkXE6xELzVTWQ32Prdoe0kAI8vZh7LMrbF__rtB8iPVM/exec";
 
-    // 2. 監聽 11 題「兄姊就讀」動態展開
+    // 監聽 11 題「兄姊就讀」動態展開
     const siblingRadios = document.querySelectorAll('input[name="hasSiblings"]');
     const siblingPanel = document.getElementById('siblingPanel');
     const siblingInfo = document.getElementById('siblingInfo');
@@ -465,7 +461,7 @@
       });
     });
 
-    // 3. 監聽 18 題「接送方式」安親班動態展開
+    // 監聽 18 題「接送方式」安親班動態展開
     const pickupRadios = document.querySelectorAll('input[name="pickupMethod"]');
     const afterSchoolPanel = document.getElementById('afterSchoolPanel');
     const afterSchoolName = document.getElementById('afterSchoolName');
@@ -487,7 +483,7 @@
       });
     });
 
-    // 4. 處理表單提交
+    // 處理表單提交 (採用相容性極高且避開 CORS 限制的 URLSearchParams 模式)
     const form = document.getElementById('surveyForm');
     const submitBtn = document.getElementById('submitBtn');
 
@@ -497,50 +493,46 @@
       submitBtn.disabled = true;
       submitBtn.innerText = "資料傳送中...";
 
-      // 打包 23 項表單資料
-      const formData = {
-        studentName: document.getElementById('studentName').value,
-        studentGender: document.querySelector('input[name="studentGender"]:checked').value,
-        studentSeat: document.getElementById('studentSeat').value,
-        homePhone: document.getElementById('homePhone').value,
-        fatherName: document.getElementById('fatherName').value,
-        fatherPhone: document.getElementById('fatherPhone').value,
-        motherName: document.getElementById('motherName').value,
-        motherPhone: document.getElementById('motherPhone').value,
-        otherContact: document.getElementById('otherContact').value,
-        parentRelation: document.querySelector('input[name="parentRelation"]:checked').value,
-        hasSiblings: document.querySelector('input[name="hasSiblings"]:checked').value,
-        siblingInfo: siblingInfo.value,
-        isIndigenous: document.querySelector('input[name="isIndigenous"]:checked').value,
-        isDisabled: document.querySelector('input[name="isDisabled"]:checked').value,
-        isLowIncome: document.querySelector('input[name="isLowIncome"]:checked').value,
-        isMidLowIncome: document.querySelector('input[name="isMidLowIncome"]:checked').value,
-        lunchFee: document.querySelector('input[name="lunchFee"]:checked').value,
-        lunchMilk: document.querySelector('input[name="lunchMilk"]:checked').value,
-        pickupMethod: document.querySelector('input[name="pickupMethod"]:checked').value,
-        afterSchoolName: afterSchoolName.value,
-        afterSchoolPhone: afterSchoolPhone.value,
-        dietSpecial: document.getElementById('dietSpecial').value,
-        teacherNote: document.getElementById('teacherNote').value
-      };
+      const formData = new URLSearchParams();
+      formData.append('studentName', document.getElementById('studentName').value);
+      formData.append('studentGender', document.querySelector('input[name="studentGender"]:checked').value);
+      formData.append('studentSeat', document.getElementById('studentSeat').value);
+      formData.append('homePhone', document.getElementById('homePhone').value);
+      formData.append('fatherName', document.getElementById('fatherName').value);
+      formData.append('fatherPhone', document.getElementById('fatherPhone').value);
+      formData.append('motherName', document.getElementById('motherName').value);
+      formData.append('motherPhone', document.getElementById('motherPhone').value);
+      formData.append('otherContact', document.getElementById('otherContact').value);
+      formData.append('parentRelation', document.querySelector('input[name="parentRelation"]:checked').value);
+      formData.append('hasSiblings', document.querySelector('input[name="hasSiblings"]:checked').value);
+      formData.append('siblingInfo', siblingInfo.value);
+      formData.append('isIndigenous', document.querySelector('input[name="isIndigenous"]:checked').value);
+      formData.append('isDisabled', document.querySelector('input[name="isDisabled"]:checked').value);
+      formData.append('isLowIncome', document.querySelector('input[name="isLowIncome"]:checked').value);
+      formData.append('isMidLowIncome', document.querySelector('input[name="isMidLowIncome"]:checked').value);
+      formData.append('lunchFee', document.querySelector('input[name="lunchFee"]:checked').value);
+      formData.append('lunchMilk', document.querySelector('input[name="lunchMilk"]:checked').value);
+      formData.append('pickupMethod', document.querySelector('input[name="pickupMethod"]:checked').value);
+      formData.append('afterSchoolName', afterSchoolName.value);
+      formData.append('afterSchoolPhone', afterSchoolPhone.value);
+      formData.append('dietSpecial', document.getElementById('dietSpecial').value);
+      formData.append('teacherNote', document.getElementById('teacherNote').value);
 
       try {
-        const response = await fetch(GAS_WEB_APP_URL, {
+        await fetch(GAS_WEB_APP_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(formData)
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData.toString()
         });
 
-        const result = await response.json();
+        alert('調查表已成功送出！感謝您的填寫。');
+        form.reset();
+        siblingPanel.style.display = 'none';
+        afterSchoolPanel.style.display = 'none';
 
-        if (result.result === 'success') {
-          alert('調查表已成功送出！感謝您的填寫。');
-          form.reset();
-          siblingPanel.style.display = 'none';
-          afterSchoolPanel.style.display = 'none';
-        } else {
-          alert('送出失敗，請稍後再試：' + result.message);
-        }
       } catch (err) {
         console.error(err);
         alert('發送時發生錯誤，請確認網路連線與設定。');
