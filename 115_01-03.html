@@ -143,7 +143,6 @@
       transform: scale(1);
     }
 
-    /* 動態隱藏子區塊樣式 */
     .sub-panel {
       display: none;
       background-color: var(--subcard-bg);
@@ -304,7 +303,6 @@
             <input type="radio" name="hasSiblings" value="否" checked> 否
           </label>
         </div>
-        <!-- 動態展開兄姊資訊 -->
         <div class="sub-panel" id="siblingPanel">
           <div class="sub-field">
             <label for="siblingInfo">請填寫兄姊的稱謂、班級及姓名：</label>
@@ -409,7 +407,6 @@
             <input type="radio" name="pickupMethod" value="安親班"> 安親班
           </label>
 
-          <!-- 安親班動態展開欄位 -->
           <div class="sub-panel" id="afterSchoolPanel">
             <div class="sub-field">
               <label for="afterSchoolName">安親班名稱</label>
@@ -444,10 +441,9 @@
   </div>
 
   <script>
-    // 1. 請在此處替換為您的 Google Apps Script Web App URL
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxROFCqsu-q8Qw71H2d49STrkXE6xELzVTWQ32Prdoe0kAI8vZh7LMrbF__rtB8iPVM/exec";
 
-    // 2. 監聽 11 題「兄姊就讀」動態展開
+    // 監聽 11 題「兄姊就讀」動態展開
     const siblingRadios = document.querySelectorAll('input[name="hasSiblings"]');
     const siblingPanel = document.getElementById('siblingPanel');
     const siblingInfo = document.getElementById('siblingInfo');
@@ -465,7 +461,7 @@
       });
     });
 
-    // 3. 監聽 18 題「接送方式」安親班動態展開
+    // 監聽 18 題「接送方式」安親班動態展開
     const pickupRadios = document.querySelectorAll('input[name="pickupMethod"]');
     const afterSchoolPanel = document.getElementById('afterSchoolPanel');
     const afterSchoolName = document.getElementById('afterSchoolName');
@@ -487,7 +483,7 @@
       });
     });
 
-    // 4. 處理表單提交
+    // 處理表單提交 (採用相容性極高且避開 CORS 限制的 URLSearchParams 模式)
     const form = document.getElementById('surveyForm');
     const submitBtn = document.getElementById('submitBtn');
 
@@ -497,57 +493,53 @@
       submitBtn.disabled = true;
       submitBtn.innerText = "資料傳送中...";
 
-      // 打包 23 項表單資料
-      const formData = {
-        studentName: document.getElementById('studentName').value,
-        studentGender: document.querySelector('input[name="studentGender"]:checked').value,
-        studentSeat: document.getElementById('studentSeat').value,
-        homePhone: document.getElementById('homePhone').value,
-        fatherName: document.getElementById('fatherName').value,
-        fatherPhone: document.getElementById('fatherPhone').value,
-        motherName: document.getElementById('motherName').value,
-        motherPhone: document.getElementById('motherPhone').value,
-        otherContact: document.getElementById('otherContact').value,
-        parentRelation: document.querySelector('input[name="parentRelation"]:checked').value,
-        hasSiblings: document.querySelector('input[name="hasSiblings"]:checked').value,
-        siblingInfo: siblingInfo.value,
-        isIndigenous: document.querySelector('input[name="isIndigenous"]:checked').value,
-        isDisabled: document.querySelector('input[name="isDisabled"]:checked').value,
-        isLowIncome: document.querySelector('input[name="isLowIncome"]:checked').value,
-        isMidLowIncome: document.querySelector('input[name="isMidLowIncome"]:checked').value,
-        lunchFee: document.querySelector('input[name="lunchFee"]:checked').value,
-        lunchMilk: document.querySelector('input[name="lunchMilk"]:checked').value,
-        pickupMethod: document.querySelector('input[name="pickupMethod"]:checked').value,
-        afterSchoolName: afterSchoolName.value,
-        afterSchoolPhone: afterSchoolPhone.value,
-        dietSpecial: document.getElementById('dietSpecial').value,
-        teacherNote: document.getElementById('teacherNote').value
-      };
+      const formData = new URLSearchParams();
+      formData.append('studentName', document.getElementById('studentName').value);
+      formData.append('studentGender', document.querySelector('input[name="studentGender"]:checked').value);
+      formData.append('studentSeat', document.getElementById('studentSeat').value);
+      formData.append('homePhone', document.getElementById('homePhone').value);
+      formData.append('fatherName', document.getElementById('fatherName').value);
+      formData.append('fatherPhone', document.getElementById('fatherPhone').value);
+      formData.append('motherName', document.getElementById('motherName').value);
+      formData.append('motherPhone', document.getElementById('motherPhone').value);
+      formData.append('otherContact', document.getElementById('otherContact').value);
+      formData.append('parentRelation', document.querySelector('input[name="parentRelation"]:checked').value);
+      formData.append('hasSiblings', document.querySelector('input[name="hasSiblings"]:checked').value);
+      formData.append('siblingInfo', siblingInfo.value);
+      formData.append('isIndigenous', document.querySelector('input[name="isIndigenous"]:checked').value);
+      formData.append('isDisabled', document.querySelector('input[name="isDisabled"]:checked').value);
+      formData.append('isLowIncome', document.querySelector('input[name="isLowIncome"]:checked').value);
+      formData.append('isMidLowIncome', document.querySelector('input[name="isMidLowIncome"]:checked').value);
+      formData.append('lunchFee', document.querySelector('input[name="lunchFee"]:checked').value);
+      formData.append('lunchMilk', document.querySelector('input[name="lunchMilk"]:checked').value);
+      formData.append('pickupMethod', document.querySelector('input[name="pickupMethod"]:checked').value);
+      formData.append('afterSchoolName', afterSchoolName.value);
+      formData.append('afterSchoolPhone', afterSchoolPhone.value);
+      formData.append('dietSpecial', document.getElementById('dietSpecial').value);
+      formData.append('teacherNote', document.getElementById('teacherNote').value);
 
-try {
-  // 使用 mode: 'no-cors' 與 FormBody 能有效避免 99% 的跨網域錯誤
-  await fetch(GAS_WEB_APP_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams(formData).toString()
-  });
+      try {
+        await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData.toString()
+        });
 
-  // no-cors 模式下無法讀取回傳 JSON，但只要沒拋出 exception 即可視為成功
-  alert('調查表已成功送出！感謝您的填寫。');
-  form.reset();
-  if (typeof siblingPanel !== 'undefined') siblingPanel.style.display = 'none';
-  if (typeof afterSchoolPanel !== 'undefined') afterSchoolPanel.style.display = 'none';
+        alert('調查表已成功送出！感謝您的填寫。');
+        form.reset();
+        siblingPanel.style.display = 'none';
+        afterSchoolPanel.style.display = 'none';
 
-} catch (err) {
-  console.error(err);
-  alert('發送時發生錯誤，請確認網路連線與設定。');
-} finally {
-  submitBtn.disabled = false;
-  submitBtn.innerText = "送出問卷";
-}
+      } catch (err) {
+        console.error(err);
+        alert('發送時發生錯誤，請確認網路連線與設定。');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "送出問卷";
+      }
     });
   </script>
 </body>
