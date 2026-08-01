@@ -143,6 +143,7 @@
       transform: scale(1);
     }
 
+    /* 動態隱藏子區塊樣式 */
     .sub-panel {
       display: none;
       background-color: var(--subcard-bg);
@@ -280,12 +281,19 @@
           <label class="radio-option">
             <input type="radio" name="parentRelation" value="離婚"> 離婚
           </label>
-          <label class="radio-option">
-            <input type="radio" name="parentRelation" value="與母同住"> 與母同住
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="parentRelation" value="與父同住"> 與父同住
-          </label>
+
+          <!-- 動態展開離婚子選項 -->
+          <div class="sub-panel" id="divorcePanel">
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="divorceDetail" value="與母同住"> 與母同住
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="divorceDetail" value="與父同住"> 與父同住
+              </label>
+            </div>
+          </div>
+
           <label class="radio-option">
             <input type="radio" name="parentRelation" value="其他"> 其他
           </label>
@@ -443,6 +451,22 @@
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxROFCqsu-q8Qw71H2d49STrkXE6xELzVTWQ32Prdoe0kAI8vZh7LMrbF__rtB8iPVM/exec";
 
+    // 監聽 10 題「離婚」動態展開
+    const parentRadios = document.querySelectorAll('input[name="parentRelation"]');
+    const divorcePanel = document.getElementById('divorcePanel');
+    const divorceDetailRadios = document.querySelectorAll('input[name="divorceDetail"]');
+
+    parentRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.value === '離婚') {
+          divorcePanel.style.display = 'block';
+        } else {
+          divorcePanel.style.display = 'none';
+          divorceDetailRadios.forEach(r => r.checked = false); // 隱藏時重置勾選
+        }
+      });
+    });
+
     // 監聽 11 題「兄姊就讀」動態展開
     const siblingRadios = document.querySelectorAll('input[name="hasSiblings"]');
     const siblingPanel = document.getElementById('siblingPanel');
@@ -483,7 +507,7 @@
       });
     });
 
-    // 處理表單提交 (採用相容性極高且避開 CORS 限制的 URLSearchParams 模式)
+    // 處理表單提交
     const form = document.getElementById('surveyForm');
     const submitBtn = document.getElementById('submitBtn');
 
@@ -492,6 +516,15 @@
 
       submitBtn.disabled = true;
       submitBtn.innerText = "資料傳送中...";
+
+      // 取得第 10 題父母關係的值
+      let parentRelationValue = document.querySelector('input[name="parentRelation"]:checked').value;
+      if (parentRelationValue === '離婚') {
+        const divorceDetail = document.querySelector('input[name="divorceDetail"]:checked');
+        if (divorceDetail) {
+          parentRelationValue = `離婚(${divorceDetail.value})`;
+        }
+      }
 
       const formData = new URLSearchParams();
       formData.append('studentName', document.getElementById('studentName').value);
@@ -503,7 +536,7 @@
       formData.append('motherName', document.getElementById('motherName').value);
       formData.append('motherPhone', document.getElementById('motherPhone').value);
       formData.append('otherContact', document.getElementById('otherContact').value);
-      formData.append('parentRelation', document.querySelector('input[name="parentRelation"]:checked').value);
+      formData.append('parentRelation', parentRelationValue);
       formData.append('hasSiblings', document.querySelector('input[name="hasSiblings"]:checked').value);
       formData.append('siblingInfo', siblingInfo.value);
       formData.append('isIndigenous', document.querySelector('input[name="isIndigenous"]:checked').value);
@@ -530,6 +563,7 @@
 
         alert('調查表已成功送出！感謝您的填寫。');
         form.reset();
+        divorcePanel.style.display = 'none';
         siblingPanel.style.display = 'none';
         afterSchoolPanel.style.display = 'none';
 
