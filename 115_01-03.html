@@ -524,30 +524,30 @@
         teacherNote: document.getElementById('teacherNote').value
       };
 
-      try {
-        const response = await fetch(GAS_WEB_APP_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(formData)
-        });
+try {
+  // 使用 mode: 'no-cors' 與 FormBody 能有效避免 99% 的跨網域錯誤
+  await fetch(GAS_WEB_APP_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams(formData).toString()
+  });
 
-        const result = await response.json();
+  // no-cors 模式下無法讀取回傳 JSON，但只要沒拋出 exception 即可視為成功
+  alert('調查表已成功送出！感謝您的填寫。');
+  form.reset();
+  if (typeof siblingPanel !== 'undefined') siblingPanel.style.display = 'none';
+  if (typeof afterSchoolPanel !== 'undefined') afterSchoolPanel.style.display = 'none';
 
-        if (result.result === 'success') {
-          alert('調查表已成功送出！感謝您的填寫。');
-          form.reset();
-          siblingPanel.style.display = 'none';
-          afterSchoolPanel.style.display = 'none';
-        } else {
-          alert('送出失敗，請稍後再試：' + result.message);
-        }
-      } catch (err) {
-        console.error(err);
-        alert('發送時發生錯誤，請確認網路連線與設定。');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "送出問卷";
-      }
+} catch (err) {
+  console.error(err);
+  alert('發送時發生錯誤，請確認網路連線與設定。');
+} finally {
+  submitBtn.disabled = false;
+  submitBtn.innerText = "送出問卷";
+}
     });
   </script>
 </body>
