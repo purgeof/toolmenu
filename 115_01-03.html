@@ -61,12 +61,11 @@
       padding-bottom: 0;
     }
 
-    /* 加大題目字體、縮減間距 */
     .form-group label.question-title {
       display: block;
       font-weight: 700;
       margin-bottom: 6px;
-      font-size: 1.05rem; /* 字體加大 */
+      font-size: 1.05rem;
       color: var(--text-main);
       line-height: 1.35;
     }
@@ -80,10 +79,10 @@
     /* 緊湊型輸入框 */
     input[type="text"], input[type="number"], textarea {
       width: 100%;
-      padding: 8px 12px; /* 縮減內襯 */
+      padding: 8px 12px;
       border: 1.5px solid var(--border-color);
       border-radius: 8px;
-      font-size: 1rem; /* 大字體 */
+      font-size: 1rem;
       outline: none;
       transition: all 0.2s ease;
       background-color: #fff;
@@ -91,7 +90,7 @@
 
     textarea {
       resize: vertical;
-      min-height: 60px; /* 縮減高度 */
+      min-height: 60px;
     }
 
     input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
@@ -99,18 +98,18 @@
       box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
     }
 
-    /* 單選題並排網格（精簡高度） */
+    /* 單選題並排網格 */
     .radio-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 16px; /* 緊湊間距 */
+      gap: 8px 16px;
     }
 
     .radio-option {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
-      font-size: 1rem; /* 加大選項字體 */
+      font-size: 1rem;
       user-select: none;
       padding: 3px 0;
     }
@@ -263,7 +262,7 @@
 <body>
 
   <div class="container">
-    <h2>115年_1年3班調查表</h2>
+    <h2>115_1年3班調查表</h2>
     
     <form id="surveyForm">
       
@@ -289,12 +288,12 @@
       <!-- 3. 學生座號 -->
       <div class="form-group">
         <label class="question-title">3. 學生座號</label>
-        <input type="number" id="studentSeat" required placeholder="例：12">
+        <input type="number" id="studentSeat" required placeholder="例如：12">
       </div>
 
       <!-- 4. 家中電話 -->
       <div class="form-group">
-        <label class="question-title">4. 家中電話 <span class="question-note">(若沒有，填「無」)</span></label>
+        <label class="question-title">4. 家中電話 <span class="question-note">(若沒有請填「無」)</span></label>
         <input type="text" id="homePhone" required placeholder="若無請填「無」">
       </div>
 
@@ -307,7 +306,7 @@
       <!-- 6. 父親手機 -->
       <div class="form-group">
         <label class="question-title">6. 父親手機</label>
-        <input type="text" id="fatherPhone" placeholder="例：0912345678">
+        <input type="text" id="fatherPhone" placeholder="例如：0912345678">
       </div>
 
       <!-- 7. 母親姓名 -->
@@ -319,13 +318,13 @@
       <!-- 8. 母親電話 -->
       <div class="form-group">
         <label class="question-title">8. 母親電話</label>
-        <input type="text" id="motherPhone" placeholder="例：0912345678">
+        <input type="text" id="motherPhone" placeholder="例如：0912345678">
       </div>
 
       <!-- 9. 其他聯絡人 -->
       <div class="form-group">
-        <label class="question-title">9. 其他重要聯絡人電話 <span class="question-note">(若沒有，填「無」)</span></label>
-        <input type="text" id="otherContact" required placeholder="例：祖母0917383628 (若沒有，請填無)">
+        <label class="question-title">9. 其他聯絡人(稱謂)電話 <span class="question-note">(若沒有請填「無」)</span></label>
+        <input type="text" id="otherContact" required placeholder="例：祖母0917383628 (若無請填無)">
       </div>
 
       <!-- 10. 父母關係為何 -->
@@ -345,7 +344,7 @@
             <input type="radio" name="parentRelation" value="其他"> 其他
           </label>
 
-          <!-- 動態展開離婚子選項 -->
+          <!-- 動態展開：離婚子選項 -->
           <div class="sub-panel" id="divorcePanel">
             <div class="radio-group">
               <label class="radio-option">
@@ -356,12 +355,21 @@
               </label>
             </div>
           </div>
+
+          <!-- 動態展開：其他原因輸入框 -->
+          <div class="sub-panel" id="otherParentRelationPanel">
+            <div class="sub-field">
+              <label for="otherParentRelationText">請說明其他狀況：</label>
+              <input type="text" id="otherParentRelationText" placeholder="請簡述父母關係狀況">
+            </div>
+          </div>
+
         </div>
       </div>
 
       <!-- 11. 是否有兄姊在本校就讀 -->
       <div class="form-group">
-        <label class="question-title">11. 是否有兄姊就讀本校</label>
+        <label class="question-title">11. 是否有兄姊在本校就讀</label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="hasSiblings" value="是" required> 是
@@ -406,7 +414,7 @@
 
       <!-- 14. 是否為低收入戶學生 -->
       <div class="form-group">
-        <label class="question-title">14. 是否有低收戶證明 <span class="question-note">(需附114年證明)</span></label>
+        <label class="question-title">14. 是否為低收入戶學生？ <span class="question-note">(需附114年證明)</span></label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="isLowIncome" value="是" required> 是
@@ -419,7 +427,7 @@
 
       <!-- 15. 是否為中低收入戶學生 -->
       <div class="form-group">
-        <label class="question-title">15. 是否有中低收戶證明 <span class="question-note">(需附114年證明)</span></label>
+        <label class="question-title">15. 是否為中低收入戶學生？ <span class="question-note">(需附114年證明)</span></label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="isMidLowIncome" value="是" required> 是
@@ -430,28 +438,28 @@
         </div>
       </div>
 
-      <!-- 16. 本學期午餐繳費方式 
+      <!-- 16. 本學期午餐繳費方式
       <div class="form-group">
         <label class="question-title">16. 本學期午餐繳費方式</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="全繳" required>全繳
+            <input type="radio" name="lunchFee" value="全繳（與註冊費一起繳）" required> 全繳（與註冊費一起）
           </label>
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="月繳">月繳
+            <input type="radio" name="lunchFee" value="月繳"> 月繳
           </label>
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="領有午餐補助證明">領有補助
+            <input type="radio" name="lunchFee" value="領有午餐補助證明"> 領有補助
           </label>
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="午餐自理">自理
+            <input type="radio" name="lunchFee" value="午餐自理"> 自理
           </label>
         </div>
-      </div>-->
+      </div> -->
 
       <!-- 17. 本學期欲飲用的乳品 -->
       <div class="form-group">
-        <label class="question-title">16. 本學期要飲用的乳品</label>
+        <label class="question-title">17. 本學期欲飲用的乳品</label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="lunchMilk" value="牛奶" required> 牛奶
@@ -464,7 +472,7 @@
 
       <!-- 18. 本學期放學後接送方式 -->
       <div class="form-group">
-        <label class="question-title">17. 本學期放學後接送方式</label>
+        <label class="question-title">18. 本學期放學後接送方式</label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="pickupMethod" value="家長接送" required> 家長接送
@@ -479,11 +487,11 @@
           <div class="sub-panel" id="afterSchoolPanel">
             <div class="sub-field">
               <label for="afterSchoolName">安親班名稱</label>
-              <input type="text" id="afterSchoolName" placeholder="例：必勝補習班">
+              <input type="text" id="afterSchoolName" placeholder="例如：必勝文理補習班">
             </div>
             <div class="sub-field">
               <label for="afterSchoolPhone">安親班電話</label>
-              <input type="text" id="afterSchoolPhone" placeholder="例：8653269">
+              <input type="text" id="afterSchoolPhone" placeholder="例如：8653269">
             </div>
           </div>
         </div>
@@ -491,14 +499,14 @@
 
       <!-- 19. 孩子飲食特殊情況說明 -->
       <div class="form-group">
-        <label class="question-title">18. 孩子飲食特殊情況說明 <span class="question-note"></span></label>
-        <textarea id="dietSpecial" required placeholder="若沒有，請填「無」"></textarea>
+        <label class="question-title">19. 孩子飲食特殊情況說明 <span class="question-note">(若無請填「無」)</span></label>
+        <textarea id="dietSpecial" required placeholder="若沒有請填寫「無」"></textarea>
       </div>
 
       <!-- 20. 孩子需要老師特別注意的事項說明 -->
       <div class="form-group">
-        <label class="question-title">19. 孩子需要老師特別注意事項 <span class="question-note"></span></label>
-        <textarea id="teacherNote" required placeholder="若沒有，請填「無」"></textarea>
+        <label class="question-title">20. 孩子需要老師特別注意事項 <span class="question-note">(若無請填「無」)</span></label>
+        <textarea id="teacherNote" required placeholder="若沒有請填寫「無」"></textarea>
       </div>
 
       <button type="submit" class="submit-btn" id="submitBtn">送出問卷</button>
@@ -516,20 +524,36 @@
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxROFCqsu-q8Qw71H2d49STrkXE6xELzVTWQ32Prdoe0kAI8vZh7LMrbF__rtB8iPVM/exec";
 
-    // 10 題「離婚」動態展開
+    // 10 題「父母關係」動態切換（明確拆開邏輯）
     const parentRadios = document.querySelectorAll('input[name="parentRelation"]');
     const divorcePanel = document.getElementById('divorcePanel');
     const divorceDetailRadios = document.querySelectorAll('input[name="divorceDetail"]');
+    
+    const otherParentRelationPanel = document.getElementById('otherParentRelationPanel');
+    const otherParentRelationText = document.getElementById('otherParentRelationText');
 
     parentRadios.forEach(radio => {
       radio.addEventListener('change', (e) => {
-        if (e.target.value === '離婚') {
+        const val = e.target.value;
+
+        // 1. 離婚控制
+        if (val === '離婚') {
           divorcePanel.style.display = 'block';
           document.getElementById('divorceDetail1').required = true;
         } else {
           divorcePanel.style.display = 'none';
           document.getElementById('divorceDetail1').required = false;
           divorceDetailRadios.forEach(r => r.checked = false);
+        }
+
+        // 2. 其他控制
+        if (val === '其他') {
+          otherParentRelationPanel.style.display = 'block';
+          otherParentRelationText.required = true;
+        } else {
+          otherParentRelationPanel.style.display = 'none';
+          otherParentRelationText.required = false;
+          otherParentRelationText.value = '';
         }
       });
     });
@@ -606,11 +630,17 @@
         return checkedOption ? checkedOption.value : '';
       };
 
+      // 組合第 10 題文字 (離婚 或 其他)
       let parentRelationValue = getRadioValue('parentRelation');
       if (parentRelationValue === '離婚') {
         const divorceDetail = getRadioValue('divorceDetail');
         if (divorceDetail) {
           parentRelationValue = `離婚(${divorceDetail})`;
+        }
+      } else if (parentRelationValue === '其他') {
+        const otherText = otherParentRelationText.value.trim();
+        if (otherText) {
+          parentRelationValue = `其他(${otherText})`;
         }
       }
 
@@ -642,6 +672,7 @@
       showModal();
       form.reset();
       divorcePanel.style.display = 'none';
+      otherParentRelationPanel.style.display = 'none';
       siblingPanel.style.display = 'none';
       afterSchoolPanel.style.display = 'none';
 
