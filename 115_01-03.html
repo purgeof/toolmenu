@@ -6,13 +6,15 @@
   <title>115資料調查表</title>
   <style>
     :root {
-      --primary-color: #00bfa5;
-      --primary-hover: #00a892;
-      --bg-color: #f4f6f8;
+      --primary-color: #0d9488;
+      --primary-hover: #0f766e;
+      --primary-light: #f0fdf4;
+      --bg-color: #f1f5f9;
       --card-bg: #ffffff;
-      --text-color: #2c3e50;
-      --border-color: #e0e0e0;
-      --subcard-bg: #f8f9fa;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+      --border-color: #cbd5e1;
+      --subcard-bg: #f8fafc;
     }
 
     * {
@@ -21,114 +23,118 @@
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
+      color: var(--text-main);
       display: flex;
       justify-content: center;
-      padding: 20px 10px;
+      padding: 12px 8px;
       margin: 0;
     }
 
     .container {
       background-color: var(--card-bg);
       width: 100%;
-      max-width: 520px;
-      padding: 30px 24px;
-      border-radius: 20px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      max-width: 500px;
+      padding: 20px 18px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
     }
 
     h2 {
       text-align: center;
       margin-top: 0;
-      margin-bottom: 24px;
-      font-size: 1.5rem;
-      color: #1a252f;
+      margin-bottom: 16px;
+      font-size: 1.4rem;
+      color: var(--primary-color);
+      letter-spacing: 0.5px;
     }
 
+    /* 緊湊型題目區塊 */
     .form-group {
-      margin-bottom: 22px;
-      border-bottom: 1px solid #f0f0f0;
-      padding-bottom: 18px;
+      margin-bottom: 12px;
+      border-bottom: 1px dashed #e2e8f0;
+      padding-bottom: 10px;
     }
 
     .form-group:last-of-type {
       border-bottom: none;
+      padding-bottom: 0;
     }
 
+    /* 加大題目字體、縮減間距 */
     .form-group label.question-title {
       display: block;
-      font-weight: 600;
-      margin-bottom: 10px;
-      font-size: 1rem;
-      line-height: 1.4;
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 1.05rem; /* 字體加大 */
+      color: var(--text-main);
+      line-height: 1.35;
     }
 
     .question-note {
       font-size: 0.85rem;
-      color: #666;
+      color: var(--text-sub);
       font-weight: normal;
     }
 
+    /* 緊湊型輸入框 */
     input[type="text"], input[type="number"], textarea {
       width: 100%;
-      padding: 12px 16px;
+      padding: 8px 12px; /* 縮減內襯 */
       border: 1.5px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 1rem;
+      border-radius: 8px;
+      font-size: 1rem; /* 大字體 */
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s ease;
+      background-color: #fff;
     }
 
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 60px; /* 縮減高度 */
     }
 
     input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
       border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
     }
 
+    /* 單選題並排網格（精簡高度） */
     .radio-group {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .radio-inline {
-      display: flex;
       flex-wrap: wrap;
-      gap: 18px;
+      gap: 8px 16px; /* 緊湊間距 */
     }
 
     .radio-option {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 1rem; /* 加大選項字體 */
       user-select: none;
+      padding: 3px 0;
     }
 
     .radio-option input[type="radio"] {
       appearance: none;
       -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #ccc;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border-color);
       border-radius: 50%;
       outline: none;
-      margin-right: 8px;
+      margin-right: 6px;
       display: grid;
       place-content: center;
-      transition: border-color 0.2s;
+      transition: all 0.2s ease;
       cursor: pointer;
       flex-shrink: 0;
     }
 
     .radio-option input[type="radio"]::before {
       content: "";
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       transform: scale(0);
       transition: 120ms transform ease-in-out;
@@ -146,15 +152,17 @@
     /* 動態隱藏子區塊樣式 */
     .sub-panel {
       display: none;
+      width: 100%;
       background-color: var(--subcard-bg);
-      padding: 16px;
-      border-radius: 12px;
-      margin-top: 8px;
-      margin-bottom: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-top: 6px;
+      margin-bottom: 4px;
+      border-left: 3px solid var(--primary-color);
     }
 
     .sub-panel .sub-field {
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .sub-panel .sub-field:last-child {
@@ -163,13 +171,10 @@
 
     .sub-panel label {
       display: block;
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 6px;
-    }
-
-    .sub-panel input {
-      background-color: #fff;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+      font-weight: 600;
     }
 
     .submit-btn {
@@ -177,36 +182,39 @@
       background-color: var(--primary-color);
       color: white;
       border: none;
-      padding: 14px;
-      font-size: 1.1rem;
+      padding: 12px;
+      font-size: 1.15rem;
       font-weight: bold;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
       margin-top: 10px;
-      transition: background-color 0.2s, transform 0.1s;
+      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+      transition: all 0.2s ease;
     }
 
     .submit-btn:hover {
       background-color: var(--primary-hover);
+      box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35);
     }
 
     .submit-btn:active {
-      transform: scale(0.99);
+      transform: scale(0.98);
     }
 
     .submit-btn:disabled {
-      background-color: #ccc;
+      background-color: #cbd5e1;
+      box-shadow: none;
       cursor: not-allowed;
     }
 
-    /* 成功訊息覆蓋層 (Modal Overlay) */
+    /* 成功訊息彈窗 (Modal) */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(15, 23, 42, 0.4);
       backdrop-filter: blur(4px);
       display: flex;
       justify-content: center;
@@ -214,7 +222,7 @@
       z-index: 1000;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
     }
 
     .modal-overlay.active {
@@ -222,18 +230,17 @@
       visibility: visible;
     }
 
-    /* 成功訊息卡片 (Modal Content) */
     .modal-card {
       background-color: var(--primary-color);
       color: white;
-      padding: 32px 40px;
-      border-radius: 20px;
+      padding: 24px 32px;
+      border-radius: 16px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      transform: scale(0.8);
-      transition: transform 0.3s ease;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      transform: scale(0.85);
+      transition: transform 0.25s ease;
       max-width: 80%;
-      width: 300px;
+      width: 280px;
     }
 
     .modal-overlay.active .modal-card {
@@ -241,17 +248,15 @@
     }
 
     .modal-card h3 {
-      margin: 0 0 12px 0;
-      font-size: 1.6rem;
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
       font-weight: 700;
-      letter-spacing: 1px;
     }
 
     .modal-card p {
       margin: 0;
       font-size: 1.05rem;
       opacity: 0.95;
-      font-weight: 400;
     }
   </style>
 </head>
@@ -268,10 +273,10 @@
         <input type="text" id="studentName" required placeholder="請輸入姓名">
       </div>
 
-      <!-- 2. 學生性別 (已取消預設) -->
+      <!-- 2. 學生性別 -->
       <div class="form-group">
         <label class="question-title">2. 學生性別</label>
-        <div class="radio-group radio-inline">
+        <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="studentGender" value="男" required> 男
           </label>
@@ -287,10 +292,10 @@
         <input type="number" id="studentSeat" required placeholder="例如：12">
       </div>
 
-      <!-- 4. 家中電話 (已清空預設值) -->
+      <!-- 4. 家中電話 -->
       <div class="form-group">
         <label class="question-title">4. 家中電話 <span class="question-note">(若沒有請填「無」)</span></label>
-        <input type="text" id="homePhone" required placeholder="若沒有請填「無」">
+        <input type="text" id="homePhone" required placeholder="若無請填「無」">
       </div>
 
       <!-- 5. 父親姓名 -->
@@ -323,7 +328,7 @@
         <input type="text" id="otherContact" required placeholder="例：祖母0917383628 (若無請填無)">
       </div>
 
-      <!-- 10. 父母關係為何 (已取消預設) -->
+      <!-- 10. 父母關係為何 -->
       <div class="form-group">
         <label class="question-title">10. 父母關係為何</label>
         <div class="radio-group">
@@ -335,6 +340,9 @@
           </label>
           <label class="radio-option">
             <input type="radio" name="parentRelation" value="離婚"> 離婚
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="parentRelation" value="其他"> 其他
           </label>
 
           <!-- 動態展開離婚子選項 -->
@@ -348,17 +356,13 @@
               </label>
             </div>
           </div>
-
-          <label class="radio-option">
-            <input type="radio" name="parentRelation" value="其他"> 其他
-          </label>
         </div>
       </div>
 
-      <!-- 11. 是否有兄姊在本校就讀 (已取消預設) -->
+      <!-- 11. 是否有兄姊在本校就讀 -->
       <div class="form-group">
         <label class="question-title">11. 是否有兄姊在本校就讀</label>
-        <div class="radio-group radio-inline">
+        <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="hasSiblings" value="是" required> 是
           </label>
@@ -374,10 +378,10 @@
         </div>
       </div>
 
-      <!-- 12. 是否為原住民學生 (已取消預設) -->
+      <!-- 12. 是否為原住民學生 -->
       <div class="form-group">
         <label class="question-title">12. 是否為原住民學生</label>
-        <div class="radio-group radio-inline">
+        <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="isIndigenous" value="是" required> 是
           </label>
@@ -387,10 +391,10 @@
         </div>
       </div>
 
-      <!-- 13. 是否為身障學生或子女 (已取消預設) -->
+      <!-- 13. 是否為身障學生或子女 -->
       <div class="form-group">
         <label class="question-title">13. 是否為身心障礙學生或身心障礙人士子女</label>
-        <div class="radio-group radio-inline">
+        <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="isDisabled" value="是" required> 是
           </label>
@@ -400,10 +404,10 @@
         </div>
       </div>
 
-      <!-- 14. 是否為低收入戶學生 (已取消預設) -->
+      <!-- 14. 是否為低收入戶學生 -->
       <div class="form-group">
-        <label class="question-title">14. 是否為低收入戶學生？ <span class="question-note">(需附市公所114年度低收入戶證明書正本)</span></label>
-        <div class="radio-group radio-inline">
+        <label class="question-title">14. 是否為低收入戶學生？ <span class="question-note">(需附114年證明)</span></label>
+        <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="isLowIncome" value="是" required> 是
           </label>
@@ -413,10 +417,10 @@
         </div>
       </div>
 
-      <!-- 15. 是否為中低收入戶學生 (已取消預設) -->
+      <!-- 15. 是否為中低收入戶學生 -->
       <div class="form-group">
-        <label class="question-title">15. 是否為中低收入戶學生？ <span class="question-note">(需附市公所114年度中低收入戶證明書正本)</span></label>
-        <div class="radio-group radio-inline">
+        <label class="question-title">15. 是否為中低收入戶學生？ <span class="question-note">(需附114年證明)</span></label>
+        <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="isMidLowIncome" value="是" required> 是
           </label>
@@ -426,29 +430,29 @@
         </div>
       </div>
 
-      <!-- 16. 本學期午餐繳費方式 (已取消預設) -->
+      <!-- 16. 本學期午餐繳費方式 -->
       <div class="form-group">
         <label class="question-title">16. 本學期午餐繳費方式</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="全繳（與註冊費一起繳）" required> 全繳（與註冊費一起繳）
+            <input type="radio" name="lunchFee" value="全繳（與註冊費一起繳）" required> 全繳（與註冊費一起）
           </label>
           <label class="radio-option">
             <input type="radio" name="lunchFee" value="月繳"> 月繳
           </label>
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="領有午餐補助證明"> 領有午餐補助證明
+            <input type="radio" name="lunchFee" value="領有午餐補助證明"> 領有補助
           </label>
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="午餐自理"> 午餐自理
+            <input type="radio" name="lunchFee" value="午餐自理"> 自理
           </label>
         </div>
       </div>
 
-      <!-- 17. 本學期欲飲用的乳品 (已取消預設) -->
+      <!-- 17. 本學期欲飲用的乳品 -->
       <div class="form-group">
         <label class="question-title">17. 本學期欲飲用的乳品</label>
-        <div class="radio-group radio-inline">
+        <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="lunchMilk" value="牛奶" required> 牛奶
           </label>
@@ -458,16 +462,18 @@
         </div>
       </div>
 
-      <!-- 18. 本學期放學後接送方式 (已取消預設) -->
+      <!-- 18. 本學期放學後接送方式 -->
       <div class="form-group">
         <label class="question-title">18. 本學期放學後接送方式</label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="pickupMethod" value="家長接送" required> 家長接送
           </label>
-
           <label class="radio-option">
             <input type="radio" name="pickupMethod" value="安親班"> 安親班
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="pickupMethod" value="課後照顧班"> 課後照顧班
           </label>
 
           <div class="sub-panel" id="afterSchoolPanel">
@@ -480,22 +486,18 @@
               <input type="text" id="afterSchoolPhone" placeholder="例如：8653269">
             </div>
           </div>
-
-          <label class="radio-option">
-            <input type="radio" name="pickupMethod" value="課後照顧班"> 課後照顧班
-          </label>
         </div>
       </div>
 
       <!-- 19. 孩子飲食特殊情況說明 -->
       <div class="form-group">
-        <label class="question-title">19. 孩子飲食特殊情況說明 <span class="question-note">(若沒有請填「無」)</span></label>
+        <label class="question-title">19. 孩子飲食特殊情況說明 <span class="question-note">(若無請填「無」)</span></label>
         <textarea id="dietSpecial" required placeholder="若沒有請填寫「無」"></textarea>
       </div>
 
       <!-- 20. 孩子需要老師特別注意的事項說明 -->
       <div class="form-group">
-        <label class="question-title">20. 孩子需要老師特別注意的事項說明 <span class="question-note">(若沒有請填「無」)</span></label>
+        <label class="question-title">20. 孩子需要老師特別注意事項 <span class="question-note">(若無請填「無」)</span></label>
         <textarea id="teacherNote" required placeholder="若沒有請填寫「無」"></textarea>
       </div>
 
@@ -514,7 +516,7 @@
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxROFCqsu-q8Qw71H2d49STrkXE6xELzVTWQ32Prdoe0kAI8vZh7LMrbF__rtB8iPVM/exec";
 
-    // 監聽 10 題「離婚」動態展開
+    // 10 題「離婚」動態展開
     const parentRadios = document.querySelectorAll('input[name="parentRelation"]');
     const divorcePanel = document.getElementById('divorcePanel');
     const divorceDetailRadios = document.querySelectorAll('input[name="divorceDetail"]');
@@ -532,7 +534,7 @@
       });
     });
 
-    // 監聽 11 題「兄姊就讀」動態展開
+    // 11 題「兄姊就讀」動態展開
     const siblingRadios = document.querySelectorAll('input[name="hasSiblings"]');
     const siblingPanel = document.getElementById('siblingPanel');
     const siblingInfo = document.getElementById('siblingInfo');
@@ -550,7 +552,7 @@
       });
     });
 
-    // 監聽 18 題「接送方式」安親班動態展開
+    // 18 題「接送方式」安親班動態展開
     const pickupRadios = document.querySelectorAll('input[name="pickupMethod"]');
     const afterSchoolPanel = document.getElementById('afterSchoolPanel');
     const afterSchoolName = document.getElementById('afterSchoolName');
@@ -572,7 +574,7 @@
       });
     });
 
-    // 處理 Modal 關閉邏輯
+    // Modal 邏輯
     const successModal = document.getElementById('successModal');
     let autoCloseTimer;
 
@@ -590,7 +592,7 @@
 
     successModal.addEventListener('click', closeModal);
 
-    // 表單提交邏輯
+    // 提交邏輯
     const form = document.getElementById('surveyForm');
     const submitBtn = document.getElementById('submitBtn');
 
@@ -599,13 +601,11 @@
 
       submitBtn.disabled = true;
 
-      // 安全讀取單選值（若未選時不會報錯）
       const getRadioValue = (name) => {
         const checkedOption = document.querySelector(`input[name="${name}"]:checked`);
         return checkedOption ? checkedOption.value : '';
       };
 
-      // 處理第 10 題離婚細節
       let parentRelationValue = getRadioValue('parentRelation');
       if (parentRelationValue === '離婚') {
         const divorceDetail = getRadioValue('divorceDetail');
@@ -614,7 +614,6 @@
         }
       }
 
-      // 打包資料
       const formData = new URLSearchParams();
       formData.append('studentName', document.getElementById('studentName').value);
       formData.append('studentGender', getRadioValue('studentGender'));
@@ -640,7 +639,6 @@
       formData.append('dietSpecial', document.getElementById('dietSpecial').value);
       formData.append('teacherNote', document.getElementById('teacherNote').value);
 
-      // 1. 立即顯示成功視窗與重置畫面
       showModal();
       form.reset();
       divorcePanel.style.display = 'none';
@@ -651,7 +649,6 @@
         submitBtn.disabled = false;
       }, 1000);
 
-      // 2. 背景靜默發送（keepalive 保障傳輸完畢）
       fetch(GAS_WEB_APP_URL, {
         method: 'POST',
         mode: 'no-cors',
