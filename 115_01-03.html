@@ -268,12 +268,12 @@
         <input type="text" id="studentName" required placeholder="請輸入姓名">
       </div>
 
-      <!-- 2. 學生性別 -->
+      <!-- 2. 學生性別 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">2. 學生性別</label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="studentGender" value="男" checked> 男
+            <input type="radio" name="studentGender" value="男" required> 男
           </label>
           <label class="radio-option">
             <input type="radio" name="studentGender" value="女"> 女
@@ -287,10 +287,10 @@
         <input type="number" id="studentSeat" required placeholder="例如：12">
       </div>
 
-      <!-- 4. 家中電話 -->
+      <!-- 4. 家中電話 (已清空預設值) -->
       <div class="form-group">
         <label class="question-title">4. 家中電話 <span class="question-note">(若沒有請填「無」)</span></label>
-        <input type="text" id="homePhone" required value="無">
+        <input type="text" id="homePhone" required placeholder="若沒有請填「無」">
       </div>
 
       <!-- 5. 父親姓名 -->
@@ -323,12 +323,12 @@
         <input type="text" id="otherContact" required placeholder="例：祖母0917383628 (若無請填無)">
       </div>
 
-      <!-- 10. 父母關係為何 -->
+      <!-- 10. 父母關係為何 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">10. 父母關係為何</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="parentRelation" value="同住" checked> 同住
+            <input type="radio" name="parentRelation" value="同住" required> 同住
           </label>
           <label class="radio-option">
             <input type="radio" name="parentRelation" value="分居"> 分居
@@ -341,10 +341,10 @@
           <div class="sub-panel" id="divorcePanel">
             <div class="radio-group">
               <label class="radio-option">
-                <input type="radio" name="divorceDetail" value="與母同住"> 與母同住
+                <input type="radio" name="divorceDetail" value="與母同住" id="divorceDetail1"> 與母同住
               </label>
               <label class="radio-option">
-                <input type="radio" name="divorceDetail" value="與父同住"> 與父同住
+                <input type="radio" name="divorceDetail" value="與父同住" id="divorceDetail2"> 與父同住
               </label>
             </div>
           </div>
@@ -355,15 +355,15 @@
         </div>
       </div>
 
-      <!-- 11. 是否有兄姊在本校就讀 -->
+      <!-- 11. 是否有兄姊在本校就讀 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">11. 是否有兄姊在本校就讀</label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="hasSiblings" value="是"> 是
+            <input type="radio" name="hasSiblings" value="是" required> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="hasSiblings" value="否" checked> 否
+            <input type="radio" name="hasSiblings" value="否"> 否
           </label>
         </div>
         <div class="sub-panel" id="siblingPanel">
@@ -374,64 +374,64 @@
         </div>
       </div>
 
-      <!-- 12. 是否為原住民學生 -->
+      <!-- 12. 是否為原住民學生 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">12. 是否為原住民學生</label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="isIndigenous" value="是"> 是
+            <input type="radio" name="isIndigenous" value="是" required> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="isIndigenous" value="否" checked> 否
+            <input type="radio" name="isIndigenous" value="否"> 否
           </label>
         </div>
       </div>
 
-      <!-- 13. 是否為身障學生或子女 -->
+      <!-- 13. 是否為身障學生或子女 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">13. 是否為身心障礙學生或身心障礙人士子女</label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="isDisabled" value="是"> 是
+            <input type="radio" name="isDisabled" value="是" required> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="isDisabled" value="否" checked> 否
+            <input type="radio" name="isDisabled" value="否"> 否
           </label>
         </div>
       </div>
 
-      <!-- 14. 是否為低收入戶學生 -->
+      <!-- 14. 是否為低收入戶學生 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">14. 是否為低收入戶學生？ <span class="question-note">(需附市公所114年度低收入戶證明書正本)</span></label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="isLowIncome" value="是"> 是
+            <input type="radio" name="isLowIncome" value="是" required> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="isLowIncome" value="否" checked> 否
+            <input type="radio" name="isLowIncome" value="否"> 否
           </label>
         </div>
       </div>
 
-      <!-- 15. 是否為中低收入戶學生 -->
+      <!-- 15. 是否為中低收入戶學生 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">15. 是否為中低收入戶學生？ <span class="question-note">(需附市公所114年度中低收入戶證明書正本)</span></label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="isMidLowIncome" value="是"> 是
+            <input type="radio" name="isMidLowIncome" value="是" required> 是
           </label>
           <label class="radio-option">
-            <input type="radio" name="isMidLowIncome" value="否" checked> 否
+            <input type="radio" name="isMidLowIncome" value="否"> 否
           </label>
         </div>
       </div>
 
-      <!-- 16. 本學期午餐繳費方式 -->
+      <!-- 16. 本學期午餐繳費方式 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">16. 本學期午餐繳費方式</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="全繳（與註冊費一起繳）" checked> 全繳（與註冊費一起繳）
+            <input type="radio" name="lunchFee" value="全繳（與註冊費一起繳）" required> 全繳（與註冊費一起繳）
           </label>
           <label class="radio-option">
             <input type="radio" name="lunchFee" value="月繳"> 月繳
@@ -445,12 +445,12 @@
         </div>
       </div>
 
-      <!-- 17. 本學期欲飲用的乳品 -->
+      <!-- 17. 本學期欲飲用的乳品 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">17. 本學期欲飲用的乳品</label>
         <div class="radio-group radio-inline">
           <label class="radio-option">
-            <input type="radio" name="lunchMilk" value="牛奶" checked> 牛奶
+            <input type="radio" name="lunchMilk" value="牛奶" required> 牛奶
           </label>
           <label class="radio-option">
             <input type="radio" name="lunchMilk" value="豆奶"> 豆奶
@@ -458,12 +458,12 @@
         </div>
       </div>
 
-      <!-- 18. 本學期放學後接送方式 -->
+      <!-- 18. 本學期放學後接送方式 (已取消預設) -->
       <div class="form-group">
         <label class="question-title">18. 本學期放學後接送方式</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="pickupMethod" value="家長接送" checked> 家長接送
+            <input type="radio" name="pickupMethod" value="家長接送" required> 家長接送
           </label>
 
           <label class="radio-option">
@@ -490,13 +490,13 @@
       <!-- 19. 孩子飲食特殊情況說明 -->
       <div class="form-group">
         <label class="question-title">19. 孩子飲食特殊情況說明 <span class="question-note">(若沒有請填「無」)</span></label>
-        <textarea id="dietSpecial" required placeholder="若沒有請填寫「無」">無</textarea>
+        <textarea id="dietSpecial" required placeholder="若沒有請填寫「無」"></textarea>
       </div>
 
       <!-- 20. 孩子需要老師特別注意的事項說明 -->
       <div class="form-group">
         <label class="question-title">20. 孩子需要老師特別注意的事項說明 <span class="question-note">(若沒有請填「無」)</span></label>
-        <textarea id="teacherNote" required placeholder="若沒有請填寫「無」">無</textarea>
+        <textarea id="teacherNote" required placeholder="若沒有請填寫「無」"></textarea>
       </div>
 
       <button type="submit" class="submit-btn" id="submitBtn">送出問卷</button>
@@ -523,8 +523,10 @@
       radio.addEventListener('change', (e) => {
         if (e.target.value === '離婚') {
           divorcePanel.style.display = 'block';
+          document.getElementById('divorceDetail1').required = true;
         } else {
           divorcePanel.style.display = 'none';
+          document.getElementById('divorceDetail1').required = false;
           divorceDetailRadios.forEach(r => r.checked = false);
         }
       });
@@ -576,7 +578,6 @@
 
     function showModal() {
       successModal.classList.add('active');
-      // 2.5 秒後自動關閉 Modal
       autoCloseTimer = setTimeout(() => {
         closeModal();
       }, 2500);
@@ -587,32 +588,36 @@
       if (autoCloseTimer) clearTimeout(autoCloseTimer);
     }
 
-    // 點擊 Modal 任意區域手動關閉
     successModal.addEventListener('click', closeModal);
 
-    // 高效能 + 確保背景傳送（防秒關）表單提交邏輯
+    // 表單提交邏輯
     const form = document.getElementById('surveyForm');
     const submitBtn = document.getElementById('submitBtn');
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // 防止重複點擊
       submitBtn.disabled = true;
 
-      // 取得第 10 題父母關係的值
-      let parentRelationValue = document.querySelector('input[name="parentRelation"]:checked').value;
+      // 安全讀取單選值（若未選時不會報錯）
+      const getRadioValue = (name) => {
+        const checkedOption = document.querySelector(`input[name="${name}"]:checked`);
+        return checkedOption ? checkedOption.value : '';
+      };
+
+      // 處理第 10 題離婚細節
+      let parentRelationValue = getRadioValue('parentRelation');
       if (parentRelationValue === '離婚') {
-        const divorceDetail = document.querySelector('input[name="divorceDetail"]:checked');
+        const divorceDetail = getRadioValue('divorceDetail');
         if (divorceDetail) {
-          parentRelationValue = `離婚(${divorceDetail.value})`;
+          parentRelationValue = `離婚(${divorceDetail})`;
         }
       }
 
       // 打包資料
       const formData = new URLSearchParams();
       formData.append('studentName', document.getElementById('studentName').value);
-      formData.append('studentGender', document.querySelector('input[name="studentGender"]:checked').value);
+      formData.append('studentGender', getRadioValue('studentGender'));
       formData.append('studentSeat', document.getElementById('studentSeat').value);
       formData.append('homePhone', document.getElementById('homePhone').value);
       formData.append('fatherName', document.getElementById('fatherName').value);
@@ -621,37 +626,36 @@
       formData.append('motherPhone', document.getElementById('motherPhone').value);
       formData.append('otherContact', document.getElementById('otherContact').value);
       formData.append('parentRelation', parentRelationValue);
-      formData.append('hasSiblings', document.querySelector('input[name="hasSiblings"]:checked').value);
+      formData.append('hasSiblings', getRadioValue('hasSiblings'));
       formData.append('siblingInfo', siblingInfo.value);
-      formData.append('isIndigenous', document.querySelector('input[name="isIndigenous"]:checked').value);
-      formData.append('isDisabled', document.querySelector('input[name="isDisabled"]:checked').value);
-      formData.append('isLowIncome', document.querySelector('input[name="isLowIncome"]:checked').value);
-      formData.append('isMidLowIncome', document.querySelector('input[name="isMidLowIncome"]:checked').value);
-      formData.append('lunchFee', document.querySelector('input[name="lunchFee"]:checked').value);
-      formData.append('lunchMilk', document.querySelector('input[name="lunchMilk"]:checked').value);
-      formData.append('pickupMethod', document.querySelector('input[name="pickupMethod"]:checked').value);
+      formData.append('isIndigenous', getRadioValue('isIndigenous'));
+      formData.append('isDisabled', getRadioValue('isDisabled'));
+      formData.append('isLowIncome', getRadioValue('isLowIncome'));
+      formData.append('isMidLowIncome', getRadioValue('isMidLowIncome'));
+      formData.append('lunchFee', getRadioValue('lunchFee'));
+      formData.append('lunchMilk', getRadioValue('lunchMilk'));
+      formData.append('pickupMethod', getRadioValue('pickupMethod'));
       formData.append('afterSchoolName', afterSchoolName.value);
       formData.append('afterSchoolPhone', afterSchoolPhone.value);
       formData.append('dietSpecial', document.getElementById('dietSpecial').value);
       formData.append('teacherNote', document.getElementById('teacherNote').value);
 
-      // 1. 立即顯示成功視窗與重置畫面，達到零延遲體驗
+      // 1. 立即顯示成功視窗與重置畫面
       showModal();
       form.reset();
       divorcePanel.style.display = 'none';
       siblingPanel.style.display = 'none';
       afterSchoolPanel.style.display = 'none';
 
-      // 恢復按鈕狀態
       setTimeout(() => {
         submitBtn.disabled = false;
       }, 1000);
 
-      // 2. 背景傳送資料（關鍵：加上 keepalive: true 防止關閉網頁中斷傳送）
+      // 2. 背景靜默發送（keepalive 保障傳輸完畢）
       fetch(GAS_WEB_APP_URL, {
         method: 'POST',
         mode: 'no-cors',
-        keepalive: true, // 👈 防秒關關鍵：確保即使家長按完立即關閉視窗，瀏覽器背景仍會傳送完畢
+        keepalive: true,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
