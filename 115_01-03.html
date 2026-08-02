@@ -576,10 +576,10 @@
 
     function showModal() {
       successModal.classList.add('active');
-      // 3 秒後自動關閉 Modal
+      // 2.5 秒後自動關閉 Modal
       autoCloseTimer = setTimeout(() => {
         closeModal();
-      }, 3000);
+      }, 2500);
     }
 
     function closeModal() {
@@ -587,18 +587,18 @@
       if (autoCloseTimer) clearTimeout(autoCloseTimer);
     }
 
-    // 點擊 Modal 任意區域亦可手動關閉
+    // 點擊 Modal 任意區域手動關閉
     successModal.addEventListener('click', closeModal);
 
-    // 處理表單提交
+    // 高效能 + 確保背景傳送（防秒關）表單提交邏輯
     const form = document.getElementById('surveyForm');
     const submitBtn = document.getElementById('submitBtn');
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
 
+      // 防止重複點擊
       submitBtn.disabled = true;
-      submitBtn.innerText = "資料傳送中...";
 
       // 取得第 10 題父母關係的值
       let parentRelationValue = document.querySelector('input[name="parentRelation"]:checked').value;
@@ -609,6 +609,7 @@
         }
       }
 
+      // 打包資料
       const formData = new URLSearchParams();
       formData.append('studentName', document.getElementById('studentName').value);
       formData.append('studentGender', document.querySelector('input[name="studentGender"]:checked').value);
@@ -634,32 +635,30 @@
       formData.append('dietSpecial', document.getElementById('dietSpecial').value);
       formData.append('teacherNote', document.getElementById('teacherNote').value);
 
-      try {
-        await fetch(GAS_WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: formData.toString()
-        });
+      // 1. 立即顯示成功視窗與重置畫面，達到零延遲體驗
+      showModal();
+      form.reset();
+      divorcePanel.style.display = 'none';
+      siblingPanel.style.display = 'none';
+      afterSchoolPanel.style.display = 'none';
 
-        // 觸發自訂成功彈窗
-        showModal();
-
-        // 重置表單與收合選單
-        form.reset();
-        divorcePanel.style.display = 'none';
-        siblingPanel.style.display = 'none';
-        afterSchoolPanel.style.display = 'none';
-
-      } catch (err) {
-        console.error(err);
-        alert('發送時發生錯誤，請確認網路連線與設定。');
-      } finally {
+      // 恢復按鈕狀態
+      setTimeout(() => {
         submitBtn.disabled = false;
-        submitBtn.innerText = "送出問卷";
-      }
+      }, 1000);
+
+      // 2. 背景傳送資料（關鍵：加上 keepalive: true 防止關閉網頁中斷傳送）
+      fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true, // 👈 防秒關關鍵：確保即使家長按完立即關閉視窗，瀏覽器背景仍會傳送完畢
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData.toString()
+      }).catch(err => {
+        console.error('背景發送異常：', err);
+      });
     });
   </script>
 </body>
