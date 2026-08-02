@@ -198,6 +198,61 @@
       background-color: #ccc;
       cursor: not-allowed;
     }
+
+    /* 成功訊息覆蓋層 (Modal Overlay) */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 成功訊息卡片 (Modal Content) */
+    .modal-card {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 32px 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+      max-width: 80%;
+      width: 300px;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-card h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .modal-card p {
+      margin: 0;
+      font-size: 1.05rem;
+      opacity: 0.95;
+      font-weight: 400;
+    }
   </style>
 </head>
 <body>
@@ -448,6 +503,14 @@
     </form>
   </div>
 
+  <!-- 成功訊息彈窗 -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-card">
+      <h3>成功送出！</h3>
+      <p>感謝您的填寫。</p>
+    </div>
+  </div>
+
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxROFCqsu-q8Qw71H2d49STrkXE6xELzVTWQ32Prdoe0kAI8vZh7LMrbF__rtB8iPVM/exec";
 
@@ -462,7 +525,7 @@
           divorcePanel.style.display = 'block';
         } else {
           divorcePanel.style.display = 'none';
-          divorceDetailRadios.forEach(r => r.checked = false); // 隱藏時重置勾選
+          divorceDetailRadios.forEach(r => r.checked = false);
         }
       });
     });
@@ -506,6 +569,26 @@
         }
       });
     });
+
+    // 處理 Modal 關閉邏輯
+    const successModal = document.getElementById('successModal');
+    let autoCloseTimer;
+
+    function showModal() {
+      successModal.classList.add('active');
+      // 3 秒後自動關閉 Modal
+      autoCloseTimer = setTimeout(() => {
+        closeModal();
+      }, 3000);
+    }
+
+    function closeModal() {
+      successModal.classList.remove('active');
+      if (autoCloseTimer) clearTimeout(autoCloseTimer);
+    }
+
+    // 點擊 Modal 任意區域亦可手動關閉
+    successModal.addEventListener('click', closeModal);
 
     // 處理表單提交
     const form = document.getElementById('surveyForm');
@@ -561,7 +644,10 @@
           body: formData.toString()
         });
 
-        alert('調查表已成功送出！感謝您的填寫。');
+        // 觸發自訂成功彈窗
+        showModal();
+
+        // 重置表單與收合選單
         form.reset();
         divorcePanel.style.display = 'none';
         siblingPanel.style.display = 'none';
