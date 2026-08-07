@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>115_1年3班調查表</title>
+  <title>115資料調查表</title>
   <style>
     :root {
       --primary-color: #0d9488;
@@ -148,7 +148,7 @@
       transform: scale(1);
     }
 
-    /* 動態隱藏子區塊樣式 */
+    /* 動態隱藏子區塊樣式（包含左側綠色垂直條） */
     .sub-panel {
       display: none;
       width: 100%;
@@ -262,7 +262,7 @@
 <body>
 
   <div class="container">
-    <h2>115_1年3班調查表</h2>
+    <h2>115資料調查表</h2>
     
     <form id="surveyForm">
       
@@ -293,8 +293,8 @@
 
       <!-- 4. 家中電話 -->
       <div class="form-group">
-        <label class="question-title">4. 家中電話 <span class="question-note">(若沒有，請填「無」)</span></label>
-        <input type="text" id="homePhone" required placeholder="若沒有，請填「無」">
+        <label class="question-title">4. 家中電話 <span class="question-note">(若沒有請填「無」)</span></label>
+        <input type="text" id="homePhone" required placeholder="若無請填「無」">
       </div>
 
       <!-- 5. 父親姓名 -->
@@ -318,18 +318,18 @@
       <!-- 8. 母親電話 -->
       <div class="form-group">
         <label class="question-title">8. 母親電話</label>
-        <input type="text" id="motherPhone" placeholder="例：0912345678">
+        <input type="text" id="motherPhone" placeholder="例如：0912345678">
       </div>
 
       <!-- 9. 其他聯絡人 -->
       <div class="form-group">
-        <label class="question-title">9. 其他聯絡人(稱謂)電話 <span class="question-note">(若沒有，請填「無」)</span></label>
-        <input type="text" id="otherContact" required placeholder="例：祖母0917383628 (若沒有，請填「無」)">
+        <label class="question-title">9. 其他聯絡人(稱謂)電話 <span class="question-note">(若沒有請填「無」)</span></label>
+        <input type="text" id="otherContact" required placeholder="例：祖母0917383628 (若無請填無)">
       </div>
 
       <!-- 10. 父母關係為何 -->
       <div class="form-group">
-        <label class="question-title">10. 父母關係</label>
+        <label class="question-title">10. 父母關係為何</label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="parentRelation" value="同住" required> 同住
@@ -359,7 +359,7 @@
           <!-- 動態展開：其他原因輸入框 -->
           <div class="sub-panel" id="otherParentRelationPanel">
             <div class="sub-field">
-              <label for="otherParentRelationText">請說明狀況：</label>
+              <label for="otherParentRelationText">請說明其他狀況：</label>
               <input type="text" id="otherParentRelationText" placeholder="請簡述父母關係狀況">
             </div>
           </div>
@@ -396,6 +396,14 @@
           <label class="radio-option">
             <input type="radio" name="isIndigenous" value="否"> 否
           </label>
+
+          <!-- 動態展開：原住民族別輸入框 -->
+          <div class="sub-panel" id="indigenousPanel">
+            <div class="sub-field">
+              <label for="indigenousTribeText">請填寫原住民族別：</label>
+              <input type="text" id="indigenousTribeText" placeholder="例如：阿美族、泰雅族">
+            </div>
+          </div>
         </div>
       </div>
 
@@ -414,7 +422,7 @@
 
       <!-- 14. 是否為低收入戶學生 -->
       <div class="form-group">
-        <label class="question-title">14. 是否為低收戶學生 <span class="question-note">(需附114年證明)</span></label>
+        <label class="question-title">14. 是否為低收入戶學生？ <span class="question-note">(需附114年證明)</span></label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="isLowIncome" value="是" required> 是
@@ -427,7 +435,7 @@
 
       <!-- 15. 是否為中低收入戶學生 -->
       <div class="form-group">
-        <label class="question-title">15. 是否為中低收戶學生 <span class="question-note">(需附114年證明)</span></label>
+        <label class="question-title">15. 是否為中低收入戶學生？ <span class="question-note">(需附114年證明)</span></label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="isMidLowIncome" value="是" required> 是
@@ -438,29 +446,28 @@
         </div>
       </div>
 
-      <!-- 16. 本學期午餐繳費方式-->
+      <!-- 16. 本學期午餐繳費方式 -->
       <div class="form-group">
-        <label class="question-title">16. 午餐用餐方式 (午餐不須繳費)</label>
+        <label class="question-title">16. 本學期午餐繳費方式</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="在校用餐" required>在校用餐
+            <input type="radio" name="lunchFee" value="全繳（與註冊費一起繳）" required> 全繳（與註冊費一起）
           </label>
           <label class="radio-option">
-            <input type="radio" name="lunchFee" value="午餐自理">午餐自理
+            <input type="radio" name="lunchFee" value="月繳"> 月繳
           </label>
-  <!--  <label class="radio-option">
+          <label class="radio-option">
             <input type="radio" name="lunchFee" value="領有午餐補助證明"> 領有補助
           </label>
           <label class="radio-option">
             <input type="radio" name="lunchFee" value="午餐自理"> 自理
-          </label>      
-  -->
+          </label>
         </div>
-      </div> 
+      </div>
 
       <!-- 17. 本學期欲飲用的乳品 -->
       <div class="form-group">
-        <label class="question-title">17. 本學期要飲用的乳品</label>
+        <label class="question-title">17. 本學期欲飲用的乳品</label>
         <div class="radio-group">
           <label class="radio-option">
             <input type="radio" name="lunchMilk" value="牛奶" required> 牛奶
@@ -488,7 +495,7 @@
           <div class="sub-panel" id="afterSchoolPanel">
             <div class="sub-field">
               <label for="afterSchoolName">安親班名稱</label>
-              <input type="text" id="afterSchoolName" placeholder="例如：必勝補習班">
+              <input type="text" id="afterSchoolName" placeholder="例如：必勝文理補習班">
             </div>
             <div class="sub-field">
               <label for="afterSchoolPhone">安親班電話</label>
@@ -500,14 +507,14 @@
 
       <!-- 19. 孩子飲食特殊情況說明 -->
       <div class="form-group">
-        <label class="question-title">19. 孩子飲食特殊情況說明 <span class="question-note">(若沒有，請填「無」)</span></label>
-        <textarea id="dietSpecial" required placeholder="若沒有，請填「無」"></textarea>
+        <label class="question-title">19. 孩子飲食特殊情況說明 <span class="question-note">(若無請填「無」)</span></label>
+        <textarea id="dietSpecial" required placeholder="若沒有請填寫「無」"></textarea>
       </div>
 
       <!-- 20. 孩子需要老師特別注意的事項說明 -->
       <div class="form-group">
-        <label class="question-title">20. 孩子需要老師特別注意事項 <span class="question-note">(若沒有，請填「無」)</span></label>
-        <textarea id="teacherNote" required placeholder="若沒有，請填「無」"></textarea>
+        <label class="question-title">20. 孩子需要老師特別注意事項 <span class="question-note">(若無請填「無」)</span></label>
+        <textarea id="teacherNote" required placeholder="若沒有請填寫「無」"></textarea>
       </div>
 
       <button type="submit" class="submit-btn" id="submitBtn">送出問卷</button>
@@ -525,19 +532,16 @@
   <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxROFCqsu-q8Qw71H2d49STrkXE6xELzVTWQ32Prdoe0kAI8vZh7LMrbF__rtB8iPVM/exec";
 
-    // 10 題「父母關係」動態切換（明確拆開邏輯）
+    // 10 題「父母關係」動態切換
     const parentRadios = document.querySelectorAll('input[name="parentRelation"]');
     const divorcePanel = document.getElementById('divorcePanel');
     const divorceDetailRadios = document.querySelectorAll('input[name="divorceDetail"]');
-    
     const otherParentRelationPanel = document.getElementById('otherParentRelationPanel');
     const otherParentRelationText = document.getElementById('otherParentRelationText');
 
     parentRadios.forEach(radio => {
       radio.addEventListener('change', (e) => {
         const val = e.target.value;
-
-        // 1. 離婚控制
         if (val === '離婚') {
           divorcePanel.style.display = 'block';
           document.getElementById('divorceDetail1').required = true;
@@ -547,7 +551,6 @@
           divorceDetailRadios.forEach(r => r.checked = false);
         }
 
-        // 2. 其他控制
         if (val === '其他') {
           otherParentRelationPanel.style.display = 'block';
           otherParentRelationText.required = true;
@@ -573,6 +576,24 @@
           siblingPanel.style.display = 'none';
           siblingInfo.required = false;
           siblingInfo.value = '';
+        }
+      });
+    });
+
+    // 12 題「原住民學生」動態展開
+    const indigenousRadios = document.querySelectorAll('input[name="isIndigenous"]');
+    const indigenousPanel = document.getElementById('indigenousPanel');
+    const indigenousTribeText = document.getElementById('indigenousTribeText');
+
+    indigenousRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.value === '是') {
+          indigenousPanel.style.display = 'block';
+          indigenousTribeText.required = true;
+        } else {
+          indigenousPanel.style.display = 'none';
+          indigenousTribeText.required = false;
+          indigenousTribeText.value = '';
         }
       });
     });
@@ -631,17 +652,22 @@
         return checkedOption ? checkedOption.value : '';
       };
 
-      // 組合第 10 題文字 (離婚 或 其他)
+      // 組合第 10 題文字
       let parentRelationValue = getRadioValue('parentRelation');
       if (parentRelationValue === '離婚') {
         const divorceDetail = getRadioValue('divorceDetail');
-        if (divorceDetail) {
-          parentRelationValue = `離婚(${divorceDetail})`;
-        }
+        if (divorceDetail) parentRelationValue = `離婚(${divorceDetail})`;
       } else if (parentRelationValue === '其他') {
         const otherText = otherParentRelationText.value.trim();
-        if (otherText) {
-          parentRelationValue = `其他(${otherText})`;
+        if (otherText) parentRelationValue = `其他(${otherText})`;
+      }
+
+      // 組合第 12 題文字 (原住民)
+      let isIndigenousValue = getRadioValue('isIndigenous');
+      if (isIndigenousValue === '是') {
+        const tribeText = indigenousTribeText.value.trim();
+        if (tribeText) {
+          isIndigenousValue = `是(${tribeText})`;
         }
       }
 
@@ -658,7 +684,7 @@
       formData.append('parentRelation', parentRelationValue);
       formData.append('hasSiblings', getRadioValue('hasSiblings'));
       formData.append('siblingInfo', siblingInfo.value);
-      formData.append('isIndigenous', getRadioValue('isIndigenous'));
+      formData.append('isIndigenous', isIndigenousValue);
       formData.append('isDisabled', getRadioValue('isDisabled'));
       formData.append('isLowIncome', getRadioValue('isLowIncome'));
       formData.append('isMidLowIncome', getRadioValue('isMidLowIncome'));
@@ -675,6 +701,7 @@
       divorcePanel.style.display = 'none';
       otherParentRelationPanel.style.display = 'none';
       siblingPanel.style.display = 'none';
+      indigenousPanel.style.display = 'none';
       afterSchoolPanel.style.display = 'none';
 
       setTimeout(() => {
